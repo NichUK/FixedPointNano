@@ -1,0 +1,106 @@
+# Quantauma C# coding style ruleset
+# Source guidance:
+# - https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names
+# - https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions
+
+root = true
+
+[*.cs]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+tab_width = 4
+trim_trailing_whitespace = true
+
+# Allman braces + readability defaults
+dotnet_sort_system_directives_first = true
+csharp_new_line_before_open_brace = all
+csharp_prefer_braces = true:warning
+
+# var guidance: use when obvious, avoid when unclear
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = false:suggestion
+
+# Prefer explicit accessibility and clean modern defaults
+dotnet_style_require_accessibility_modifiers = always:warning
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+csharp_prefer_simple_using_statement = true:suggestion
+
+# Naming symbols
+
+dotnet_naming_symbols.public_members.applicable_kinds = property,method,event,field
+dotnet_naming_symbols.public_members.applicable_accessibilities = public,protected,protected_internal
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_symbols.private_static_fields.applicable_kinds = field
+dotnet_naming_symbols.private_static_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_fields.required_modifiers = static
+
+dotnet_naming_symbols.local_variables.applicable_kinds = local
+
+dotnet_naming_symbols.parameters.applicable_kinds = parameter
+
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+
+dotnet_naming_symbols.type_parameters.applicable_kinds = type_parameter
+
+# Naming styles
+
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.camel_case.capitalization = camel_case
+
+dotnet_naming_style.interface_prefix_i.capitalization = pascal_case
+dotnet_naming_style.interface_prefix_i.required_prefix = I
+
+dotnet_naming_style.type_parameter_prefix_t.capitalization = pascal_case
+dotnet_naming_style.type_parameter_prefix_t.required_prefix = T
+
+dotnet_naming_style.private_instance_field_style.capitalization = camel_case
+dotnet_naming_style.private_instance_field_style.required_prefix = _
+
+dotnet_naming_style.private_static_field_style.capitalization = camel_case
+dotnet_naming_style.private_static_field_style.required_prefix = s_
+
+# Naming rules
+
+dotnet_naming_rule.public_members_pascal_case.symbols = public_members
+dotnet_naming_rule.public_members_pascal_case.style = pascal_case
+dotnet_naming_rule.public_members_pascal_case.severity = warning
+
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = private_instance_field_style
+dotnet_naming_rule.private_fields_underscore.severity = warning
+
+dotnet_naming_rule.private_static_fields_s_underscore.symbols = private_static_fields
+dotnet_naming_rule.private_static_fields_s_underscore.style = private_static_field_style
+dotnet_naming_rule.private_static_fields_s_underscore.severity = warning
+
+dotnet_naming_rule.locals_camel_case.symbols = local_variables
+dotnet_naming_rule.locals_camel_case.style = camel_case
+dotnet_naming_rule.locals_camel_case.severity = suggestion
+
+dotnet_naming_rule.parameters_camel_case.symbols = parameters
+dotnet_naming_rule.parameters_camel_case.style = camel_case
+dotnet_naming_rule.parameters_camel_case.severity = suggestion
+
+dotnet_naming_rule.interfaces_start_with_i.symbols = interfaces
+dotnet_naming_rule.interfaces_start_with_i.style = interface_prefix_i
+dotnet_naming_rule.interfaces_start_with_i.severity = warning
+
+dotnet_naming_rule.type_parameters_start_with_t.symbols = type_parameters
+dotnet_naming_rule.type_parameters_start_with_t.style = type_parameter_prefix_t
+dotnet_naming_rule.type_parameters_start_with_t.severity = warning
+
+# Analyzer-backed naming rules from Microsoft guidance
+dotnet_diagnostic.CA1715.severity = warning
+# Prevent underscores in externally visible identifiers
+dotnet_diagnostic.CA1707.severity = warning

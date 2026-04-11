@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FixedPointNano/FixedPointNano.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FixedPointNano.Tests/FixedPointNano.Tests.csproj" />
+  </Folder>
+</Solution>

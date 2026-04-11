@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>FixedPointNano</RootNamespace>
+    <AssemblyName>FixedPointNano</AssemblyName>
+    <PackageId>FixedPointNano</PackageId>
+    <Authors>NichUK</Authors>
+    <Company>Quantauma</Company>
+    <Description>Long-backed fixed-point numeric primitive with 9 decimal places.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/NichUK/FixedPointNano</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+</Project>

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
 
@@ -12,21 +13,40 @@ public readonly struct FixedPointNano :
     IEquatable<FixedPointNano>,
     IFormattable,
     ISpanFormattable,
+    IParsable<FixedPointNano>,
+    ISpanParsable<FixedPointNano>,
     IConvertible
 {
+    /// <summary>The number of decimal places used by this type (9).</summary>
     public const int DecimalPlaces = 9;
+
+    /// <summary>The scaling factor applied to the raw <see cref="long"/> storage value (10^9).</summary>
     public const long Scale = 1_000_000_000L;
 
+    /// <summary>Represents the value zero (0).</summary>
     public static FixedPointNano Zero { get; } = new(0L);
+
+    /// <summary>Represents the value one (1).</summary>
     public static FixedPointNano One { get; } = new(Scale);
 
+    /// <summary>Represents the largest possible value (~9.223372036 billion).</summary>
+    public static FixedPointNano MaxValue { get; } = new(long.MaxValue);
+
+    /// <summary>Represents the smallest possible value (~-9.223372036 billion).</summary>
+    public static FixedPointNano MinValue { get; } = new(long.MinValue);
+
+    /// <summary>Initialises a new instance from a raw scaled <see cref="long"/> value.</summary>
+    /// <param name="rawValue">The raw value, already multiplied by <see cref="Scale"/>.</param>
     public FixedPointNano(long rawValue)
     {
         RawValue = rawValue;
     }
 
+    /// <summary>Gets the underlying raw scaled <see cref="long"/> value.</summary>
     public long RawValue { get; }
 
+    /// <summary>Returns the absolute value of <paramref name="value"/>.</summary>
+    /// <exception cref="OverflowException">Thrown when <paramref name="value"/> equals <see cref="MinValue"/>.</exception>
     public static FixedPointNano Abs(FixedPointNano value)
     {
         return value.RawValue < 0
@@ -34,54 +54,78 @@ public readonly struct FixedPointNano :
             : value;
     }
 
+    /// <summary>Returns the smallest integral value greater than or equal to <paramref name="value"/>.</summary>
     public static FixedPointNano Ceiling(FixedPointNano value)
     {
         return FromDecimal(decimal.Ceiling(value.ToDecimal()));
     }
 
+    /// <summary>Returns the largest integral value less than or equal to <paramref name="value"/>.</summary>
     public static FixedPointNano Floor(FixedPointNano value)
     {
         return FromDecimal(decimal.Floor(value.ToDecimal()));
     }
 
+    /// <summary>
+    /// Creates a <see cref="FixedPointNano"/> from a <see cref="decimal"/> value,
+    /// rounding to <see cref="DecimalPlaces"/> decimal places using <see cref="MidpointRounding.ToEven"/>.
+    /// </summary>
     public static FixedPointNano FromDecimal(decimal value)
     {
         var scaledValue = decimal.Round(value * Scale, 0, MidpointRounding.ToEven);
         return new FixedPointNano(decimal.ToInt64(scaledValue));
     }
 
+    /// <summary>Creates a <see cref="FixedPointNano"/> from a <see cref="double"/> value.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="value"/> is NaN or infinite.</exception>
     public static FixedPointNano FromDouble(double value)
     {
         ThrowIfInvalidFloatingPoint(value);
         return FromDecimal((decimal)value);
     }
 
+    /// <summary>Creates a <see cref="FixedPointNano"/> from a <see cref="Half"/> value.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="value"/> is NaN or infinite.</exception>
     public static FixedPointNano FromHalf(Half value)
     {
         return FromSingle((float)value);
     }
 
+    /// <summary>Creates a <see cref="FixedPointNano"/> directly from a raw scaled <see cref="long"/> value without scaling.</summary>
     public static FixedPointNano FromRaw(long rawValue)
     {
         return new FixedPointNano(rawValue);
     }
 
+    /// <summary>Creates a <see cref="FixedPointNano"/> from a <see cref="float"/> value.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="value"/> is NaN or infinite.</exception>
     public static FixedPointNano FromSingle(float value)
     {
         ThrowIfInvalidFloatingPoint(value);
         return FromDecimal((decimal)value);
     }
 
+    /// <summary>Returns the greater of two <see cref="FixedPointNano"/> values.</summary>
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;
     }
 
+    /// <summary>Returns the lesser of two <see cref="FixedPointNano"/> values.</summary>
     public static FixedPointNano Min(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue <= right.RawValue ? left : right;
     }
 
+    /// <summary>
+    /// Rounds <paramref name="value"/> to a specified number of decimal places.
+    /// </summary>
+    /// <param name="value">The value to round.</param>
+    /// <param name="decimals">The number of decimal places (0 to <see cref="DecimalPlaces"/>).</param>
+    /// <param name="rounding">The midpoint rounding strategy. Defaults to <see cref="MidpointRounding.ToEven"/>.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="decimals"/> is less than 0 or greater than <see cref="DecimalPlaces"/>.
+    /// </exception>
     public static FixedPointNano Round(FixedPointNano value, int decimals, MidpointRounding rounding = MidpointRounding.ToEven)
     {
         if (decimals is < 0 or > DecimalPlaces)
@@ -92,9 +136,62 @@ public readonly struct FixedPointNano :
         return FromDecimal(decimal.Round(value.ToDecimal(), decimals, rounding));
     }
 
+    /// <summary>Returns the integral part of <paramref name="value"/>, discarding any fractional digits toward zero.</summary>
     public static FixedPointNano Truncate(FixedPointNano value)
     {
-        return FromDecimal(decimal.Truncate(value.ToDecimal()));
+        return new FixedPointNano(value.RawValue / Scale * Scale);
+    }
+
+    /// <summary>Converts the string representation of a number to its <see cref="FixedPointNano"/> equivalent.</summary>
+    /// <param name="s">A string containing the number to convert.</param>
+    /// <param name="provider">An optional format provider. Defaults to the current culture.</param>
+    /// <exception cref="FormatException">Thrown when <paramref name="s"/> is not a valid number.</exception>
+    /// <exception cref="OverflowException">Thrown when the parsed value is outside the representable range.</exception>
+    public static FixedPointNano Parse(string s, IFormatProvider? provider = null)
+    {
+        return FromDecimal(decimal.Parse(s, NumberStyles.Number, provider));
+    }
+
+    /// <summary>Converts the span representation of a number to its <see cref="FixedPointNano"/> equivalent.</summary>
+    /// <param name="s">A read-only span containing the number to convert.</param>
+    /// <param name="provider">An optional format provider. Defaults to the current culture.</param>
+    /// <exception cref="FormatException">Thrown when <paramref name="s"/> is not a valid number.</exception>
+    /// <exception cref="OverflowException">Thrown when the parsed value is outside the representable range.</exception>
+    public static FixedPointNano Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null)
+    {
+        return FromDecimal(decimal.Parse(s, NumberStyles.Number, provider));
+    }
+
+    /// <summary>
+    /// Tries to convert the string representation of a number to its <see cref="FixedPointNano"/> equivalent.
+    /// Returns <see langword="false"/> if the conversion fails.
+    /// </summary>
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out FixedPointNano result)
+    {
+        if (decimal.TryParse(s, NumberStyles.Number, provider, out var d))
+        {
+            result = FromDecimal(d);
+            return true;
+        }
+
+        result = Zero;
+        return false;
+    }
+
+    /// <summary>
+    /// Tries to convert the span representation of a number to its <see cref="FixedPointNano"/> equivalent.
+    /// Returns <see langword="false"/> if the conversion fails.
+    /// </summary>
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out FixedPointNano result)
+    {
+        if (decimal.TryParse(s, NumberStyles.Number, provider, out var d))
+        {
+            result = FromDecimal(d);
+            return true;
+        }
+
+        result = Zero;
+        return false;
     }
 
     public int CompareTo(object? obj)
@@ -132,62 +229,75 @@ public readonly struct FixedPointNano :
         return RawValue.GetHashCode();
     }
 
+    /// <summary>Converts this value to a <see cref="decimal"/>.</summary>
     public decimal ToDecimal()
     {
         return RawValue / (decimal)Scale;
     }
 
+    /// <summary>Converts this value to a <see cref="double"/>. May lose precision.</summary>
     public double ToDouble()
     {
         return RawValue / (double)Scale;
     }
 
+    /// <summary>Converts this value to a <see cref="float"/>. May lose precision.</summary>
     public float ToSingle()
     {
         return RawValue / (float)Scale;
     }
 
+    /// <summary>Converts this value to a <see cref="Half"/>. May lose precision.</summary>
     public Half ToHalf()
     {
         return (Half)ToSingle();
     }
 
+    /// <summary>Converts this value to a <see cref="BigInteger"/>, truncating any fractional part toward zero.</summary>
     public BigInteger ToBigInteger()
     {
         return new BigInteger(RawValue / Scale);
     }
 
+    /// <summary>Converts this value to an <see cref="Int128"/>, truncating any fractional part toward zero.</summary>
     public Int128 ToInt128()
     {
         return RawValue / Scale;
     }
 
+    /// <summary>Converts this value to a <see cref="UInt128"/>, truncating any fractional part toward zero.</summary>
+    /// <exception cref="OverflowException">Thrown when this value is negative.</exception>
     public UInt128 ToUInt128()
     {
         var truncatedValue = RawValue / Scale;
         return checked((UInt128)truncatedValue);
     }
 
+    /// <inheritdoc/>
     public override string ToString()
     {
         return ToDecimal().ToString(CultureInfo.CurrentCulture);
     }
 
+    /// <summary>Converts this value to its string representation using the specified format and the current culture.</summary>
     public string ToString(string? format)
     {
         return ToDecimal().ToString(format, CultureInfo.CurrentCulture);
     }
 
+    /// <inheritdoc/>
     public string ToString(IFormatProvider? formatProvider)
     {
         return ToDecimal().ToString(formatProvider);
     }
 
+    /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
         return ToDecimal().ToString(format, formatProvider);
     }
 
+    /// <inheritdoc/>
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         return ToDecimal().TryFormat(destination, out charsWritten, format, provider);
@@ -265,52 +375,52 @@ public readonly struct FixedPointNano :
 
     public static implicit operator FixedPointNano(byte value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano(value * Scale);
     }
 
     public static implicit operator FixedPointNano(sbyte value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano(value * Scale);
     }
 
     public static implicit operator FixedPointNano(short value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano(value * Scale);
     }
 
     public static implicit operator FixedPointNano(ushort value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano(value * Scale);
     }
 
     public static implicit operator FixedPointNano(int value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano((long)value * Scale);
     }
 
     public static implicit operator FixedPointNano(uint value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano((long)value * Scale);
     }
 
     public static implicit operator FixedPointNano(long value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano(checked(value * Scale));
     }
 
     public static explicit operator FixedPointNano(ulong value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano(checked((long)value * Scale));
     }
 
     public static implicit operator FixedPointNano(nint value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano(checked((long)value * Scale));
     }
 
     public static explicit operator FixedPointNano(nuint value)
     {
-        return FromDecimal(value);
+        return new FixedPointNano(checked((long)value * Scale));
     }
 
     public static explicit operator FixedPointNano(Half value)
@@ -350,52 +460,52 @@ public readonly struct FixedPointNano :
 
     public static explicit operator byte(FixedPointNano value)
     {
-        return checked((byte)decimal.Truncate(value.ToDecimal()));
+        return checked((byte)(value.RawValue / Scale));
     }
 
     public static explicit operator sbyte(FixedPointNano value)
     {
-        return checked((sbyte)decimal.Truncate(value.ToDecimal()));
+        return checked((sbyte)(value.RawValue / Scale));
     }
 
     public static explicit operator short(FixedPointNano value)
     {
-        return checked((short)decimal.Truncate(value.ToDecimal()));
+        return checked((short)(value.RawValue / Scale));
     }
 
     public static explicit operator ushort(FixedPointNano value)
     {
-        return checked((ushort)decimal.Truncate(value.ToDecimal()));
+        return checked((ushort)(value.RawValue / Scale));
     }
 
     public static explicit operator int(FixedPointNano value)
     {
-        return checked((int)decimal.Truncate(value.ToDecimal()));
+        return checked((int)(value.RawValue / Scale));
     }
 
     public static explicit operator uint(FixedPointNano value)
     {
-        return checked((uint)decimal.Truncate(value.ToDecimal()));
+        return checked((uint)(value.RawValue / Scale));
     }
 
     public static explicit operator long(FixedPointNano value)
     {
-        return checked((long)decimal.Truncate(value.ToDecimal()));
+        return value.RawValue / Scale;
     }
 
     public static explicit operator ulong(FixedPointNano value)
     {
-        return checked((ulong)decimal.Truncate(value.ToDecimal()));
+        return checked((ulong)(value.RawValue / Scale));
     }
 
     public static explicit operator nint(FixedPointNano value)
     {
-        return checked((nint)decimal.Truncate(value.ToDecimal()));
+        return checked((nint)(value.RawValue / Scale));
     }
 
     public static explicit operator nuint(FixedPointNano value)
     {
-        return checked((nuint)decimal.Truncate(value.ToDecimal()));
+        return checked((nuint)(value.RawValue / Scale));
     }
 
     public static explicit operator Half(FixedPointNano value)
@@ -545,17 +655,9 @@ public readonly struct FixedPointNano :
         return checked((ulong)this);
     }
 
-    private static void ThrowIfInvalidFloatingPoint(double value)
+    private static void ThrowIfInvalidFloatingPoint<T>(T value) where T : IFloatingPointIeee754<T>
     {
-        if (double.IsNaN(value) || double.IsInfinity(value))
-        {
-            throw new ArgumentOutOfRangeException(nameof(value), "Floating-point values must be finite.");
-        }
-    }
-
-    private static void ThrowIfInvalidFloatingPoint(float value)
-    {
-        if (float.IsNaN(value) || float.IsInfinity(value))
+        if (!T.IsFinite(value))
         {
             throw new ArgumentOutOfRangeException(nameof(value), "Floating-point values must be finite.");
         }

@@ -13,6 +13,8 @@ public sealed class FixedPointNanoTests
     {
         Assert.That(FixedPointNano.Zero.RawValue, Is.EqualTo(0L));
         Assert.That(FixedPointNano.One.RawValue, Is.EqualTo(FixedPointNano.Scale));
+        Assert.That(FixedPointNano.MaxValue.RawValue, Is.EqualTo(long.MaxValue));
+        Assert.That(FixedPointNano.MinValue.RawValue, Is.EqualTo(long.MinValue));
 
         var fromRaw = FixedPointNano.FromRaw(123456789L);
         var fromLong = (FixedPointNano)42L;
@@ -114,6 +116,31 @@ public sealed class FixedPointNanoTests
 
         Assert.That(() => FixedPointNano.Round(fractional, -1), Throws.TypeOf<ArgumentOutOfRangeException>());
         Assert.That(() => FixedPointNano.Round(fractional, 10), Throws.TypeOf<ArgumentOutOfRangeException>());
+        Assert.That(() => FixedPointNano.Abs(FixedPointNano.MinValue), Throws.TypeOf<OverflowException>());
+    }
+
+    [Test]
+    public void ParseAndTryParseShouldWork()
+    {
+        var invariant = CultureInfo.InvariantCulture;
+
+        Assert.That(FixedPointNano.Parse("1.5", invariant).ToDecimal(), Is.EqualTo(1.5m));
+        Assert.That(FixedPointNano.Parse("1.5".AsSpan(), invariant).ToDecimal(), Is.EqualTo(1.5m));
+        Assert.That(FixedPointNano.Parse("-123.456789123", invariant).ToDecimal(), Is.EqualTo(-123.456789123m));
+
+        Assert.That(FixedPointNano.TryParse("2.75", invariant, out var result1), Is.True);
+        Assert.That(result1.ToDecimal(), Is.EqualTo(2.75m));
+
+        Assert.That(FixedPointNano.TryParse("2.75".AsSpan(), invariant, out var result2), Is.True);
+        Assert.That(result2.ToDecimal(), Is.EqualTo(2.75m));
+
+        Assert.That(FixedPointNano.TryParse("not-a-number", invariant, out var result3), Is.False);
+        Assert.That(result3, Is.EqualTo(FixedPointNano.Zero));
+
+        Assert.That(FixedPointNano.TryParse((string?)null, invariant, out var result4), Is.False);
+        Assert.That(result4, Is.EqualTo(FixedPointNano.Zero));
+
+        Assert.That(() => FixedPointNano.Parse("not-a-number", invariant), Throws.TypeOf<FormatException>());
     }
 
     [Test]

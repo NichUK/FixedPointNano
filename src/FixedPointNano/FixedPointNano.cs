@@ -403,6 +403,11 @@ public readonly struct FixedPointNano :
         return new FixedPointNano((long)value * Scale);
     }
 
+    /// <summary>
+    /// Implicitly converts a <see cref="long"/> to a <see cref="FixedPointNano"/>.
+    /// The representable range is approximately ±9.223 billion; values outside this range will throw <see cref="OverflowException"/>.
+    /// </summary>
+    /// <exception cref="OverflowException">Thrown when <paramref name="value"/> is outside the representable range.</exception>
     public static implicit operator FixedPointNano(long value)
     {
         return new FixedPointNano(checked(value * Scale));
@@ -490,7 +495,7 @@ public readonly struct FixedPointNano :
 
     public static explicit operator long(FixedPointNano value)
     {
-        return value.RawValue / Scale;
+        return checked((long)(value.RawValue / Scale));
     }
 
     public static explicit operator ulong(FixedPointNano value)

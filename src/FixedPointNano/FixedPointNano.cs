@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
 
-namespace FixedPointNano;
+namespace Seerstone;
 
 [DebuggerDisplay("{ToString(),nq}")]
 public readonly struct FixedPointNano :

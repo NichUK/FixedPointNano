@@ -2,8 +2,9 @@ using System;
 using System.Globalization;
 using System.Numerics;
 using Moq;
+using Seerstone;
 
-namespace FixedPointNano.Tests;
+namespace Seerstone.Tests;
 
 [TestFixture]
 public sealed class FixedPointNanoTests

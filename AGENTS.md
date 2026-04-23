@@ -36,6 +36,9 @@ Create a scoped branch first.
 - `src/FixedPointNano/FixedPointNano.cs`
 - `tests/FixedPointNano.Tests/FixedPointNano.Tests.csproj`
 - `tests/FixedPointNano.Tests/FixedPointNanoTests.cs`
+- `benchmarks/FixedPointNano.Benchmarks/FixedPointNano.Benchmarks.csproj`
+- `benchmarks/FixedPointNano.Benchmarks/FixedPointNanoMathBenchmarks.cs`
+  - compares raw `FixedPointNano` math against decimal-reference and double-reference paths
 
 ## Current Runtime And Tooling
 
@@ -70,6 +73,16 @@ The current `FixedPointNano` type:
 - uses banker’s rounding (`MidpointRounding.ToEven`) when constructing from floating/decimal inputs
 - supports arithmetic operators `+`, `-`, unary `-`, `*`, `/`, `%`
 - supports comparisons and helper methods like `Abs`, `Min`, `Max`, `Round`, `Floor`, `Ceiling`, `Truncate`
+- supports fast fixed-point helper methods:
+  - `Divide(FixedPointNano, int)`
+  - `Divide(FixedPointNano, long)`
+  - `MultiplyRatio(FixedPointNano, long, long)`
+  - `Square(FixedPointNano)`
+  - `PopulationVariance(FixedPointNano, Int128, int)`
+  - `PopulationStandardDeviation(FixedPointNano, Int128, int)`
+  - `Sqrt(FixedPointNano)`
+- core arithmetic operators and math helpers use raw scaled integer arithmetic rather than decimal round-trips
+- `FromDouble` uses finite-only double scaling and midpoint-to-even raw rounding without decimal conversion
 - supports conversions for:
   - `byte`, `sbyte`
   - `short`, `ushort`
@@ -163,7 +176,9 @@ Suggested naming:
 - library code: `C:\Dev\FixedPointNano\src\FixedPointNano\FixedPointNano.cs`
 - library project: `C:\Dev\FixedPointNano\src\FixedPointNano\FixedPointNano.csproj`
 - tests: `C:\Dev\FixedPointNano\tests\FixedPointNano.Tests\FixedPointNanoTests.cs`
+- comparison tests: `C:\Dev\FixedPointNano\tests\FixedPointNano.Tests\FixedPointNanoMathComparisonTests.cs`
 - test project: `C:\Dev\FixedPointNano\tests\FixedPointNano.Tests\FixedPointNano.Tests.csproj`
+- benchmarks: `C:\Dev\FixedPointNano\benchmarks\FixedPointNano.Benchmarks`
 - solution: `C:\Dev\FixedPointNano\FixedPointNano.slnx`
 - style rules: `C:\Dev\FixedPointNano\.editorconfig`
 

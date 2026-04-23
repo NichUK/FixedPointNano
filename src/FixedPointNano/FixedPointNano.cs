@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Seerstone;
 
@@ -16,6 +17,21 @@ public readonly struct FixedPointNano :
 {
     public const int DecimalPlaces = 9;
     public const long Scale = 1_000_000_000L;
+    private const double MaxRawValueAsDoubleExclusive = 9_223_372_036_854_775_808d;
+    private const double MinRawValueAsDoubleInclusive = -9_223_372_036_854_775_808d;
+    private static readonly long[] s_roundingScales =
+    [
+        1_000_000_000L,
+        100_000_000L,
+        10_000_000L,
+        1_000_000L,
+        100_000L,
+        10_000L,
+        1_000L,
+        100L,
+        10L,
+        1L,
+    ];
 
     public static FixedPointNano Zero { get; } = new(0L);
     public static FixedPointNano One { get; } = new(Scale);
@@ -36,12 +52,26 @@ public readonly struct FixedPointNano :
 
     public static FixedPointNano Ceiling(FixedPointNano value)
     {
-        return FromDecimal(decimal.Ceiling(value.ToDecimal()));
+        var quotient = value.RawValue / Scale;
+        var remainder = value.RawValue % Scale;
+        if (remainder > 0)
+        {
+            quotient = checked(quotient + 1);
+        }
+
+        return new FixedPointNano(checked(quotient * Scale));
     }
 
     public static FixedPointNano Floor(FixedPointNano value)
     {
-        return FromDecimal(decimal.Floor(value.ToDecimal()));
+        var quotient = value.RawValue / Scale;
+        var remainder = value.RawValue % Scale;
+        if (remainder < 0)
+        {
+            quotient = checked(quotient - 1);
+        }
+
+        return new FixedPointNano(checked(quotient * Scale));
     }
 
     public static FixedPointNano FromDecimal(decimal value)
@@ -53,7 +83,19 @@ public readonly struct FixedPointNano :
     public static FixedPointNano FromDouble(double value)
     {
         ThrowIfInvalidFloatingPoint(value);
-        return FromDecimal((decimal)value);
+        var scaledValue = value * Scale;
+        if (double.IsInfinity(scaledValue))
+        {
+            throw new OverflowException("The value is outside the range of FixedPointNano.");
+        }
+
+        var roundedValue = Math.Round(scaledValue, MidpointRounding.ToEven);
+        if (roundedValue < MinRawValueAsDoubleInclusive || roundedValue >= MaxRawValueAsDoubleExclusive)
+        {
+            throw new OverflowException("The value is outside the range of FixedPointNano.");
+        }
+
+        return new FixedPointNano(checked((long)roundedValue));
     }
 
     public static FixedPointNano FromHalf(Half value)
@@ -69,7 +111,7 @@ public readonly struct FixedPointNano :
     public static FixedPointNano FromSingle(float value)
     {
         ThrowIfInvalidFloatingPoint(value);
-        return FromDecimal((decimal)value);
+        return FromDouble(value);
     }
 
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
@@ -89,12 +131,93 @@ public readonly struct FixedPointNano :
             throw new ArgumentOutOfRangeException(nameof(decimals), $"Decimals must be between 0 and {DecimalPlaces}.");
         }
 
-        return FromDecimal(decimal.Round(value.ToDecimal(), decimals, rounding));
+        ValidateRounding(rounding);
+        return new FixedPointNano(RoundRaw(value.RawValue, s_roundingScales[decimals], rounding));
+    }
+
+    public static FixedPointNano Divide(FixedPointNano value, int divisor)
+    {
+        return Divide(value, (long)divisor);
+    }
+
+    public static FixedPointNano Divide(FixedPointNano value, long divisor)
+    {
+        if (divisor == 0)
+        {
+            throw new DivideByZeroException();
+        }
+
+        return FromRawChecked(DivideRoundedToNearestEven(value.RawValue, divisor));
+    }
+
+    public static FixedPointNano MultiplyRatio(FixedPointNano value, long numerator, long denominator)
+    {
+        if (denominator == 0)
+        {
+            throw new DivideByZeroException();
+        }
+
+        var scaledNumerator = (Int128)value.RawValue * numerator;
+        return FromRawChecked(DivideRoundedToNearestEven(scaledNumerator, denominator));
+    }
+
+    public static FixedPointNano Square(FixedPointNano value)
+    {
+        return value * value;
+    }
+
+    public static FixedPointNano PopulationVariance(FixedPointNano sum, Int128 sumOfRawSquares, int count)
+    {
+        if (count <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater than zero.");
+        }
+
+        if (sumOfRawSquares < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sumOfRawSquares), "Sum of raw squares must not be negative.");
+        }
+
+        var countValue = (Int128)count;
+        var numerator = checked((sumOfRawSquares * countValue) - ((Int128)sum.RawValue * sum.RawValue));
+        if (numerator < 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(sumOfRawSquares),
+                "Sum of raw squares is inconsistent with the supplied sum and count.");
+        }
+
+        var denominator = checked(countValue * countValue * Scale);
+        return FromRawChecked(DivideRoundedToNearestEven(numerator, denominator));
+    }
+
+    public static FixedPointNano PopulationStandardDeviation(FixedPointNano sum, Int128 sumOfRawSquares, int count)
+    {
+        return Sqrt(PopulationVariance(sum, sumOfRawSquares, count));
+    }
+
+    public static FixedPointNano Sqrt(FixedPointNano value)
+    {
+        if (value.RawValue < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), "Square root input must not be negative.");
+        }
+
+        if (value.RawValue == 0)
+        {
+            return value;
+        }
+
+        var target = checked((UInt128)((Int128)value.RawValue * Scale));
+        var rawValue = target <= ulong.MaxValue
+            ? SquareRootRoundedToNearestEven((ulong)target)
+            : SquareRootRoundedToNearestEven(target);
+        return FromRawChecked((Int128)rawValue);
     }
 
     public static FixedPointNano Truncate(FixedPointNano value)
     {
-        return FromDecimal(decimal.Truncate(value.ToDecimal()));
+        return new FixedPointNano((value.RawValue / Scale) * Scale);
     }
 
     public int CompareTo(object? obj)
@@ -210,7 +333,8 @@ public readonly struct FixedPointNano :
 
     public static FixedPointNano operator *(FixedPointNano left, FixedPointNano right)
     {
-        return FromDecimal(left.ToDecimal() * right.ToDecimal());
+        var product = (Int128)left.RawValue * right.RawValue;
+        return FromRawChecked(DivideRoundedToNearestEven(product, Scale));
     }
 
     public static FixedPointNano operator /(FixedPointNano left, FixedPointNano right)
@@ -220,7 +344,8 @@ public readonly struct FixedPointNano :
             throw new DivideByZeroException();
         }
 
-        return FromDecimal(left.ToDecimal() / right.ToDecimal());
+        var numerator = (Int128)left.RawValue * Scale;
+        return FromRawChecked(DivideRoundedToNearestEven(numerator, right.RawValue));
     }
 
     public static FixedPointNano operator %(FixedPointNano left, FixedPointNano right)
@@ -230,7 +355,7 @@ public readonly struct FixedPointNano :
             throw new DivideByZeroException();
         }
 
-        return FromDecimal(left.ToDecimal() % right.ToDecimal());
+        return new FixedPointNano(left.RawValue % right.RawValue);
     }
 
     public static bool operator ==(FixedPointNano left, FixedPointNano right)
@@ -265,52 +390,52 @@ public readonly struct FixedPointNano :
 
     public static implicit operator FixedPointNano(byte value)
     {
-        return FromDecimal(value);
+        return FromInteger((long)value);
     }
 
     public static implicit operator FixedPointNano(sbyte value)
     {
-        return FromDecimal(value);
+        return FromInteger((long)value);
     }
 
     public static implicit operator FixedPointNano(short value)
     {
-        return FromDecimal(value);
+        return FromInteger((long)value);
     }
 
     public static implicit operator FixedPointNano(ushort value)
     {
-        return FromDecimal(value);
+        return FromInteger((long)value);
     }
 
     public static implicit operator FixedPointNano(int value)
     {
-        return FromDecimal(value);
+        return FromInteger((long)value);
     }
 
     public static implicit operator FixedPointNano(uint value)
     {
-        return FromDecimal(value);
+        return FromInteger((ulong)value);
     }
 
     public static implicit operator FixedPointNano(long value)
     {
-        return FromDecimal(value);
+        return FromInteger(value);
     }
 
     public static explicit operator FixedPointNano(ulong value)
     {
-        return FromDecimal(value);
+        return FromInteger(value);
     }
 
     public static implicit operator FixedPointNano(nint value)
     {
-        return FromDecimal(value);
+        return FromInteger((long)value);
     }
 
     public static explicit operator FixedPointNano(nuint value)
     {
-        return FromDecimal(value);
+        return FromInteger((ulong)value);
     }
 
     public static explicit operator FixedPointNano(Half value)
@@ -335,67 +460,67 @@ public readonly struct FixedPointNano :
 
     public static explicit operator FixedPointNano(Int128 value)
     {
-        return FromDecimal(decimal.CreateChecked(value));
+        return FromInteger(value);
     }
 
     public static explicit operator FixedPointNano(UInt128 value)
     {
-        return FromDecimal(decimal.CreateChecked(value));
+        return FromInteger(value);
     }
 
     public static explicit operator FixedPointNano(BigInteger value)
     {
-        return FromDecimal((decimal)value);
+        return FromInteger(value);
     }
 
     public static explicit operator byte(FixedPointNano value)
     {
-        return checked((byte)decimal.Truncate(value.ToDecimal()));
+        return checked((byte)(value.RawValue / Scale));
     }
 
     public static explicit operator sbyte(FixedPointNano value)
     {
-        return checked((sbyte)decimal.Truncate(value.ToDecimal()));
+        return checked((sbyte)(value.RawValue / Scale));
     }
 
     public static explicit operator short(FixedPointNano value)
     {
-        return checked((short)decimal.Truncate(value.ToDecimal()));
+        return checked((short)(value.RawValue / Scale));
     }
 
     public static explicit operator ushort(FixedPointNano value)
     {
-        return checked((ushort)decimal.Truncate(value.ToDecimal()));
+        return checked((ushort)(value.RawValue / Scale));
     }
 
     public static explicit operator int(FixedPointNano value)
     {
-        return checked((int)decimal.Truncate(value.ToDecimal()));
+        return checked((int)(value.RawValue / Scale));
     }
 
     public static explicit operator uint(FixedPointNano value)
     {
-        return checked((uint)decimal.Truncate(value.ToDecimal()));
+        return checked((uint)(value.RawValue / Scale));
     }
 
     public static explicit operator long(FixedPointNano value)
     {
-        return checked((long)decimal.Truncate(value.ToDecimal()));
+        return value.RawValue / Scale;
     }
 
     public static explicit operator ulong(FixedPointNano value)
     {
-        return checked((ulong)decimal.Truncate(value.ToDecimal()));
+        return checked((ulong)(value.RawValue / Scale));
     }
 
     public static explicit operator nint(FixedPointNano value)
     {
-        return checked((nint)decimal.Truncate(value.ToDecimal()));
+        return checked((nint)(value.RawValue / Scale));
     }
 
     public static explicit operator nuint(FixedPointNano value)
     {
-        return checked((nuint)decimal.Truncate(value.ToDecimal()));
+        return checked((nuint)(value.RawValue / Scale));
     }
 
     public static explicit operator Half(FixedPointNano value)
@@ -543,6 +668,210 @@ public readonly struct FixedPointNano :
     ulong IConvertible.ToUInt64(IFormatProvider? provider)
     {
         return checked((ulong)this);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static FixedPointNano FromRawChecked(Int128 rawValue)
+    {
+        return new FixedPointNano(checked((long)rawValue));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static FixedPointNano FromInteger(long value)
+    {
+        return new FixedPointNano(checked(value * Scale));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static FixedPointNano FromInteger(ulong value)
+    {
+        if (value > long.MaxValue / (ulong)Scale)
+        {
+            throw new OverflowException("The value is outside the range of FixedPointNano.");
+        }
+
+        return new FixedPointNano(checked((long)value * Scale));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static FixedPointNano FromInteger(Int128 value)
+    {
+        return FromRawChecked(checked(value * Scale));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static FixedPointNano FromInteger(UInt128 value)
+    {
+        if (value > (UInt128)(long.MaxValue / Scale))
+        {
+            throw new OverflowException("The value is outside the range of FixedPointNano.");
+        }
+
+        return new FixedPointNano(checked((long)value * Scale));
+    }
+
+    private static FixedPointNano FromInteger(BigInteger value)
+    {
+        var rawValue = value * Scale;
+        if (rawValue < long.MinValue || rawValue > long.MaxValue)
+        {
+            throw new OverflowException("The value is outside the range of FixedPointNano.");
+        }
+
+        return new FixedPointNano((long)rawValue);
+    }
+
+    private static Int128 DivideRoundedToNearestEven(Int128 numerator, Int128 denominator)
+    {
+        if (denominator < 0)
+        {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+
+        if (numerator < 0)
+        {
+            return -DivideRoundedToNearestEven(-numerator, denominator);
+        }
+
+        var quotient = numerator / denominator;
+        var remainder = numerator % denominator;
+        var twiceRemainder = remainder * 2;
+        if (twiceRemainder < denominator)
+        {
+            return quotient;
+        }
+
+        if (twiceRemainder > denominator)
+        {
+            return quotient + 1;
+        }
+
+        return quotient % 2 == 0 ? quotient : quotient + 1;
+    }
+
+    private static long RoundRaw(long rawValue, long quantum, MidpointRounding rounding)
+    {
+        var quotient = rawValue / quantum;
+        var remainder = rawValue % quantum;
+        if (remainder == 0)
+        {
+            return rawValue;
+        }
+
+        var sign = rawValue < 0 ? -1L : 1L;
+        var absoluteRemainder = remainder < 0 ? -remainder : remainder;
+        var twiceRemainder = absoluteRemainder * 2;
+
+        long adjustedQuotient;
+        if (rounding == MidpointRounding.ToEven)
+        {
+            adjustedQuotient = twiceRemainder < quantum
+                ? quotient
+                : twiceRemainder > quantum
+                    ? checked(quotient + sign)
+                    : quotient % 2 == 0 ? quotient : checked(quotient + sign);
+        }
+        else if (rounding == MidpointRounding.AwayFromZero)
+        {
+            adjustedQuotient = twiceRemainder >= quantum ? checked(quotient + sign) : quotient;
+        }
+        else if (rounding == MidpointRounding.ToZero)
+        {
+            adjustedQuotient = quotient;
+        }
+        else if (rounding == MidpointRounding.ToNegativeInfinity)
+        {
+            adjustedQuotient = rawValue < 0 ? checked(quotient - 1) : quotient;
+        }
+        else
+        {
+            adjustedQuotient = rawValue > 0 ? checked(quotient + 1) : quotient;
+        }
+
+        return checked(adjustedQuotient * quantum);
+    }
+
+    private static void ValidateRounding(MidpointRounding rounding)
+    {
+        _ = rounding switch
+        {
+            MidpointRounding.ToEven => rounding,
+            MidpointRounding.AwayFromZero => rounding,
+            MidpointRounding.ToZero => rounding,
+            MidpointRounding.ToNegativeInfinity => rounding,
+            MidpointRounding.ToPositiveInfinity => rounding,
+            _ => throw new ArgumentOutOfRangeException(nameof(rounding), rounding, "Unsupported midpoint rounding mode."),
+        };
+    }
+
+    private static UInt128 SquareRootRoundedToNearestEven(ulong value)
+    {
+        var floor = (ulong)Math.Sqrt(value);
+        if (floor > uint.MaxValue)
+        {
+            floor = uint.MaxValue;
+        }
+
+        while (floor * floor > value)
+        {
+            floor--;
+        }
+
+        while (floor < uint.MaxValue)
+        {
+            var candidate = floor + 1;
+            if (candidate * candidate > value)
+            {
+                break;
+            }
+
+            floor = candidate;
+        }
+
+        var next = floor + 1;
+        var floorSquare = floor * floor;
+        var nextSquare = (UInt128)next * next;
+        var distanceToFloor = value - floorSquare;
+        var distanceToNext = nextSquare - value;
+        if (distanceToNext < distanceToFloor)
+        {
+            return next;
+        }
+
+        return floor;
+    }
+
+    private static UInt128 SquareRootRoundedToNearestEven(UInt128 value)
+    {
+        var floor = (UInt128)Math.Sqrt((double)value);
+        while (floor * floor > value)
+        {
+            floor--;
+        }
+
+        while (true)
+        {
+            var candidate = floor + 1;
+            if (candidate * candidate > value)
+            {
+                break;
+            }
+
+            floor = candidate;
+        }
+
+        var next = floor + 1;
+        var floorSquare = floor * floor;
+        var nextSquare = next * next;
+        var distanceToFloor = value - floorSquare;
+        var distanceToNext = nextSquare - value;
+        if (distanceToNext < distanceToFloor)
+        {
+            return next;
+        }
+
+        return floor;
     }
 
     private static void ThrowIfInvalidFloatingPoint(double value)

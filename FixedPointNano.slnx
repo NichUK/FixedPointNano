@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/FixedPointNano.Benchmarks/FixedPointNano.Benchmarks.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/FixedPointNano/FixedPointNano.csproj" />
   </Folder>

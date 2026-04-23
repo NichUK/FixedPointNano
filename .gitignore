@@ -1,6 +1,7 @@
 bin/
 obj/
 TestResults/
+BenchmarkDotNet.Artifacts/
 .vs/
 *.user
 *.suo

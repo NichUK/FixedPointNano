@@ -60,7 +60,8 @@ public readonly struct FixedPointNano :
     /// <summary>The underlying scaled integer. Divide by <see cref="Scale"/> to obtain the decimal value.</summary>
     public long RawValue { get; }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Returns the absolute value of <paramref name="value"/>.</summary>
+    /// <exception cref="OverflowException">Thrown when <paramref name="value"/> is <see cref="MinValue"/>.</exception>
     public static FixedPointNano Abs(FixedPointNano value)
     {
         return value.RawValue < 0
@@ -130,7 +131,7 @@ public readonly struct FixedPointNano :
         return FromSingle((float)value);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Creates a <see cref="FixedPointNano"/> directly from a pre-scaled raw value.</summary>
     public static FixedPointNano FromRaw(long rawValue)
     {
         return new FixedPointNano(rawValue);
@@ -145,33 +146,23 @@ public readonly struct FixedPointNano :
         return FromDouble(value);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Returns the larger of two values.</summary>
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Returns the smaller of two values.</summary>
     public static FixedPointNano Min(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue <= right.RawValue ? left : right;
     }
 
-    public static FixedPointNano Clamp(FixedPointNano value, FixedPointNano min, FixedPointNano max)
-    {
-        if (min.RawValue > max.RawValue)
-        {
-            throw new ArgumentOutOfRangeException(nameof(min), "min must be less than or equal to max.");
-        }
-
-        return value.RawValue < min.RawValue ? min : value.RawValue > max.RawValue ? max : value;
-    }
-
-    public static int Sign(FixedPointNano value)
-    {
-        return value.RawValue < 0 ? -1 : value.RawValue > 0 ? 1 : 0;
-    }
-
+    /// <summary>Rounds <paramref name="value"/> to <paramref name="decimals"/> decimal places using the specified <paramref name="rounding"/> mode.</summary>
+    /// <param name="value">The value to round.</param>
+    /// <param name="decimals">The number of decimal places (0–9).</param>
+    /// <param name="rounding">The midpoint rounding strategy. Defaults to <see cref="MidpointRounding.ToEven"/>.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="decimals"/> is outside 0–9 or <paramref name="rounding"/> is unrecognised.</exception>
     public static FixedPointNano Round(FixedPointNano value, int decimals, MidpointRounding rounding = MidpointRounding.ToEven)
     {
         if (decimals is < 0 or > DecimalPlaces)
@@ -278,7 +269,7 @@ public readonly struct FixedPointNano :
         return FromRawChecked((Int128)rawValue);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Returns the integral part of <paramref name="value"/>, discarding the fractional portion (truncation toward zero).</summary>
     public static FixedPointNano Truncate(FixedPointNano value)
     {
         return new FixedPointNano((value.RawValue / Scale) * Scale);

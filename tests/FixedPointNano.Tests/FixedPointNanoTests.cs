@@ -287,6 +287,49 @@ public sealed class FixedPointNanoTests
         });
     }
 
+    [Test]
+    public void ParseAndTryParseShouldWork()
+    {
+        Assert.Multiple(() =>
+        {
+            // Parse string
+            Assert.That(FixedPointNano.Parse("123.456789123").ToDecimal(), Is.EqualTo(123.456789123m));
+            Assert.That(FixedPointNano.Parse("-42.5").ToDecimal(), Is.EqualTo(-42.5m));
+            Assert.That(FixedPointNano.Parse("0").ToDecimal(), Is.EqualTo(0m));
+
+            // Parse ReadOnlySpan<char>
+            Assert.That(FixedPointNano.Parse("987.654321".AsSpan()).ToDecimal(), Is.EqualTo(987.654321m));
+
+            // TryParse string — valid input
+            Assert.That(FixedPointNano.TryParse("1.5", null, out var result1), Is.True);
+            Assert.That(result1.ToDecimal(), Is.EqualTo(1.5m));
+
+            // TryParse string — invalid input
+            Assert.That(FixedPointNano.TryParse("not-a-number", null, out var result2), Is.False);
+            Assert.That(result2, Is.EqualTo(FixedPointNano.Zero));
+
+            // TryParse string — null input
+            Assert.That(FixedPointNano.TryParse(null, null, out var result3), Is.False);
+            Assert.That(result3, Is.EqualTo(FixedPointNano.Zero));
+
+            // TryParse ReadOnlySpan<char> — valid
+            Assert.That(FixedPointNano.TryParse("-3.14".AsSpan(), null, out var result4), Is.True);
+            Assert.That(result4.ToDecimal(), Is.EqualTo(-3.14m));
+
+            // TryParse ReadOnlySpan<char> — invalid
+            Assert.That(FixedPointNano.TryParse("abc".AsSpan(), null, out var result5), Is.False);
+            Assert.That(result5, Is.EqualTo(FixedPointNano.Zero));
+
+            // IParsable round-trip
+            var original = FixedPointNano.FromDecimal(99.999999999m);
+            var parsed = FixedPointNano.Parse(original.ToString(), null);
+            Assert.That(parsed.ToDecimal(), Is.EqualTo(original.ToDecimal()));
+
+            // Out-of-range value returns false from TryParse
+            Assert.That(FixedPointNano.TryParse("9999999999999999999", null, out _), Is.False);
+        });
+    }
+
     private sealed class CultureScope : IDisposable
     {
         private readonly CultureInfo _originalCulture;

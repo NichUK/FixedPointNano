@@ -13,6 +13,8 @@ public readonly struct FixedPointNano :
     IEquatable<FixedPointNano>,
     IFormattable,
     ISpanFormattable,
+    IParsable<FixedPointNano>,
+    ISpanParsable<FixedPointNano>,
     IConvertible
 {
     public const int DecimalPlaces = 9;
@@ -218,6 +220,48 @@ public readonly struct FixedPointNano :
     public static FixedPointNano Truncate(FixedPointNano value)
     {
         return new FixedPointNano((value.RawValue / Scale) * Scale);
+    }
+
+    public static FixedPointNano Parse(string s, IFormatProvider? provider = null)
+    {
+        return FromDecimal(decimal.Parse(s, provider));
+    }
+
+    public static FixedPointNano Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null)
+    {
+        return FromDecimal(decimal.Parse(s, provider));
+    }
+
+    public static bool TryParse(string? s, IFormatProvider? provider, out FixedPointNano result)
+    {
+        if (s is not null && decimal.TryParse(s, provider, out var d))
+        {
+            try
+            {
+                result = FromDecimal(d);
+                return true;
+            }
+            catch (OverflowException) { }
+        }
+
+        result = Zero;
+        return false;
+    }
+
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out FixedPointNano result)
+    {
+        if (decimal.TryParse(s, provider, out var d))
+        {
+            try
+            {
+                result = FromDecimal(d);
+                return true;
+            }
+            catch (OverflowException) { }
+        }
+
+        result = Zero;
+        return false;
     }
 
     public int CompareTo(object? obj)

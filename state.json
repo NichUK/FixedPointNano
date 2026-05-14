@@ -1,21 +1,23 @@
 {
-  "last_run": "2026-05-13T14:44:22Z",
-  "last_run_id": "25802335405",
-  "monthly_summary_issue": null,
-  "notes": "Monthly summary issue created this run - need to check actual issue number. PRs #4 (CI workflow) and #5 (test improvements) created. PR #1 (copilot full code review) still open since April 12.",
+  "last_run": "2026-05-14T01:27:12Z",
+  "last_run_id": "25836161162",
+  "monthly_summary_issue": 6,
+  "notes": "Two branches proposed this run: eng-global-json-sdk-fix-2026-05-14 (global.json + csproj) and improve-parse-tryparse-2026-05-14 (Parse/TryParse). PR creation via safeoutputs returned patches only. Testing branch from previous run (improve-testing-2026-05-13-ada4040c508be994) still pending. PR #1 (Copilot full code review) still open since April 12. CI workflow blocked by workflow permissions.",
   "comments_made": [],
   "fix_attempts": [],
   "open_repo_assist_prs": [
-    {"pr": 4, "title": "Add CI workflow for build and test", "branch": "repo-assist/eng-ci-workflow-2026-05-13"},
-    {"pr": 5, "title": "Add explicit edge-case and fast-math unit tests", "branch": "repo-assist/improve-testing-2026-05-13"}
+    {"branch": "repo-assist/improve-testing-2026-05-13-ada4040c508be994", "title": "Add explicit edge-case and fast-math unit tests", "issue": 5},
+    {"branch": "repo-assist/eng-global-json-sdk-fix-2026-05-14", "title": "Fix SDK roll-forward strategy and improve NuGet package metadata"},
+    {"branch": "repo-assist/improve-parse-tryparse-2026-05-14", "title": "Add Parse/TryParse and implement IParsable<T>/ISpanParsable<T>"}
   ],
   "backlog_cursor": {
     "issues": 0,
     "prs": 0
   },
   "engineering_checks": {
-    "last_checked": "2026-05-13",
-    "ci_workflow_added": true,
-    "sdk_version": "10.0.203 (pinned by user, local env only has 10.0.201)"
+    "last_checked": "2026-05-14",
+    "ci_workflow_added": false,
+    "sdk_rollforward_fixed": true,
+    "sdk_version_floor": "10.0.201"
   }
 }

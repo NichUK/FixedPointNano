@@ -1,14 +1,15 @@
 {
-  "last_run": "2026-05-14T01:27:12Z",
-  "last_run_id": "25836161162",
+  "last_run": "2026-05-14T13:25:15Z",
+  "last_run_id": "25862250598",
   "monthly_summary_issue": 6,
-  "notes": "Two branches proposed this run: eng-global-json-sdk-fix-2026-05-14 (global.json + csproj) and improve-parse-tryparse-2026-05-14 (Parse/TryParse). PR creation via safeoutputs returned patches only. Testing branch from previous run (improve-testing-2026-05-13-ada4040c508be994) still pending. PR #1 (Copilot full code review) still open since April 12. CI workflow blocked by workflow permissions.",
+  "notes": "Run 2026-05-14T13:25: Tasks 9+10. Submitted testing branch PR (improve-testing-2026-05-13-ada4040c508be994 with global.json fix) and maxvalue/xmldocs branch PR (improve-maxvalue-xmldocs-2026-05-14). Both via safeoutputs (patches only). PR #1 (Copilot) still open overlaps with parse/tryparse and xmldocs work.",
   "comments_made": [],
   "fix_attempts": [],
   "open_repo_assist_prs": [
     {"branch": "repo-assist/improve-testing-2026-05-13-ada4040c508be994", "title": "Add explicit edge-case and fast-math unit tests", "issue": 5},
-    {"branch": "repo-assist/eng-global-json-sdk-fix-2026-05-14", "title": "Fix SDK roll-forward strategy and improve NuGet package metadata"},
-    {"branch": "repo-assist/improve-parse-tryparse-2026-05-14", "title": "Add Parse/TryParse and implement IParsable<T>/ISpanParsable<T>"}
+    {"branch": "repo-assist/eng-global-json-sdk-fix-2026-05-14-f994d1092901ebce", "title": "Fix SDK roll-forward strategy and improve NuGet package metadata", "issue": 7},
+    {"branch": "repo-assist/improve-parse-tryparse-2026-05-14-f71108bea411c774", "title": "Add Parse/TryParse and implement IParsable/ISpanParsable", "issue": 8},
+    {"branch": "repo-assist/improve-maxvalue-xmldocs-2026-05-14", "title": "Add MaxValue/MinValue, XML docs, GenerateDocumentationFile"}
   ],
   "backlog_cursor": {
     "issues": 0,

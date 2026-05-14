@@ -6,6 +6,10 @@ using System.Runtime.CompilerServices;
 
 namespace Seerstone;
 
+/// <summary>
+/// A <see langword="long"/>-backed fixed-point numeric type with a scale of 1,000,000,000 (10<sup>9</sup>),
+/// providing 9 decimal places of precision. Arithmetic is deterministic and allocation-free.
+/// </summary>
 [DebuggerDisplay("{ToString(),nq}")]
 public readonly struct FixedPointNano :
     IComparable,
@@ -17,7 +21,9 @@ public readonly struct FixedPointNano :
     ISpanParsable<FixedPointNano>,
     IConvertible
 {
+    /// <summary>The number of decimal places: 9.</summary>
     public const int DecimalPlaces = 9;
+    /// <summary>The scale factor applied to all raw values: 1,000,000,000.</summary>
     public const long Scale = 1_000_000_000L;
     private const double MaxRawValueAsDoubleExclusive = 9_223_372_036_854_775_808d;
     private const double MinRawValueAsDoubleInclusive = -9_223_372_036_854_775_808d;
@@ -35,19 +41,27 @@ public readonly struct FixedPointNano :
         1L,
     ];
 
+    /// <summary>The zero value (0).</summary>
     public static FixedPointNano Zero { get; } = new(0L);
+    /// <summary>The value one (1).</summary>
     public static FixedPointNano One { get; } = new(Scale);
+    /// <summary>The maximum representable value (raw value <see cref="long.MaxValue"/>: approximately ±9.223 billion).</summary>
     public static FixedPointNano MaxValue { get; } = new(long.MaxValue);
+    /// <summary>The minimum representable value (raw value <see cref="long.MinValue"/>: approximately −9.223 billion).</summary>
     public static FixedPointNano MinValue { get; } = new(long.MinValue);
 
+    /// <summary>Initializes a new instance from a raw scaled <see langword="long"/> value.</summary>
+    /// <param name="rawValue">The pre-scaled integer value (not divided by <see cref="Scale"/>).</param>
     public FixedPointNano(long rawValue)
     {
         RawValue = rawValue;
     }
 
+    /// <summary>The underlying scaled integer. Divide by <see cref="Scale"/> to obtain the decimal value.</summary>
     public long RawValue { get; }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Returns the absolute value of <paramref name="value"/>.</summary>
+    /// <exception cref="OverflowException">Thrown when <paramref name="value"/> is <see cref="MinValue"/>.</exception>
     public static FixedPointNano Abs(FixedPointNano value)
     {
         return value.RawValue < 0
@@ -55,6 +69,7 @@ public readonly struct FixedPointNano :
             : value;
     }
 
+    /// <summary>Returns the smallest integral value that is greater than or equal to <paramref name="value"/>.</summary>
     public static FixedPointNano Ceiling(FixedPointNano value)
     {
         var quotient = value.RawValue / Scale;
@@ -67,6 +82,7 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(checked(quotient * Scale));
     }
 
+    /// <summary>Returns the largest integral value that is less than or equal to <paramref name="value"/>.</summary>
     public static FixedPointNano Floor(FixedPointNano value)
     {
         var quotient = value.RawValue / Scale;
@@ -79,12 +95,17 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(checked(quotient * Scale));
     }
 
+    /// <summary>Converts a <see cref="decimal"/> to <see cref="FixedPointNano"/> using banker's rounding (ToEven).</summary>
+    /// <exception cref="OverflowException">Thrown when <paramref name="value"/> is outside the representable range.</exception>
     public static FixedPointNano FromDecimal(decimal value)
     {
         var scaledValue = decimal.Round(value * Scale, 0, MidpointRounding.ToEven);
         return new FixedPointNano(decimal.ToInt64(scaledValue));
     }
 
+    /// <summary>Converts a finite <see cref="double"/> to <see cref="FixedPointNano"/> using banker's rounding (ToEven).</summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="value"/> is NaN or infinite.</exception>
+    /// <exception cref="OverflowException">Thrown when <paramref name="value"/> is outside the representable range.</exception>
     public static FixedPointNano FromDouble(double value)
     {
         ThrowIfInvalidFloatingPoint(value);
@@ -103,65 +124,45 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(checked((long)roundedValue));
     }
 
+    /// <summary>Converts a finite <see cref="Half"/> to <see cref="FixedPointNano"/>.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="value"/> is NaN or infinite.</exception>
     public static FixedPointNano FromHalf(Half value)
     {
         return FromSingle((float)value);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Creates a <see cref="FixedPointNano"/> directly from a pre-scaled raw value.</summary>
     public static FixedPointNano FromRaw(long rawValue)
     {
         return new FixedPointNano(rawValue);
     }
 
+    /// <summary>Converts a finite <see cref="float"/> to <see cref="FixedPointNano"/>.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="value"/> is NaN or infinite.</exception>
+    /// <exception cref="OverflowException">Thrown when <paramref name="value"/> is outside the representable range.</exception>
     public static FixedPointNano FromSingle(float value)
     {
         ThrowIfInvalidFloatingPoint(value);
         return FromDouble(value);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Returns the larger of two values.</summary>
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Returns the smaller of two values.</summary>
     public static FixedPointNano Min(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue <= right.RawValue ? left : right;
     }
 
-    public static FixedPointNano Clamp(FixedPointNano value, FixedPointNano min, FixedPointNano max)
-    {
-        if (min.RawValue > max.RawValue)
-        {
-            throw new ArgumentException($"'{nameof(min)}' cannot be greater than '{nameof(max)}'.");
-        }
-
-        if (value.RawValue < min.RawValue)
-        {
-            return min;
-        }
-
-        if (value.RawValue > max.RawValue)
-        {
-            return max;
-        }
-
-        return value;
-    }
-
-    public static int Sign(FixedPointNano value)
-    {
-        return value.RawValue switch
-        {
-            > 0 => 1,
-            < 0 => -1,
-            _ => 0,
-        };
-    }
-
+    /// <summary>Rounds <paramref name="value"/> to <paramref name="decimals"/> decimal places using the specified <paramref name="rounding"/> mode.</summary>
+    /// <param name="value">The value to round.</param>
+    /// <param name="decimals">The number of decimal places (0–9).</param>
+    /// <param name="rounding">The midpoint rounding strategy. Defaults to <see cref="MidpointRounding.ToEven"/>.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="decimals"/> is outside 0–9 or <paramref name="rounding"/> is unrecognised.</exception>
     public static FixedPointNano Round(FixedPointNano value, int decimals, MidpointRounding rounding = MidpointRounding.ToEven)
     {
         if (decimals is < 0 or > DecimalPlaces)
@@ -173,12 +174,15 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(RoundRaw(value.RawValue, s_roundingScales[decimals], rounding));
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Divides <paramref name="value"/> by an integer <paramref name="divisor"/> with banker's rounding.</summary>
+    /// <exception cref="DivideByZeroException">Thrown when <paramref name="divisor"/> is zero.</exception>
     public static FixedPointNano Divide(FixedPointNano value, int divisor)
     {
         return Divide(value, (long)divisor);
     }
 
+    /// <summary>Divides <paramref name="value"/> by a <see langword="long"/> <paramref name="divisor"/> with banker's rounding.</summary>
+    /// <exception cref="DivideByZeroException">Thrown when <paramref name="divisor"/> is zero.</exception>
     public static FixedPointNano Divide(FixedPointNano value, long divisor)
     {
         if (divisor == 0)
@@ -189,6 +193,8 @@ public readonly struct FixedPointNano :
         return FromRawChecked(DivideRoundedToNearestEven(value.RawValue, divisor));
     }
 
+    /// <summary>Computes <c>value * numerator / denominator</c> with banker's rounding, using 128-bit intermediate arithmetic to avoid overflow.</summary>
+    /// <exception cref="DivideByZeroException">Thrown when <paramref name="denominator"/> is zero.</exception>
     public static FixedPointNano MultiplyRatio(FixedPointNano value, long numerator, long denominator)
     {
         if (denominator == 0)
@@ -200,11 +206,17 @@ public readonly struct FixedPointNano :
         return FromRawChecked(DivideRoundedToNearestEven(scaledNumerator, denominator));
     }
 
+    /// <summary>Returns <c>value²</c>.</summary>
     public static FixedPointNano Square(FixedPointNano value)
     {
         return value * value;
     }
 
+    /// <summary>Computes the population variance from pre-aggregated statistics.</summary>
+    /// <param name="sum">The sum of all values.</param>
+    /// <param name="sumOfRawSquares">The sum of each element's <see cref="RawValue"/> squared.</param>
+    /// <param name="count">The number of values (must be &gt; 0).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count"/> ≤ 0 or statistics are inconsistent.</exception>
     public static FixedPointNano PopulationVariance(FixedPointNano sum, Int128 sumOfRawSquares, int count)
     {
         if (count <= 0)
@@ -230,11 +242,14 @@ public readonly struct FixedPointNano :
         return FromRawChecked(DivideRoundedToNearestEven(numerator, denominator));
     }
 
+    /// <summary>Computes the population standard deviation from pre-aggregated statistics. See <see cref="PopulationVariance"/>.</summary>
     public static FixedPointNano PopulationStandardDeviation(FixedPointNano sum, Int128 sumOfRawSquares, int count)
     {
         return Sqrt(PopulationVariance(sum, sumOfRawSquares, count));
     }
 
+    /// <summary>Returns the square root of <paramref name="value"/>, rounded to nearest (banker's rounding).</summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="value"/> is negative.</exception>
     public static FixedPointNano Sqrt(FixedPointNano value)
     {
         if (value.RawValue < 0)
@@ -254,7 +269,7 @@ public readonly struct FixedPointNano :
         return FromRawChecked((Int128)rawValue);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Returns the integral part of <paramref name="value"/>, discarding the fractional portion (truncation toward zero).</summary>
     public static FixedPointNano Truncate(FixedPointNano value)
     {
         return new FixedPointNano((value.RawValue / Scale) * Scale);
@@ -341,25 +356,25 @@ public readonly struct FixedPointNano :
         return RawValue.GetHashCode();
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Converts this value to <see cref="decimal"/>. The result is exact to <see cref="DecimalPlaces"/> decimal places.</summary>
     public decimal ToDecimal()
     {
         return RawValue / (decimal)Scale;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Converts this value to <see cref="double"/>. Precision beyond ~15 significant digits may be lost.</summary>
     public double ToDouble()
     {
         return RawValue / (double)Scale;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Converts this value to <see cref="float"/>. Significant precision loss is expected.</summary>
     public float ToSingle()
     {
         return RawValue / (float)Scale;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>Converts this value to <see cref="Half"/>. Significant precision loss is expected.</summary>
     public Half ToHalf()
     {
         return (Half)ToSingle();
@@ -381,11 +396,13 @@ public readonly struct FixedPointNano :
         return checked((UInt128)truncatedValue);
     }
 
+    /// <summary>Returns a string representation using the current culture's format.</summary>
     public override string ToString()
     {
         return ToDecimal().ToString(CultureInfo.CurrentCulture);
     }
 
+    /// <summary>Returns a formatted string using the specified numeric format string and current culture.</summary>
     public string ToString(string? format)
     {
         return ToDecimal().ToString(format, CultureInfo.CurrentCulture);

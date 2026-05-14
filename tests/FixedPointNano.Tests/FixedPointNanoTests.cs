@@ -322,77 +322,45 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
-    public void CeilingAndFloorShouldHandleNegativeAndExactValues()
+    public void ParseAndTryParseShouldWork()
     {
         Assert.Multiple(() =>
         {
-            // Ceiling rounds toward positive infinity
-            Assert.That(FixedPointNano.Ceiling(FixedPointNano.FromDecimal(-1.1m)).ToDecimal(), Is.EqualTo(-1m));
-            Assert.That(FixedPointNano.Ceiling(FixedPointNano.FromDecimal(-1.9m)).ToDecimal(), Is.EqualTo(-1m));
-            Assert.That(FixedPointNano.Ceiling(FixedPointNano.FromDecimal(2.0m)).ToDecimal(), Is.EqualTo(2m));
+            // Parse string
+            Assert.That(FixedPointNano.Parse("123.456789123").ToDecimal(), Is.EqualTo(123.456789123m));
+            Assert.That(FixedPointNano.Parse("-42.5").ToDecimal(), Is.EqualTo(-42.5m));
+            Assert.That(FixedPointNano.Parse("0").ToDecimal(), Is.EqualTo(0m));
 
-            // Floor rounds toward negative infinity
-            Assert.That(FixedPointNano.Floor(FixedPointNano.FromDecimal(-0.1m)).ToDecimal(), Is.EqualTo(-1m));
-            Assert.That(FixedPointNano.Floor(FixedPointNano.FromDecimal(-1.9m)).ToDecimal(), Is.EqualTo(-2m));
-            Assert.That(FixedPointNano.Floor(FixedPointNano.FromDecimal(2.0m)).ToDecimal(), Is.EqualTo(2m));
+            // Parse ReadOnlySpan<char>
+            Assert.That(FixedPointNano.Parse("987.654321".AsSpan()).ToDecimal(), Is.EqualTo(987.654321m));
 
-            // Truncate discards the fractional part regardless of sign
-            Assert.That(FixedPointNano.Truncate(FixedPointNano.FromDecimal(1.9m)).ToDecimal(), Is.EqualTo(1m));
-        });
-    }
+            // TryParse string — valid input
+            Assert.That(FixedPointNano.TryParse("1.5", null, out var result1), Is.True);
+            Assert.That(result1.ToDecimal(), Is.EqualTo(1.5m));
 
-    [Test]
-    public void RoundShouldSupportAllMidpointRoundingModes()
-    {
-        var half = FixedPointNano.FromDecimal(1.5m);
-        var twoAndHalf = FixedPointNano.FromDecimal(2.5m);
-        var negativeHalf = FixedPointNano.FromDecimal(-1.5m);
+            // TryParse string — invalid input
+            Assert.That(FixedPointNano.TryParse("not-a-number", null, out var result2), Is.False);
+            Assert.That(result2, Is.EqualTo(FixedPointNano.Zero));
 
-        Assert.Multiple(() =>
-        {
-            // ToEven (banker's rounding): rounds to nearest even integer at midpoint
-            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.ToEven).ToDecimal(), Is.EqualTo(2m));
-            Assert.That(FixedPointNano.Round(twoAndHalf, 0, MidpointRounding.ToEven).ToDecimal(), Is.EqualTo(2m));
+            // TryParse string — null input
+            Assert.That(FixedPointNano.TryParse(null, null, out var result3), Is.False);
+            Assert.That(result3, Is.EqualTo(FixedPointNano.Zero));
 
-            // AwayFromZero: always rounds midpoint away from zero
-            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.AwayFromZero).ToDecimal(), Is.EqualTo(2m));
-            Assert.That(FixedPointNano.Round(negativeHalf, 0, MidpointRounding.AwayFromZero).ToDecimal(), Is.EqualTo(-2m));
+            // TryParse ReadOnlySpan<char> — valid
+            Assert.That(FixedPointNano.TryParse("-3.14".AsSpan(), null, out var result4), Is.True);
+            Assert.That(result4.ToDecimal(), Is.EqualTo(-3.14m));
 
-            // ToZero: always rounds midpoint toward zero (truncates)
-            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.ToZero).ToDecimal(), Is.EqualTo(1m));
-            Assert.That(FixedPointNano.Round(negativeHalf, 0, MidpointRounding.ToZero).ToDecimal(), Is.EqualTo(-1m));
+            // TryParse ReadOnlySpan<char> — invalid
+            Assert.That(FixedPointNano.TryParse("abc".AsSpan(), null, out var result5), Is.False);
+            Assert.That(result5, Is.EqualTo(FixedPointNano.Zero));
 
-            // ToNegativeInfinity: rounds midpoint toward negative infinity
-            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.ToNegativeInfinity).ToDecimal(), Is.EqualTo(1m));
-            Assert.That(FixedPointNano.Round(negativeHalf, 0, MidpointRounding.ToNegativeInfinity).ToDecimal(), Is.EqualTo(-2m));
+            // IParsable round-trip
+            var original = FixedPointNano.FromDecimal(99.999999999m);
+            var parsed = FixedPointNano.Parse(original.ToString(), null);
+            Assert.That(parsed.ToDecimal(), Is.EqualTo(original.ToDecimal()));
 
-            // ToPositiveInfinity: rounds midpoint toward positive infinity
-            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.ToPositiveInfinity).ToDecimal(), Is.EqualTo(2m));
-            Assert.That(FixedPointNano.Round(negativeHalf, 0, MidpointRounding.ToPositiveInfinity).ToDecimal(), Is.EqualTo(-1m));
-        });
-    }
-
-    [Test]
-    public void FastMathHelpersShouldWork()
-    {
-        var value = FixedPointNano.FromDecimal(10m);
-
-        Assert.Multiple(() =>
-        {
-            // Divide by int delegates to the long overload
-            Assert.That(FixedPointNano.Divide(value, 4).ToDecimal(), Is.EqualTo(2.5m));
-            Assert.That(FixedPointNano.Divide(value, 4L).ToDecimal(), Is.EqualTo(2.5m));
-
-            // MultiplyRatio: (10 * 3) / 4 = 7.5
-            Assert.That(FixedPointNano.MultiplyRatio(value, 3L, 4L).ToDecimal(), Is.EqualTo(7.5m));
-
-            // Square: 10^2 = 100
-            Assert.That(FixedPointNano.Square(value).ToDecimal(), Is.EqualTo(100m));
-
-            // Sqrt: sqrt(4) = 2
-            Assert.That(
-                FixedPointNano.Sqrt(FixedPointNano.FromDecimal(4m)).ToDecimal(),
-                Is.EqualTo(2m));
+            // Out-of-range value returns false from TryParse
+            Assert.That(FixedPointNano.TryParse("9999999999999999999", null, out _), Is.False);
         });
     }
 

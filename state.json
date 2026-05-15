@@ -1,12 +1,12 @@
 {
-  "last_run": "2026-05-15T01:25:44Z",
-  "last_run_id": "25895099579",
+  "last_run": "2026-05-15T13:20:02Z",
+  "last_run_id": "25919956940",
   "monthly_summary_issue": 6,
-  "notes": "Run 2026-05-15T01:25: Tasks 2+5. Task 2: no user issues to comment on, all open issues are Repo Assist tracking issues. Task 5: Added Clamp and Sign methods. PR #1 (Copilot) still open, covers MaxValue/MinValue/Parse/TryParse/XML-docs/perf. Several Repo Assist branches exist as patches pending maintainer review.",
+  "notes": "Run 2026-05-15T13:20: Tasks 2+3. Task 2: no user issues to comment on, all open issues are Repo Assist tracking issues. Task 3: created clean PR branch repo-assist/improve-clamp-sign-2026-05-15 with Clamp/Sign only (no global.json), 1356 tests pass. PR #1 (Copilot) still open since April 12 and overlaps with maxvalue-xmldocs and parse-tryparse branches. Note: global.json pins 10.0.203 with disable; CI runner has 10.0.204/10.0.300 - tested using 10.0.204 via temp override.",
   "comments_made": [],
   "fix_attempts": [],
   "open_repo_assist_prs": [
-    {"branch": "repo-assist/improve-clamp-sign-2026-05-15", "title": "Add Clamp and Sign utility methods"},
+    {"branch": "repo-assist/improve-clamp-sign-2026-05-15", "title": "Add Clamp and Sign utility methods", "note": "clean PR, no protected files"},
     {"branch": "repo-assist/improve-testing-2026-05-13-ada4040c508be994", "title": "Add explicit edge-case and fast-math unit tests"},
     {"branch": "repo-assist/eng-global-json-sdk-fix-2026-05-14-f994d1092901ebce", "title": "Fix SDK roll-forward strategy and improve NuGet package metadata"},
     {"branch": "repo-assist/improve-parse-tryparse-2026-05-14-f71108bea411c774", "title": "Add Parse/TryParse and implement IParsable/ISpanParsable"},
@@ -19,7 +19,7 @@
   "engineering_checks": {
     "last_checked": "2026-05-15",
     "ci_workflow_added": false,
-    "sdk_rollforward_fixed": true,
-    "sdk_version_floor": "10.0.201"
+    "sdk_rollforward_fixed": false,
+    "sdk_note": "global.json pins 10.0.203 rollForward:disable (maintainer set this intentionally). Protected file. Available on runner: 10.0.108, 10.0.204, 10.0.300."
   }
 }

@@ -43,6 +43,7 @@ public readonly struct FixedPointNano :
 
     public long RawValue { get; }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Abs(FixedPointNano value)
     {
         return value.RawValue < 0
@@ -114,11 +115,13 @@ public readonly struct FixedPointNano :
         return FromDouble(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Min(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue <= right.RawValue ? left : right;
@@ -215,6 +218,7 @@ public readonly struct FixedPointNano :
         return FromRawChecked((Int128)rawValue);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Truncate(FixedPointNano value)
     {
         return new FixedPointNano((value.RawValue / Scale) * Scale);
@@ -235,11 +239,13 @@ public readonly struct FixedPointNano :
         return CompareTo(other);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int CompareTo(FixedPointNano other)
     {
         return RawValue.CompareTo(other.RawValue);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(FixedPointNano other)
     {
         return RawValue == other.RawValue;
@@ -250,6 +256,7 @@ public readonly struct FixedPointNano :
         return obj is FixedPointNano other && Equals(other);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override int GetHashCode()
     {
         return RawValue.GetHashCode();
@@ -316,27 +323,32 @@ public readonly struct FixedPointNano :
         return ToDecimal().TryFormat(destination, out charsWritten, format, provider);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator +(FixedPointNano left, FixedPointNano right)
     {
         return new FixedPointNano(checked(left.RawValue + right.RawValue));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator -(FixedPointNano left, FixedPointNano right)
     {
         return new FixedPointNano(checked(left.RawValue - right.RawValue));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator -(FixedPointNano value)
     {
         return new FixedPointNano(checked(-value.RawValue));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator *(FixedPointNano left, FixedPointNano right)
     {
         var product = (Int128)left.RawValue * right.RawValue;
         return FromRawChecked(DivideRoundedToNearestEven(product, Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator /(FixedPointNano left, FixedPointNano right)
     {
         if (right.RawValue == 0)
@@ -348,6 +360,7 @@ public readonly struct FixedPointNano :
         return FromRawChecked(DivideRoundedToNearestEven(numerator, right.RawValue));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator %(FixedPointNano left, FixedPointNano right)
     {
         if (right.RawValue == 0)
@@ -358,31 +371,37 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(left.RawValue % right.RawValue);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(FixedPointNano left, FixedPointNano right)
     {
         return left.Equals(right);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(FixedPointNano left, FixedPointNano right)
     {
         return !left.Equals(right);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue < right.RawValue;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <=(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue <= right.RawValue;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue > right.RawValue;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >=(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue;
@@ -874,17 +893,9 @@ public readonly struct FixedPointNano :
         return floor;
     }
 
-    private static void ThrowIfInvalidFloatingPoint(double value)
+    private static void ThrowIfInvalidFloatingPoint<T>(T value) where T : IFloatingPointIeee754<T>
     {
-        if (double.IsNaN(value) || double.IsInfinity(value))
-        {
-            throw new ArgumentOutOfRangeException(nameof(value), "Floating-point values must be finite.");
-        }
-    }
-
-    private static void ThrowIfInvalidFloatingPoint(float value)
-    {
-        if (float.IsNaN(value) || float.IsInfinity(value))
+        if (T.IsNaN(value) || T.IsInfinity(value))
         {
             throw new ArgumentOutOfRangeException(nameof(value), "Floating-point values must be finite.");
         }

@@ -158,11 +158,21 @@ public readonly struct FixedPointNano :
         return left.RawValue <= right.RawValue ? left : right;
     }
 
-    /// <summary>Rounds <paramref name="value"/> to <paramref name="decimals"/> decimal places using the specified <paramref name="rounding"/> mode.</summary>
-    /// <param name="value">The value to round.</param>
-    /// <param name="decimals">The number of decimal places (0–9).</param>
-    /// <param name="rounding">The midpoint rounding strategy. Defaults to <see cref="MidpointRounding.ToEven"/>.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="decimals"/> is outside 0–9 or <paramref name="rounding"/> is unrecognised.</exception>
+    public static FixedPointNano Clamp(FixedPointNano value, FixedPointNano min, FixedPointNano max)
+    {
+        if (min.RawValue > max.RawValue)
+        {
+            throw new ArgumentOutOfRangeException(nameof(min), "min must be less than or equal to max.");
+        }
+
+        return value.RawValue < min.RawValue ? min : value.RawValue > max.RawValue ? max : value;
+    }
+
+    public static int Sign(FixedPointNano value)
+    {
+        return value.RawValue < 0 ? -1 : value.RawValue > 0 ? 1 : 0;
+    }
+
     public static FixedPointNano Round(FixedPointNano value, int decimals, MidpointRounding rounding = MidpointRounding.ToEven)
     {
         if (decimals is < 0 or > DecimalPlaces)

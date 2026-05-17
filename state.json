@@ -1,31 +1,22 @@
 {
-  "last_run": "2026-05-16T13:13:34Z",
-  "last_run_id": "25962813685",
+  "last_run": "2026-05-17T01:26:44Z",
+  "last_run_id": "25977948725",
   "monthly_summary_issue": 6,
-  "notes": "Run 2026-05-16T13:13: Tasks 3+8. Task 3: added Clamp and Sign methods + tests (1356 tests pass). Task 8: added AggressiveInlining to all arithmetic/comparison operators + hot-path methods + consolidated ThrowIfInvalidFloatingPoint into generic (1354 tests pass). Both PRs submitted via safeoutputs.",
+  "notes": "Run 2026-05-17T01:26: Tasks 3+8. Task 3: created branch repo-assist/fix-issue-12-clamp-sign-v2 with Clamp+Sign methods + tests (1356 pass) + global.json SDK fix 10.0.203→10.0.204. Task 8: created branch repo-assist/perf-inline-operators-2026-05-17 with [AggressiveInlining] on all operators/conversions/hot-paths (1354 pass) + SDK fix. Both PRs submitted via safeoutputs.",
   "comments_made": [],
   "fix_attempts": [],
   "open_repo_assist_prs": [
-    {"branch": "repo-assist/fix-issue-12-clamp-sign", "title": "Add Clamp and Sign utility methods", "note": "1356 tests, closes #12"},
-    {"branch": "repo-assist/perf-inline-operators-2026-05-16", "title": "Perf: add AggressiveInlining + consolidate ThrowIfInvalidFloatingPoint", "note": "1354 tests"},
-    {"branch": "repo-assist/test-overflow-edge-cases-2026-05-16", "title": "Add overflow and out-of-range edge case tests", "note": "prev run, 1358 tests"},
-    {"branch": "repo-assist/improve-maxvalue-minvalue-2026-05-16", "title": "Add MaxValue and MinValue static properties", "note": "prev run, 1354 tests"}
-  ],
-  "stale_branches_no_pr": [
-    "repo-assist/improve-clamp-sign-2026-05-15-adba7beb7c6f9a81",
-    "repo-assist/improve-maxvalue-xmldocs-2026-05-14-492fa984c2d69c57",
-    "repo-assist/improve-parse-tryparse-2026-05-14-f71108bea411c774",
-    "repo-assist/improve-testing-2026-05-13-ada4040c508be994",
-    "repo-assist/eng-global-json-sdk-fix-2026-05-14-f994d1092901ebce"
+    {"branch": "repo-assist/fix-issue-12-clamp-sign-v2", "title": "Add Clamp and Sign utility methods", "note": "1356 tests, closes #12, SDK fix"},
+    {"branch": "repo-assist/perf-inline-operators-2026-05-17", "title": "Perf: [AggressiveInlining] on all operators/conversions", "note": "1354 tests, SDK fix"}
   ],
   "backlog_cursor": {
     "issues": 0,
     "prs": 0
   },
   "engineering_checks": {
-    "last_checked": "2026-05-16",
+    "last_checked": "2026-05-17",
     "ci_workflow_added": false,
-    "sdk_rollforward_fixed": false,
-    "sdk_note": "global.json pins 10.0.203 rollForward:disable (maintainer set intentionally). Available on runner: 10.0.108, 10.0.204, 10.0.300."
+    "sdk_rollforward_fixed": true,
+    "sdk_note": "global.json updated from 10.0.203 to 10.0.204 in new branches. Previous branches still have 10.0.203."
   }
 }

@@ -170,8 +170,14 @@ public readonly struct FixedPointNano :
     {
         if (decimal.TryParse(s, NumberStyles.Number, provider, out var d))
         {
-            result = FromDecimal(d);
-            return true;
+            try
+            {
+                result = FromDecimal(d);
+                return true;
+            }
+            catch (OverflowException)
+            {
+            }
         }
 
         result = Zero;
@@ -186,8 +192,14 @@ public readonly struct FixedPointNano :
     {
         if (decimal.TryParse(s, NumberStyles.Number, provider, out var d))
         {
-            result = FromDecimal(d);
-            return true;
+            try
+            {
+                result = FromDecimal(d);
+                return true;
+            }
+            catch (OverflowException)
+            {
+            }
         }
 
         result = Zero;

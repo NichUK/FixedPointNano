@@ -123,6 +123,7 @@ public sealed class FixedPointNanoTests
     public void ParseAndTryParseShouldWork()
     {
         var invariant = CultureInfo.InvariantCulture;
+        const string overflowValue = "9223372036.854775808";
 
         Assert.That(FixedPointNano.Parse("1.5", invariant).ToDecimal(), Is.EqualTo(1.5m));
         Assert.That(FixedPointNano.Parse("1.5".AsSpan(), invariant).ToDecimal(), Is.EqualTo(1.5m));
@@ -140,7 +141,14 @@ public sealed class FixedPointNanoTests
         Assert.That(FixedPointNano.TryParse((string?)null, invariant, out var result4), Is.False);
         Assert.That(result4, Is.EqualTo(FixedPointNano.Zero));
 
+        Assert.That(FixedPointNano.TryParse(overflowValue, invariant, out var result5), Is.False);
+        Assert.That(result5, Is.EqualTo(FixedPointNano.Zero));
+
+        Assert.That(FixedPointNano.TryParse(overflowValue.AsSpan(), invariant, out var result6), Is.False);
+        Assert.That(result6, Is.EqualTo(FixedPointNano.Zero));
+
         Assert.That(() => FixedPointNano.Parse("not-a-number", invariant), Throws.TypeOf<FormatException>());
+        Assert.That(() => FixedPointNano.Parse(overflowValue, invariant), Throws.TypeOf<OverflowException>());
     }
 
     [Test]

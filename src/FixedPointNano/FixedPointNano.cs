@@ -60,8 +60,7 @@ public readonly struct FixedPointNano :
     /// <summary>The underlying scaled integer. Divide by <see cref="Scale"/> to obtain the decimal value.</summary>
     public long RawValue { get; }
 
-    /// <summary>Returns the absolute value of <paramref name="value"/>.</summary>
-    /// <exception cref="OverflowException">Thrown when <paramref name="value"/> is <see cref="MinValue"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Abs(FixedPointNano value)
     {
         return value.RawValue < 0
@@ -131,7 +130,7 @@ public readonly struct FixedPointNano :
         return FromSingle((float)value);
     }
 
-    /// <summary>Creates a <see cref="FixedPointNano"/> directly from a pre-scaled raw value.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano FromRaw(long rawValue)
     {
         return new FixedPointNano(rawValue);
@@ -146,13 +145,13 @@ public readonly struct FixedPointNano :
         return FromDouble(value);
     }
 
-    /// <summary>Returns the larger of two values.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;
     }
 
-    /// <summary>Returns the smaller of two values.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Min(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue <= right.RawValue ? left : right;
@@ -279,7 +278,7 @@ public readonly struct FixedPointNano :
         return FromRawChecked((Int128)rawValue);
     }
 
-    /// <summary>Returns the integral part of <paramref name="value"/>, discarding the fractional portion (truncation toward zero).</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Truncate(FixedPointNano value)
     {
         return new FixedPointNano((value.RawValue / Scale) * Scale);
@@ -577,36 +576,43 @@ public readonly struct FixedPointNano :
         return FromInteger((ulong)value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator FixedPointNano(Half value)
     {
         return FromHalf(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator FixedPointNano(float value)
     {
         return FromSingle(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator FixedPointNano(double value)
     {
         return FromDouble(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator FixedPointNano(decimal value)
     {
         return FromDecimal(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator FixedPointNano(Int128 value)
     {
         return FromInteger(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator FixedPointNano(UInt128 value)
     {
         return FromInteger(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator FixedPointNano(BigInteger value)
     {
         return FromInteger(value);
@@ -696,16 +702,19 @@ public readonly struct FixedPointNano :
         return value.ToDecimal();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator Int128(FixedPointNano value)
     {
         return value.ToInt128();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator UInt128(FixedPointNano value)
     {
         return value.ToUInt128();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator BigInteger(FixedPointNano value)
     {
         return value.ToBigInteger();

@@ -1,15 +1,16 @@
 {
-  "last_run": "2026-05-18T01:27:57Z",
-  "last_run_id": "26008648045",
+  "last_run": "2026-05-18T14:03:14Z",
+  "last_run_id": "26038380895",
   "monthly_summary_issue": 6,
-  "notes": "Run 2026-05-18T01:27: Tasks 4+2. Task 4: created PR [Repo Assist] chore: fix SDK pin to 10.0.204 and add CI workflow (branch repo-assist/eng-ci-and-sdk-2026-05-18, 1354 tests). Task 2 (no user issues): created PR [Repo Assist] feat: add Clamp and Sign utility methods (branch repo-assist/feat-clamp-sign-2026-05-18, 1356 tests, closes #12 #15). All previous repo-assist PRs are closed/gone. Two new PRs submitted this run.",
+  "notes": "Run 2026-05-18T14:03: Tasks 8+3. Task 8: created PR [Repo Assist] perf: add AggressiveInlining to hot-path operators and helpers; fix SDK pin (branch repo-assist/perf-aggressive-inlining-2026-05-18, 1354 tests). Task 3: created PR [Repo Assist] feat: add Clamp and Sign utility methods (branch repo-assist/feat-clamp-sign-2026-05-18b, 1356 tests, closes #12 #15). Two new PRs submitted this run.",
   "comments_made": [],
   "fix_attempts": [
-    {"issue": 12, "branch": "repo-assist/feat-clamp-sign-2026-05-18", "run": "26008648045", "status": "pr_submitted"}
+    {"issue": 12, "branch": "repo-assist/feat-clamp-sign-2026-05-18b", "run": "26038380895", "status": "pr_submitted"},
+    {"issue": 15, "branch": "repo-assist/feat-clamp-sign-2026-05-18b", "run": "26038380895", "status": "pr_submitted"}
   ],
   "open_repo_assist_prs": [
-    {"branch": "repo-assist/eng-ci-and-sdk-2026-05-18", "title": "chore: fix SDK pin to 10.0.204 and add CI workflow", "note": "1354 tests, SDK fix + CI workflow, closes #4 #19"},
-    {"branch": "repo-assist/feat-clamp-sign-2026-05-18", "title": "feat: add Clamp and Sign utility methods", "note": "1356 tests, closes #12 #15"}
+    {"branch": "repo-assist/perf-aggressive-inlining-2026-05-18", "title": "perf: add AggressiveInlining to hot-path operators and helpers; fix SDK pin", "note": "1354 tests, AggressiveInlining + SDK fix"},
+    {"branch": "repo-assist/feat-clamp-sign-2026-05-18b", "title": "feat: add Clamp and Sign utility methods", "note": "1356 tests, closes #12 #15"}
   ],
   "backlog_cursor": {
     "issues": 0,
@@ -17,8 +18,8 @@
   },
   "engineering_checks": {
     "last_checked": "2026-05-18",
-    "ci_workflow_added": true,
+    "ci_workflow_added": false,
     "sdk_rollforward_fixed": true,
-    "sdk_note": "global.json updated to 10.0.204 in two new branches. main still has 10.0.203."
+    "sdk_note": "global.json updated to 10.0.204 in both new branches. main still has 10.0.203."
   }
 }

@@ -287,6 +287,38 @@ public sealed class FixedPointNanoTests
         });
     }
 
+    [Test]
+    public void ClampShouldReturnValueWithinBounds()
+    {
+        var min = FixedPointNano.FromDecimal(-1m);
+        var max = FixedPointNano.FromDecimal(1m);
+        var below = FixedPointNano.FromDecimal(-2m);
+        var above = FixedPointNano.FromDecimal(2m);
+        var inside = FixedPointNano.FromDecimal(0.5m);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Clamp(below, min, max), Is.EqualTo(min));
+            Assert.That(FixedPointNano.Clamp(above, min, max), Is.EqualTo(max));
+            Assert.That(FixedPointNano.Clamp(inside, min, max), Is.EqualTo(inside));
+            Assert.That(FixedPointNano.Clamp(min, min, max), Is.EqualTo(min));
+            Assert.That(FixedPointNano.Clamp(max, min, max), Is.EqualTo(max));
+        });
+
+        Assert.That(() => FixedPointNano.Clamp(inside, max, min), Throws.TypeOf<ArgumentOutOfRangeException>());
+    }
+
+    [Test]
+    public void SignShouldReturnCorrectSign()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(3.14m)), Is.EqualTo(1));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.Zero), Is.EqualTo(0));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(-0.001m)), Is.EqualTo(-1));
+        });
+    }
+
     private sealed class CultureScope : IDisposable
     {
         private readonly CultureInfo _originalCulture;

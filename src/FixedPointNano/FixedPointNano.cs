@@ -124,6 +124,26 @@ public readonly struct FixedPointNano :
         return left.RawValue <= right.RawValue ? left : right;
     }
 
+    public static FixedPointNano Clamp(FixedPointNano value, FixedPointNano min, FixedPointNano max)
+    {
+        if (min.RawValue > max.RawValue)
+        {
+            throw new ArgumentOutOfRangeException(nameof(min), "min must not be greater than max.");
+        }
+
+        if (value.RawValue < min.RawValue)
+        {
+            return min;
+        }
+
+        return value.RawValue > max.RawValue ? max : value;
+    }
+
+    public static int Sign(FixedPointNano value)
+    {
+        return value.RawValue > 0 ? 1 : value.RawValue < 0 ? -1 : 0;
+    }
+
     public static FixedPointNano Round(FixedPointNano value, int decimals, MidpointRounding rounding = MidpointRounding.ToEven)
     {
         if (decimals is < 0 or > DecimalPlaces)

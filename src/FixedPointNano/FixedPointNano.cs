@@ -145,7 +145,59 @@ public readonly struct FixedPointNano :
         return FromDouble(value);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static FixedPointNano Parse(string s, IFormatProvider? provider = null)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+        return Parse(s.AsSpan(), provider);
+    }
+
+    public static FixedPointNano Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null)
+    {
+        if (!TryParse(s, provider, out var result))
+        {
+            throw new FormatException($"The input string '{s.ToString()}' was not in a correct format for FixedPointNano.");
+        }
+
+        return result;
+    }
+
+    public static bool TryParse(string? s, IFormatProvider? provider, out FixedPointNano result)
+    {
+        if (s is null)
+        {
+            result = default;
+            return false;
+        }
+
+        return TryParse(s.AsSpan(), provider, out result);
+    }
+
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out FixedPointNano result)
+    {
+        if (!decimal.TryParse(s, NumberStyles.Number, provider ?? CultureInfo.InvariantCulture, out var d))
+        {
+            result = default;
+            return false;
+        }
+
+        try
+        {
+            result = FromDecimal(d);
+            return true;
+        }
+        catch (OverflowException)
+        {
+            result = default;
+            return false;
+        }
+    }
+
+    public static bool TryParse(string? s, out FixedPointNano result)
+        => TryParse(s, CultureInfo.InvariantCulture, out result);
+
+    public static bool TryParse(ReadOnlySpan<char> s, out FixedPointNano result)
+        => TryParse(s, CultureInfo.InvariantCulture, out result);
+
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;

@@ -460,7 +460,6 @@ public sealed class FixedPointNanoTests
         Assert.That(FixedPointNano.TryParse("1.0", CultureInfo.InvariantCulture, out var r), Is.True);
         Assert.That(r.ToDecimal(), Is.EqualTo(1.0m));
 
-        // Verify the interface is implemented
         Assert.That(typeof(FixedPointNano).GetInterfaces(), Has.Member(typeof(IParsable<FixedPointNano>)));
     }
 

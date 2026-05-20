@@ -1,35 +1,38 @@
 {
-  "last_run": "2026-05-19T13:47:39Z",
-  "last_run_id": "26101306181",
+  "last_run": "2026-05-20T01:30:06Z",
+  "last_run_id": "26135648654",
   "monthly_summary_issue": 6,
-  "notes": "Run 2026-05-19T13:47: Tasks 4+2. Task 4: successfully created PR feat: add Parse/TryParse, IParsable/ISpanParsable; fix SDK pin (branch repo-assist/feat-parse-tryparse-2026-05-19, 1363 tests, closes #8 #25). Task 2: commented on #8 (PR link) and #11 (Clamp/Sign guidance). Previous run 2026-05-19T01:30 created branch but did NOT submit PR (memory was wrong about 'submitted successfully').",
+  "notes": "Run 2026-05-20T01:30: Tasks 3+2. Task 3: created 2 PRs - (1) feat: add Parse/TryParse + IParsable/ISpanParsable (branch repo-assist/feat-parse-tryparse-2026-05-20, 1363 tests, closes #8 #25, also fixes global.json 10.0.203->10.0.204 latestPatch), (2) feat: add Clamp and Sign (branch repo-assist/feat-clamp-sign-2026-05-20, 1359 tests, closes #11 #12 #15 #22 #24, also fixes global.json). Task 2: no user issues to engage - all open issues are Repo Assist tracking issues. Both PRs include global.json fix. PR numbers not yet known (assigned post-workflow).",
   "comments_made": [
     {"issue": 8, "run": "26101306181", "note": "Linked to Parse/TryParse PR"},
     {"issue": 11, "run": "26101306181", "note": "Clamp/Sign implementation guidance"}
   ],
   "fix_attempts": [
-    {"issue": 8, "branch": "repo-assist/feat-parse-tryparse-2026-05-19", "run": "26101306181", "status": "pr_submitted"},
-    {"issue": 25, "branch": "repo-assist/feat-parse-tryparse-2026-05-19", "run": "26101306181", "status": "pr_submitted"}
+    {"issue": 8, "branch": "repo-assist/feat-parse-tryparse-2026-05-20", "run": "26135648654", "status": "pr_submitted"},
+    {"issue": 25, "branch": "repo-assist/feat-parse-tryparse-2026-05-20", "run": "26135648654", "status": "pr_submitted"},
+    {"issue": 11, "branch": "repo-assist/feat-clamp-sign-2026-05-20", "run": "26135648654", "status": "pr_submitted"},
+    {"issue": 12, "branch": "repo-assist/feat-clamp-sign-2026-05-20", "run": "26135648654", "status": "pr_submitted"}
   ],
   "open_repo_assist_prs": [
-    {"branch": "repo-assist/feat-parse-tryparse-2026-05-19", "title": "feat: add Parse/TryParse, IParsable/ISpanParsable; fix SDK pin", "note": "1363 tests, closes #8 and #25, also fixes global.json SDK pin 10.0.203->10.0.204"}
+    {"branch": "repo-assist/feat-parse-tryparse-2026-05-20", "title": "[Repo Assist] feat: add Parse/TryParse and implement IParsable/ISpanParsable", "note": "1363 tests, closes #8 and #25, also fixes global.json SDK pin 10.0.203->10.0.204 latestPatch"},
+    {"branch": "repo-assist/feat-clamp-sign-2026-05-20", "title": "[Repo Assist] feat: add Clamp and Sign utility methods", "note": "1359 tests, closes #11 #12 #15 #22 #24, also fixes global.json SDK pin"}
   ],
   "backlog_cursor": {
     "issues": 0,
     "prs": 0
   },
   "engineering_checks": {
-    "last_checked": "2026-05-19",
+    "last_checked": "2026-05-20",
     "ci_workflow_added": false,
     "sdk_rollforward_fixed": true,
-    "sdk_note": "global.json updated to 10.0.204 latestPatch in feat-parse-tryparse PR. main still has 10.0.203."
+    "sdk_note": "global.json updated to 10.0.204 latestPatch in both new PRs. main still has 10.0.203."
   },
-  "stale_issues_to_close": [3, 5, 7, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24],
+  "stale_issues_to_close": [3, 5, 7, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26],
   "future_work": [
-    "Clamp and Sign utility methods (impl guidance posted on #11)",
-    "AggressiveInlining on operators and hot paths",
+    "AggressiveInlining on operators and hot paths (#16)",
     "XML documentation comments + GenerateDocumentationFile",
     "NuGet package metadata",
-    "CI workflow (.github/workflows/ci.yml)"
+    "CI workflow (.github/workflows/ci.yml)",
+    "MaxValue/MinValue static properties (#10, #14)"
   ]
 }

@@ -265,20 +265,15 @@ public readonly struct FixedPointNano :
     {
         if (min.RawValue > max.RawValue)
         {
-            throw new ArgumentOutOfRangeException(nameof(min), "min must not be greater than max.");
+            throw new ArgumentOutOfRangeException(nameof(min), "min must be less than or equal to max.");
         }
 
-        if (value.RawValue < min.RawValue)
-        {
-            return min;
-        }
-
-        return value.RawValue > max.RawValue ? max : value;
+        return value.RawValue < min.RawValue ? min : value.RawValue > max.RawValue ? max : value;
     }
 
     public static int Sign(FixedPointNano value)
     {
-        return value.RawValue > 0 ? 1 : value.RawValue < 0 ? -1 : 0;
+        return value.RawValue < 0 ? -1 : value.RawValue > 0 ? 1 : 0;
     }
 
     public static FixedPointNano Round(FixedPointNano value, int decimals, MidpointRounding rounding = MidpointRounding.ToEven)

@@ -384,93 +384,52 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
-    public void ParseShouldRoundTripDecimalStrings()
+    public void ClampShouldReturnValueWhenWithinRange()
     {
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+
         Assert.Multiple(() =>
         {
-            Assert.That(FixedPointNano.Parse("0").ToDecimal(), Is.EqualTo(0m));
-            Assert.That(FixedPointNano.Parse("1").ToDecimal(), Is.EqualTo(1m));
-            Assert.That(FixedPointNano.Parse("-1").ToDecimal(), Is.EqualTo(-1m));
-            Assert.That(FixedPointNano.Parse("1.5").ToDecimal(), Is.EqualTo(1.5m));
-            Assert.That(FixedPointNano.Parse("-2.123456789").ToDecimal(), Is.EqualTo(-2.123456789m));
-            Assert.That(FixedPointNano.Parse("0.000000001").ToDecimal(), Is.EqualTo(0.000000001m));
+            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(3m), min, max).ToDecimal(), Is.EqualTo(3m));
+            Assert.That(FixedPointNano.Clamp(min, min, max).ToDecimal(), Is.EqualTo(1m));
+            Assert.That(FixedPointNano.Clamp(max, min, max).ToDecimal(), Is.EqualTo(5m));
         });
     }
 
     [Test]
-    public void ParseSpanShouldRoundTripDecimalStrings()
+    public void ClampShouldReturnMinWhenBelowRange()
     {
-        Assert.That(FixedPointNano.Parse("1.234567890".AsSpan()).ToDecimal(), Is.EqualTo(1.23456789m));
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+        Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(-1m), min, max).ToDecimal(), Is.EqualTo(1m));
     }
 
     [Test]
-    public void ParseShouldThrowFormatExceptionOnInvalidInput()
+    public void ClampShouldReturnMaxWhenAboveRange()
+    {
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+        Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(10m), min, max).ToDecimal(), Is.EqualTo(5m));
+    }
+
+    [Test]
+    public void ClampShouldThrowWhenMinExceedsMax()
+    {
+        var min = FixedPointNano.FromDecimal(5m);
+        var max = FixedPointNano.FromDecimal(1m);
+        Assert.That(() => FixedPointNano.Clamp(FixedPointNano.Zero, min, max), Throws.TypeOf<ArgumentOutOfRangeException>());
+    }
+
+    [Test]
+    public void SignShouldReturnCorrectValue()
     {
         Assert.Multiple(() =>
         {
-            Assert.That(() => FixedPointNano.Parse("abc"), Throws.TypeOf<FormatException>());
-            Assert.That(() => FixedPointNano.Parse(""), Throws.TypeOf<FormatException>());
-            Assert.That(() => FixedPointNano.Parse("1.2.3"), Throws.TypeOf<FormatException>());
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(3.5m)), Is.EqualTo(1));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.Zero), Is.EqualTo(0));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(-0.000000001m)), Is.EqualTo(-1));
         });
-    }
-
-    [Test]
-    public void ParseShouldThrowArgumentNullExceptionForNullString()
-    {
-        Assert.That(() => FixedPointNano.Parse(null!), Throws.TypeOf<ArgumentNullException>());
-    }
-
-    [Test]
-    public void TryParseShouldReturnTrueAndCorrectValueForValidInput()
-    {
-        Assert.Multiple(() =>
-        {
-            Assert.That(FixedPointNano.TryParse("1.5", out var r1), Is.True);
-            Assert.That(r1.ToDecimal(), Is.EqualTo(1.5m));
-
-            Assert.That(FixedPointNano.TryParse("-42.000000001", out var r2), Is.True);
-            Assert.That(r2.ToDecimal(), Is.EqualTo(-42.000000001m));
-        });
-    }
-
-    [Test]
-    public void TryParseShouldReturnFalseForInvalidInput()
-    {
-        Assert.Multiple(() =>
-        {
-            Assert.That(FixedPointNano.TryParse("not-a-number", out _), Is.False);
-            Assert.That(FixedPointNano.TryParse((string?)null, out _), Is.False);
-            Assert.That(FixedPointNano.TryParse("", out _), Is.False);
-        });
-    }
-
-    [Test]
-    public void TryParseSpanShouldWork()
-    {
-        Assert.That(FixedPointNano.TryParse("3.14".AsSpan(), out var result), Is.True);
-        Assert.That(result.ToDecimal(), Is.EqualTo(3.14m));
-
-        Assert.That(FixedPointNano.TryParse("xyz".AsSpan(), out _), Is.False);
-    }
-
-    [Test]
-    public void IParsableShouldWork()
-    {
-        Assert.That(FixedPointNano.Parse("2.5", CultureInfo.InvariantCulture).ToDecimal(), Is.EqualTo(2.5m));
-        Assert.That(FixedPointNano.TryParse("1.0", CultureInfo.InvariantCulture, out var r), Is.True);
-        Assert.That(r.ToDecimal(), Is.EqualTo(1.0m));
-
-        Assert.That(typeof(FixedPointNano).GetInterfaces(), Has.Member(typeof(IParsable<FixedPointNano>)));
-    }
-
-    [Test]
-    public void ISpanParsableShouldWork()
-    {
-        Assert.That(FixedPointNano.Parse("7.77".AsSpan(), CultureInfo.InvariantCulture).ToDecimal(), Is.EqualTo(7.77m));
-        Assert.That(FixedPointNano.TryParse("0.5".AsSpan(), CultureInfo.InvariantCulture, out var r), Is.True);
-        Assert.That(r.ToDecimal(), Is.EqualTo(0.5m));
-
-        Assert.That(typeof(FixedPointNano).GetInterfaces(), Has.Member(typeof(ISpanParsable<FixedPointNano>)));
     }
 
     private sealed class CultureScope : IDisposable

@@ -16,6 +16,7 @@ public sealed class FixedPointNanoTests
         Assert.That(FixedPointNano.One.RawValue, Is.EqualTo(FixedPointNano.Scale));
         Assert.That(FixedPointNano.MaxValue.RawValue, Is.EqualTo(long.MaxValue));
         Assert.That(FixedPointNano.MinValue.RawValue, Is.EqualTo(long.MinValue));
+        Assert.That(FixedPointNano.MaxValue > FixedPointNano.MinValue, Is.True);
 
         var fromRaw = FixedPointNano.FromRaw(123456789L);
         var fromLong = (FixedPointNano)42L;

@@ -41,7 +41,8 @@ public readonly struct FixedPointNano :
         1L,
     ];
 
-    /// <summary>The zero value (0).</summary>
+    public static FixedPointNano MaxValue { get; } = new(long.MaxValue);
+    public static FixedPointNano MinValue { get; } = new(long.MinValue);
     public static FixedPointNano Zero { get; } = new(0L);
     /// <summary>The value one (1).</summary>
     public static FixedPointNano One { get; } = new(Scale);

@@ -1,35 +1,35 @@
 {
-  "last_run": "2026-05-20T13:42:51Z",
-  "last_run_id": "26166415857",
+  "last_run": "2026-05-21T01:30:09Z",
+  "last_run_id": "26199972569",
   "monthly_summary_issue": 6,
-  "notes": "Run 2026-05-20T13:42: Tasks 2+3. ROOT CAUSE FOUND: all previous runs modified global.json (protected file) causing PR->Issue fallback. Fix: keep global.json changes local-only (modify temporarily for build/test, revert before commit). Created 2 actual PRs this run: (1) feat-parse-tryparse-2026-05-20b (1363 tests), (2) feat-clamp-sign-2026-05-20b (1359 tests). Neither touches global.json so should be real PRs. Task 2: no human issues to engage (all open issues are Repo Assist tracking). global.json still has 10.0.203/disable in main - maintainer needs to update.",
+  "notes": "Run 2026-05-21T01:30: Tasks 9+3. Created 2 branches: (1) test-edge-cases-2026-05-21 (1373 tests, 19 new edge case tests), (2) improve-maxvalue-minvalue-2026-05-21 (1354 tests, MaxValue/MinValue static properties). PRs submitted via safeoutputs with 'success' result + patch files. History: PRs keep ending up as issues - root cause unknown. Previous run branches feat-parse-tryparse-2026-05-20b and feat-clamp-sign-2026-05-20b still no open PRs despite 'success' from safeoutputs. All builds done with global.json temporarily patched to 10.0.204/latestPatch and reverted before commit.",
   "comments_made": [
     {"issue": 8, "run": "26101306181", "note": "Linked to Parse/TryParse PR"},
     {"issue": 11, "run": "26101306181", "note": "Clamp/Sign implementation guidance"}
   ],
   "fix_attempts": [
     {"issue": 8, "branch": "repo-assist/feat-parse-tryparse-2026-05-20b", "run": "26166415857", "status": "pr_submitted"},
-    {"issue": 11, "branch": "repo-assist/feat-clamp-sign-2026-05-20b", "run": "26166415857", "status": "pr_submitted"}
+    {"issue": 11, "branch": "repo-assist/feat-clamp-sign-2026-05-20b", "run": "26166415857", "status": "pr_submitted"},
+    {"issue": 9, "branch": "repo-assist/test-edge-cases-2026-05-21", "run": "26199972569", "status": "pr_submitted"},
+    {"issue": 14, "branch": "repo-assist/improve-maxvalue-minvalue-2026-05-21", "run": "26199972569", "status": "pr_submitted"}
   ],
-  "open_repo_assist_prs": [
-    {"branch": "repo-assist/feat-parse-tryparse-2026-05-20b", "title": "[Repo Assist] feat: add Parse/TryParse and implement IParsable/ISpanParsable", "note": "1363 tests, no protected files touched"},
-    {"branch": "repo-assist/feat-clamp-sign-2026-05-20b", "title": "[Repo Assist] feat: add Clamp and Sign utility methods", "note": "1359 tests, no protected files touched"}
+  "open_repo_assist_branches": [
+    {"branch": "repo-assist/feat-parse-tryparse-2026-05-20b", "title": "feat: add Parse/TryParse and implement IParsable/ISpanParsable", "tests": 1363},
+    {"branch": "repo-assist/feat-clamp-sign-2026-05-20b", "title": "feat: add Clamp and Sign utility methods", "tests": 1359},
+    {"branch": "repo-assist/test-edge-cases-2026-05-21", "title": "test: add edge-case tests for Abs overflow, Round boundaries", "tests": 1373},
+    {"branch": "repo-assist/improve-maxvalue-minvalue-2026-05-21", "title": "feat: add MaxValue and MinValue static properties", "tests": 1354}
   ],
-  "protected_files_insight": "global.json is a protected file. Do NOT include global.json changes in any PR branch. Instead: (1) temporarily modify global.json for local build/test, (2) revert before committing. This avoids the PR->Issue fallback.",
-  "backlog_cursor": {
-    "issues": 0,
-    "prs": 0
-  },
+  "protected_files_insight": "global.json is protected. Temporarily modify to 10.0.204/latestPatch for build/test, revert before committing.",
+  "backlog_cursor": {"issues": 0, "prs": 0},
   "engineering_checks": {
-    "last_checked": "2026-05-20",
-    "sdk_note": "global.json still pins 10.0.203/disable in main. SDK 10.0.204 is available. Maintainer needs to update. Do not touch global.json in PRs (protected file)."
+    "last_checked": "2026-05-21",
+    "sdk_note": "global.json pins 10.0.203/disable in main. SDK 10.0.204 available. Maintainer must update. Do NOT include global.json in PR commits."
   },
-  "duplicate_issues_to_close": [3, 5, 7, 9, 12, 13, 15, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28],
+  "duplicate_issues_to_close": [3, 5, 7, 9, 10, 12, 13, 14, 15, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
   "future_work": [
-    "AggressiveInlining on operators and hot paths (#16) - create branch WITHOUT global.json",
+    "AggressiveInlining on operators and hot paths (#16)",
     "XML documentation comments + GenerateDocumentationFile",
     "NuGet package metadata",
-    "CI workflow (.github/workflows/ci.yml) - use safeoutputs or avoid global.json",
-    "MaxValue/MinValue static properties (#10, #14)"
+    "CI workflow (.github/workflows/ci.yml)"
   ]
 }

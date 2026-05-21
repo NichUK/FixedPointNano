@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-05-21T01:30:09Z",
-  "last_run_id": "26199972569",
+  "last_run": "2026-05-21T13:50:24Z",
+  "last_run_id": "26230122605",
   "monthly_summary_issue": 6,
-  "notes": "Run 2026-05-21T01:30: Tasks 9+3. Created 2 branches: (1) test-edge-cases-2026-05-21 (1373 tests, 19 new edge case tests), (2) improve-maxvalue-minvalue-2026-05-21 (1354 tests, MaxValue/MinValue static properties). PRs submitted via safeoutputs with 'success' result + patch files. History: PRs keep ending up as issues - root cause unknown. Previous run branches feat-parse-tryparse-2026-05-20b and feat-clamp-sign-2026-05-20b still no open PRs despite 'success' from safeoutputs. All builds done with global.json temporarily patched to 10.0.204/latestPatch and reverted before commit.",
+  "notes": "Run 2026-05-21T13:50: Tasks 2+8. Task 2: no real human issues to comment on - all issues are repo-assist submissions. Task 8: implemented AggressiveInlining on hot-path operators/helpers in branch repo-assist/perf-aggressive-inlining-2026-05-21 (1354 tests pass). PR submitted via safeoutputs. History: PRs keep ending up as issues - root cause unknown. Multiple valid branches exist with real improvements waiting for maintainer review.",
   "comments_made": [
     {"issue": 8, "run": "26101306181", "note": "Linked to Parse/TryParse PR"},
     {"issue": 11, "run": "26101306181", "note": "Clamp/Sign implementation guidance"}
@@ -11,9 +11,11 @@
     {"issue": 8, "branch": "repo-assist/feat-parse-tryparse-2026-05-20b", "run": "26166415857", "status": "pr_submitted"},
     {"issue": 11, "branch": "repo-assist/feat-clamp-sign-2026-05-20b", "run": "26166415857", "status": "pr_submitted"},
     {"issue": 9, "branch": "repo-assist/test-edge-cases-2026-05-21", "run": "26199972569", "status": "pr_submitted"},
-    {"issue": 14, "branch": "repo-assist/improve-maxvalue-minvalue-2026-05-21", "run": "26199972569", "status": "pr_submitted"}
+    {"issue": 14, "branch": "repo-assist/improve-maxvalue-minvalue-2026-05-21", "run": "26199972569", "status": "pr_submitted"},
+    {"issue": 16, "branch": "repo-assist/perf-aggressive-inlining-2026-05-21", "run": "26230122605", "status": "pr_submitted"}
   ],
   "open_repo_assist_branches": [
+    {"branch": "repo-assist/perf-aggressive-inlining-2026-05-21", "title": "perf: add AggressiveInlining to hot-path operators and helpers", "tests": 1354},
     {"branch": "repo-assist/feat-parse-tryparse-2026-05-20b", "title": "feat: add Parse/TryParse and implement IParsable/ISpanParsable", "tests": 1363},
     {"branch": "repo-assist/feat-clamp-sign-2026-05-20b", "title": "feat: add Clamp and Sign utility methods", "tests": 1359},
     {"branch": "repo-assist/test-edge-cases-2026-05-21", "title": "test: add edge-case tests for Abs overflow, Round boundaries", "tests": 1373},
@@ -25,9 +27,8 @@
     "last_checked": "2026-05-21",
     "sdk_note": "global.json pins 10.0.203/disable in main. SDK 10.0.204 available. Maintainer must update. Do NOT include global.json in PR commits."
   },
-  "duplicate_issues_to_close": [3, 5, 7, 9, 10, 12, 13, 14, 15, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+  "duplicate_issues_to_close": [3, 4, 5, 7, 9, 10, 12, 13, 14, 15, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32],
   "future_work": [
-    "AggressiveInlining on operators and hot paths (#16)",
     "XML documentation comments + GenerateDocumentationFile",
     "NuGet package metadata",
     "CI workflow (.github/workflows/ci.yml)"

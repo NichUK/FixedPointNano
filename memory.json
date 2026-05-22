@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-05-22T01:29:04Z",
-  "run_id": "26263047854",
+  "last_run": "2026-05-22T13:38:26Z",
+  "run_id": "26291035663",
   "monthly_activity_issue": 6,
   "comments_made": {
     "3": "2026-05-22T01:29:04Z",
@@ -9,20 +9,27 @@
   },
   "fix_attempts": {
     "feat-clamp-sign-2026-05-22": {
-      "branch": "repo-assist/feat-clamp-sign-2026-05-22",
+      "branch": "repo-assist/feat-clamp-sign-2026-05-22-d528d92767348c89",
       "status": "pr_submitted",
       "tests": 1359,
+      "date": "2026-05-22"
+    },
+    "improve-xml-docs-2026-05-22": {
+      "branch": "repo-assist/improve-xml-docs-2026-05-22",
+      "status": "pr_submitted",
+      "tests": 1354,
       "date": "2026-05-22"
     }
   },
   "known_branches": [
-    "repo-assist/feat-clamp-sign-2026-05-20b-b8ff5f8f4c66c6c8",
+    "repo-assist/feat-clamp-sign-2026-05-22-d528d92767348c89",
     "repo-assist/feat-parse-tryparse-2026-05-20b-42d5565d077b5922",
     "repo-assist/improve-maxvalue-minvalue-2026-05-21-f30a2b6a3b5608f4",
     "repo-assist/perf-aggressive-inlining-2026-05-21-a6e47d32989a56c9",
-    "repo-assist/test-edge-cases-2026-05-21-2dbe6d62ee1bd882"
+    "repo-assist/test-edge-cases-2026-05-21-2dbe6d62ee1bd882",
+    "repo-assist/improve-xml-docs-2026-05-22"
   ],
-  "notes": "SDK was pinned to 10.0.203 (unavailable on runners); fixed to 10.0.204/latestPatch in feat-clamp-sign-2026-05-22 branch. Many duplicate issues (#7-#33) exist for same features - maintainer should close them. No human-authored issues exist yet.",
-  "issue_backlog_cursor": 33,
-  "backlog_features_pending": ["Parse/TryParse + IParsable", "MaxValue/MinValue", "AggressiveInlining", "edge-case tests", "XML docs", "NuGet metadata", "CI workflow"]
+  "notes": "All PRs end up as issues/patches due to tool constraints. Many ready branches exist for review. XML docs implemented this run. Remaining backlog: NuGet metadata, CI workflow. No human-authored issues exist. Many duplicate issues (#7-#33) need closing by maintainer.",
+  "issue_backlog_cursor": 34,
+  "backlog_features_pending": ["Parse/TryParse + IParsable", "MaxValue/MinValue", "AggressiveInlining", "NuGet metadata", "CI workflow"]
 }

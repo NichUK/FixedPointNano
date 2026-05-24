@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-05-23T13:13:44Z",
-  "run_id": "26333619342",
+  "last_run": "2026-05-24T01:28:49Z",
+  "run_id": "26348537144",
   "monthly_activity_issue": 6,
   "comments_made": {
     "3": "2026-05-22T01:29:04Z",
@@ -8,6 +8,12 @@
     "11": "2026-05-19T13:54:44Z"
   },
   "fix_attempts": {
+    "chore-nuget-metadata-2026-05-24": {
+      "branch": "repo-assist/chore-nuget-metadata-2026-05-24",
+      "status": "pr_submitted",
+      "tests": 1354,
+      "date": "2026-05-24"
+    },
     "eng-ci-workflow-2026-05-23-v2": {
       "branch": "repo-assist/eng-ci-workflow-2026-05-23-v2",
       "status": "pr_submitted",
@@ -40,6 +46,7 @@
     }
   },
   "known_branches": [
+    "repo-assist/chore-nuget-metadata-2026-05-24",
     "repo-assist/eng-ci-workflow-2026-05-23-v2",
     "repo-assist/test-floor-ceiling-rounding-2026-05-23",
     "repo-assist/test-overflow-edge-cases-2026-05-23",
@@ -50,7 +57,7 @@
     "repo-assist/perf-aggressive-inlining-2026-05-21-a6e47d32989a56c9",
     "repo-assist/test-edge-cases-2026-05-21-2dbe6d62ee1bd882"
   ],
-  "notes": "Task 2: all issues are Repo Assist submissions - no human issues to comment on. CI workflow now created. Many ready branches exist for review. Remaining backlog: NuGet metadata, Parse/TryParse. Many duplicate issues (#7-#36) need closing by maintainer.",
+  "notes": "Task 2: all issues are Repo Assist submissions - no human issues to comment on. Many branches exist for review. Remaining backlog: NuGet metadata DONE. Many duplicate issues (#7-#36) need closing by maintainer.",
   "issue_backlog_cursor": 37,
-  "backlog_features_pending": ["Parse/TryParse + IParsable", "MaxValue/MinValue", "AggressiveInlining", "NuGet metadata"]
+  "backlog_features_pending": ["Parse/TryParse + IParsable (branch ready)", "MaxValue/MinValue (branch ready)", "AggressiveInlining (branch ready)", "NuGet metadata (branch ready)"]
 }

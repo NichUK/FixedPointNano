@@ -3,16 +3,33 @@
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>FixedPointNano</RootNamespace>
     <AssemblyName>FixedPointNano</AssemblyName>
+
+    <!-- NuGet package identity -->
     <PackageId>FixedPointNano</PackageId>
+    <Version>0.1.0</Version>
     <Authors>NichUK</Authors>
     <Company>Quantauma</Company>
-    <Description>Long-backed fixed-point numeric primitive with 9 decimal places.</Description>
+    <Copyright>Copyright (c) 2024 NichUK</Copyright>
+
+    <!-- Package discovery -->
+    <Description>A high-performance, long-backed fixed-point numeric primitive for .NET with 9 decimal places of precision and deterministic arithmetic.</Description>
+    <PackageTags>fixed-point;numeric;deterministic;finance;precision;math</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/NichUK/FixedPointNano</PackageProjectUrl>
+
+    <!-- Source repository -->
     <RepositoryUrl>https://github.com/NichUK/FixedPointNano</RepositoryUrl>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Reproducible builds -->
+    <Deterministic>true</Deterministic>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 </Project>

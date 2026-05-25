@@ -49,7 +49,7 @@ public readonly struct FixedPointNano :
         1L,
     ];
 
-    /// <summary>Gets a <see cref="FixedPointNano"/> that represents zero (0).</summary>
+    public static FixedPointNano Epsilon { get; } = new(1L);
     public static FixedPointNano Zero { get; } = new(0L);
 
     /// <summary>Gets a <see cref="FixedPointNano"/> that represents one (1).</summary>
@@ -75,12 +75,10 @@ public readonly struct FixedPointNano :
     /// </summary>
     public long RawValue { get; }
 
-    /// <summary>Returns the absolute value of <paramref name="value"/>.</summary>
-    /// <param name="value">The value whose absolute value is computed.</param>
-    /// <returns>The absolute value of <paramref name="value"/>.</returns>
-    /// <exception cref="OverflowException">
-    /// Thrown when <paramref name="value"/> equals <see cref="long.MinValue"/> (no positive counterpart).
-    /// </exception>
+    public bool IsZero => RawValue == 0;
+    public bool IsPositive => RawValue > 0;
+    public bool IsNegative => RawValue < 0;
+
     public static FixedPointNano Abs(FixedPointNano value)
     {
         return value.RawValue < 0
@@ -588,14 +586,16 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(checked(-value.RawValue));
     }
 
-    /// <summary>Multiplies two <see cref="FixedPointNano"/> values.</summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns>
-    /// The product of <paramref name="left"/> and <paramref name="right"/>,
-    /// rounded to nearest even.
-    /// </returns>
-    /// <exception cref="OverflowException">Thrown on arithmetic overflow.</exception>
+    public static FixedPointNano operator ++(FixedPointNano value)
+    {
+        return new FixedPointNano(checked(value.RawValue + Scale));
+    }
+
+    public static FixedPointNano operator --(FixedPointNano value)
+    {
+        return new FixedPointNano(checked(value.RawValue - Scale));
+    }
+
     public static FixedPointNano operator *(FixedPointNano left, FixedPointNano right)
     {
         var product = (Int128)left.RawValue * right.RawValue;

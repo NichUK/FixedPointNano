@@ -1,22 +1,20 @@
 {
-  "last_run": "2026-05-24T13:13:38Z",
-  "run_id": "26362204215",
+  "last_run": "2026-05-25T01:30:24Z",
+  "run_id": "26378556602",
   "monthly_activity_issue": 6,
   "comments_made": {
-    "3": "2026-05-22T01:29:04Z",
-    "8": "2026-05-19T13:54:44Z",
-    "11": "2026-05-19T13:54:44Z"
+    "3": "2026-05-22T01:29:04Z"
   },
   "fix_attempts": {
+    "improve-epsilon-predicates-2026-05-25": {
+      "branch": "repo-assist/improve-epsilon-predicates-2026-05-25",
+      "status": "pr_submitted",
+      "tests": 1358,
+      "date": "2026-05-25"
+    },
     "chore-nuget-metadata-2026-05-24": {
       "branch": "repo-assist/chore-nuget-metadata-2026-05-24-11c8a36d6fd43f4a",
       "status": "branch_ready",
-      "tests": 1354,
-      "date": "2026-05-24"
-    },
-    "eng-ci-workflow-2026-05-24": {
-      "branch": "repo-assist/eng-ci-workflow-2026-05-24",
-      "status": "pr_submitted",
       "tests": 1354,
       "date": "2026-05-24"
     },
@@ -69,14 +67,14 @@
       "date": "2026-05-21"
     }
   },
-  "notes": "All issues are Repo Assist submissions. Many duplicate issues (#3-#39 except #6) need closing by maintainer. 10 branches ready for review. Previous eng-ci-workflow-2026-05-23-v2 branch was empty (no changes) - replaced with eng-ci-workflow-2026-05-24 this run.",
+  "notes": "All issues are Repo Assist submissions. Many duplicate issues (#3-#40 except #6) need closing by maintainer. 11 branches ready for review. PR creation tool produces issues rather than PRs - branches linked via compare URLs in monthly activity issue. CI workflow branches are empty (same commit as main).",
   "issue_backlog_cursor": 40,
   "backlog_features_pending": [
+    "Epsilon+predicates+increment (branch ready: improve-epsilon-predicates-2026-05-25)",
     "Parse/TryParse + IParsable (branch ready: feat-parse-tryparse-2026-05-20b)",
     "MaxValue/MinValue (branch ready: improve-maxvalue-minvalue-2026-05-21)",
     "AggressiveInlining (branch ready: perf-aggressive-inlining-2026-05-21)",
     "NuGet metadata (branch ready: chore-nuget-metadata-2026-05-24)",
-    "CI workflow (branch ready: eng-ci-workflow-2026-05-24)",
     "XML docs (branch ready: improve-xml-docs-2026-05-22)",
     "Clamp/Sign (branch ready: feat-clamp-sign-2026-05-22)",
     "Floor/Ceiling tests (branch ready: test-floor-ceiling-rounding-2026-05-23)",

@@ -49,7 +49,7 @@ public readonly struct FixedPointNano :
         1L,
     ];
 
-    public static FixedPointNano Epsilon { get; } = new(1L);
+    public static FixedPointNano NegativeOne { get; } = new(-Scale);
     public static FixedPointNano Zero { get; } = new(0L);
 
     /// <summary>Gets a <see cref="FixedPointNano"/> that represents one (1).</summary>
@@ -416,7 +416,16 @@ public readonly struct FixedPointNano :
         return new FixedPointNano((value.RawValue / Scale) * Scale);
     }
 
-    /// <inheritdoc/>
+    public static FixedPointNano Frac(FixedPointNano value)
+    {
+        return new FixedPointNano(value.RawValue % Scale);
+    }
+
+    public static bool IsInteger(FixedPointNano value)
+    {
+        return value.RawValue % Scale == 0;
+    }
+
     public int CompareTo(object? obj)
     {
         if (obj is null)

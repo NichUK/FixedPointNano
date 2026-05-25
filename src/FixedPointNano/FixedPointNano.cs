@@ -33,6 +33,7 @@ public readonly struct FixedPointNano :
         1L,
     ];
 
+    public static FixedPointNano Epsilon { get; } = new(1L);
     public static FixedPointNano Zero { get; } = new(0L);
     public static FixedPointNano One { get; } = new(Scale);
 
@@ -42,6 +43,10 @@ public readonly struct FixedPointNano :
     }
 
     public long RawValue { get; }
+
+    public bool IsZero => RawValue == 0;
+    public bool IsPositive => RawValue > 0;
+    public bool IsNegative => RawValue < 0;
 
     public static FixedPointNano Abs(FixedPointNano value)
     {
@@ -329,6 +334,16 @@ public readonly struct FixedPointNano :
     public static FixedPointNano operator -(FixedPointNano value)
     {
         return new FixedPointNano(checked(-value.RawValue));
+    }
+
+    public static FixedPointNano operator ++(FixedPointNano value)
+    {
+        return new FixedPointNano(checked(value.RawValue + Scale));
+    }
+
+    public static FixedPointNano operator --(FixedPointNano value)
+    {
+        return new FixedPointNano(checked(value.RawValue - Scale));
     }
 
     public static FixedPointNano operator *(FixedPointNano left, FixedPointNano right)

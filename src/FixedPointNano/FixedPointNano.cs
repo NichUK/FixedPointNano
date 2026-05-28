@@ -49,7 +49,7 @@ public readonly struct FixedPointNano :
         1L,
     ];
 
-    public static FixedPointNano NegativeOne { get; } = new(-Scale);
+    public static FixedPointNano Epsilon { get; } = new(1L);
     public static FixedPointNano Zero { get; } = new(0L);
 
     /// <summary>Gets a <see cref="FixedPointNano"/> that represents one (1).</summary>

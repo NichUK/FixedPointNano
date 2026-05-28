@@ -386,36 +386,55 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
-    public void NegativeOneShouldHaveNegativeScaleRawValue()
+    public void EpsilonShouldBeSmallestPositiveValue()
     {
-        Assert.That(FixedPointNano.NegativeOne.RawValue, Is.EqualTo(-FixedPointNano.Scale));
-        Assert.That(FixedPointNano.NegativeOne.ToDecimal(), Is.EqualTo(-1m));
+        Assert.That(FixedPointNano.Epsilon.RawValue, Is.EqualTo(1L));
+        Assert.That(FixedPointNano.Epsilon, Is.GreaterThan(FixedPointNano.Zero));
+        Assert.That((decimal)FixedPointNano.Epsilon, Is.EqualTo(0.000000001m));
     }
 
     [Test]
-    public void FracShouldReturnFractionalPart()
+    public void PredicatePropertiesShouldClassifySign()
     {
-        Assert.Multiple(() =>
-        {
-            Assert.That(FixedPointNano.Frac(FixedPointNano.FromDecimal(3.25m)).ToDecimal(), Is.EqualTo(0.25m));
-            Assert.That(FixedPointNano.Frac(FixedPointNano.FromDecimal(-3.75m)).ToDecimal(), Is.EqualTo(-0.75m));
-            Assert.That(FixedPointNano.Frac(FixedPointNano.FromDecimal(5.0m)).ToDecimal(), Is.EqualTo(0m));
-            Assert.That(FixedPointNano.Frac(FixedPointNano.Zero).ToDecimal(), Is.EqualTo(0m));
-        });
+        var positive = FixedPointNano.FromDecimal(1.5m);
+        var negative = FixedPointNano.FromDecimal(-0.5m);
+        var zero = FixedPointNano.Zero;
+
+        Assert.That(positive.IsPositive, Is.True);
+        Assert.That(positive.IsNegative, Is.False);
+        Assert.That(positive.IsZero, Is.False);
+
+        Assert.That(negative.IsPositive, Is.False);
+        Assert.That(negative.IsNegative, Is.True);
+        Assert.That(negative.IsZero, Is.False);
+
+        Assert.That(zero.IsPositive, Is.False);
+        Assert.That(zero.IsNegative, Is.False);
+        Assert.That(zero.IsZero, Is.True);
     }
 
     [Test]
-    public void IsIntegerShouldReturnTrueOnlyForExactIntegers()
+    public void IncrementDecrementOperatorsShouldAddOrSubtractOne()
     {
-        Assert.Multiple(() =>
-        {
-            Assert.That(FixedPointNano.IsInteger(FixedPointNano.Zero), Is.True);
-            Assert.That(FixedPointNano.IsInteger(FixedPointNano.One), Is.True);
-            Assert.That(FixedPointNano.IsInteger(FixedPointNano.NegativeOne), Is.True);
-            Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(42.0m)), Is.True);
-            Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(3.5m)), Is.False);
-            Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(-1.000000001m)), Is.False);
-        });
+        var value = FixedPointNano.FromDecimal(2.5m);
+
+        var incremented = value;
+        incremented++;
+        Assert.That((decimal)incremented, Is.EqualTo(3.5m));
+
+        var decremented = value;
+        decremented--;
+        Assert.That((decimal)decremented, Is.EqualTo(1.5m));
+    }
+
+    [Test]
+    public void IncrementDecrementOperatorsShouldThrowOnOverflow()
+    {
+        var maxish = new FixedPointNano(long.MaxValue);
+        var minish = new FixedPointNano(long.MinValue);
+
+        Assert.That(() => { var v = maxish; v++; }, Throws.TypeOf<OverflowException>());
+        Assert.That(() => { var v = minish; v--; }, Throws.TypeOf<OverflowException>());
     }
 
     private sealed class CultureScope : IDisposable

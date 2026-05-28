@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-05-28T01:24:35Z",
-  "run_id": "26548834838",
+  "last_run": "2026-05-28T14:07:20Z",
+  "run_id": "26579723013",
   "monthly_activity_issue": 6,
   "comments_made": {
     "3": "2026-05-22T01:29:04Z"
@@ -10,21 +10,19 @@
       "branch": "repo-assist/feat-parse-tryparse-2026-05-20b-42d5565d077b5922",
       "status": "pr_submitted",
       "tests": 1363,
-      "date": "2026-05-28",
-      "pr_title": "feat: add Parse/TryParse and implement IParsable/ISpanParsable"
+      "date": "2026-05-28"
     },
     "improve-negativone-isinteger-frac-pr-2026-05-28": {
       "branch": "repo-assist/improve-negativone-isinteger-frac-2026-05-25-7d98548cc1500f27",
       "status": "pr_submitted",
       "tests": 1357,
-      "date": "2026-05-28",
-      "pr_title": "feat: add NegativeOne, Frac, and IsInteger"
+      "date": "2026-05-28"
     },
-    "improve-epsilon-predicates-2026-05-25": {
+    "improve-epsilon-predicates-2026-05-28": {
       "branch": "repo-assist/improve-epsilon-predicates-2026-05-25-83415de3d636379b",
-      "status": "branch_ready",
+      "status": "pr_submitted",
       "tests": 1358,
-      "date": "2026-05-25"
+      "date": "2026-05-28"
     },
     "chore-nuget-metadata-2026-05-24": {
       "branch": "repo-assist/chore-nuget-metadata-2026-05-24-11c8a36d6fd43f4a",
@@ -75,10 +73,9 @@
       "date": "2026-05-21"
     }
   },
-  "notes": "All issues are Repo Assist submissions. Many duplicate issues need closing by maintainer. 2 draft PRs created this run (parse/tryparse and negativone/frac/isinteger). 9 branches still branch_ready awaiting PRs.",
-  "issue_backlog_cursor": 42,
+  "notes": "All issues are Repo Assist submissions. Maintainer has not yet responded. Many branches ready; PRs submitted via safeoutputs but appear as issues in tracker. 8 branches still branch_ready awaiting PRs.",
+  "issue_backlog_cursor": 44,
   "backlog_features_pending": [
-    "Epsilon+predicates+increment (branch ready: improve-epsilon-predicates-2026-05-25-83415de3d636379b)",
     "Clamp/Sign (branch ready: feat-clamp-sign-2026-05-22-d528d92767348c89)",
     "MaxValue/MinValue (branch ready: improve-maxvalue-minvalue-2026-05-21-f30a2b6a3b5608f4)",
     "AggressiveInlining (branch ready: perf-aggressive-inlining-2026-05-21-a6e47d32989a56c9)",

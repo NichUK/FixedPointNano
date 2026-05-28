@@ -287,6 +287,39 @@ public sealed class FixedPointNanoTests
         });
     }
 
+    [Test]
+    public void NegativeOneShouldHaveNegativeScaleRawValue()
+    {
+        Assert.That(FixedPointNano.NegativeOne.RawValue, Is.EqualTo(-FixedPointNano.Scale));
+        Assert.That(FixedPointNano.NegativeOne.ToDecimal(), Is.EqualTo(-1m));
+    }
+
+    [Test]
+    public void FracShouldReturnFractionalPart()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Frac(FixedPointNano.FromDecimal(3.25m)).ToDecimal(), Is.EqualTo(0.25m));
+            Assert.That(FixedPointNano.Frac(FixedPointNano.FromDecimal(-3.75m)).ToDecimal(), Is.EqualTo(-0.75m));
+            Assert.That(FixedPointNano.Frac(FixedPointNano.FromDecimal(5.0m)).ToDecimal(), Is.EqualTo(0m));
+            Assert.That(FixedPointNano.Frac(FixedPointNano.Zero).ToDecimal(), Is.EqualTo(0m));
+        });
+    }
+
+    [Test]
+    public void IsIntegerShouldReturnTrueOnlyForExactIntegers()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.IsInteger(FixedPointNano.Zero), Is.True);
+            Assert.That(FixedPointNano.IsInteger(FixedPointNano.One), Is.True);
+            Assert.That(FixedPointNano.IsInteger(FixedPointNano.NegativeOne), Is.True);
+            Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(42.0m)), Is.True);
+            Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(3.5m)), Is.False);
+            Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(-1.000000001m)), Is.False);
+        });
+    }
+
     private sealed class CultureScope : IDisposable
     {
         private readonly CultureInfo _originalCulture;

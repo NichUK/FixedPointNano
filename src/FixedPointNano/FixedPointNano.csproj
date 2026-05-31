@@ -9,6 +9,7 @@
     <Description>Long-backed fixed-point numeric primitive with 9 decimal places.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/NichUK/FixedPointNano</RepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

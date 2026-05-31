@@ -460,6 +460,29 @@ public sealed class FixedPointNanoMathComparisonTests
         return current;
     }
 
+    [Test]
+    public void DivideByLongHandlesExtremeRawValues()
+    {
+        Assert.Multiple(() =>
+        {
+            // long.MinValue numerator: falls back to Int128 path, divides correctly.
+            var minDivTwo = FixedPointNano.Divide(FixedPointNano.FromRaw(long.MinValue), 2L);
+            Assert.That(minDivTwo.RawValue, Is.EqualTo(long.MinValue / 2));
+
+            // long.MinValue denominator: falls back to Int128 path, tiny result rounds to 0.
+            var oneDivMin = FixedPointNano.Divide(FixedPointNano.FromRaw(1L), long.MinValue);
+            Assert.That(oneDivMin.RawValue, Is.EqualTo(0L));
+
+            // Banker's round-up: quotient=1 (odd), 2*remainder==denominator → rounds up to 2.
+            var bankersUp = FixedPointNano.Divide(FixedPointNano.FromRaw(3L), 2L);
+            Assert.That(bankersUp.RawValue, Is.EqualTo(2L));
+
+            // Banker's round-down: quotient=2 (even), 2*remainder==denominator → stays at 2.
+            var bankersDown = FixedPointNano.Divide(FixedPointNano.FromRaw(5L), 2L);
+            Assert.That(bankersDown.RawValue, Is.EqualTo(2L));
+        });
+    }
+
     private static long RoundDoubleToRaw(double value)
     {
         if (double.IsNaN(value) || double.IsInfinity(value))

@@ -147,7 +147,7 @@ public readonly struct FixedPointNano :
             throw new DivideByZeroException();
         }
 
-        return FromRawChecked(DivideRoundedToNearestEven(value.RawValue, divisor));
+        return new FixedPointNano(DivideRoundedToNearestEven(value.RawValue, divisor));
     }
 
     public static FixedPointNano MultiplyRatio(FixedPointNano value, long numerator, long denominator)
@@ -748,6 +748,51 @@ public readonly struct FixedPointNano :
         }
 
         return quotient % 2 == 0 ? quotient : quotient + 1;
+    }
+
+    // Fast long-only overload for Divide(value, int/long) — avoids Int128 overhead.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long DivideRoundedToNearestEven(long numerator, long denominator)
+    {
+        // Fall back to Int128 for the long.MinValue edge cases to avoid negation overflow.
+        if (numerator == long.MinValue || denominator == long.MinValue)
+        {
+            return (long)DivideRoundedToNearestEven((Int128)numerator, (Int128)denominator);
+        }
+
+        if (denominator < 0)
+        {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+
+        if (numerator < 0)
+        {
+            return -DivideRoundedToNearestEvenNonNeg(-numerator, denominator);
+        }
+
+        return DivideRoundedToNearestEvenNonNeg(numerator, denominator);
+    }
+
+    // Both numerator and denominator are non-negative; denominator > 0.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long DivideRoundedToNearestEvenNonNeg(long numerator, long denominator)
+    {
+        var quotient = numerator / denominator;
+        var remainder = numerator % denominator;
+        // Compare 2*remainder vs denominator overflow-free: remainder vs (denominator - remainder).
+        var halfFromAbove = denominator - remainder;
+        if (remainder < halfFromAbove)
+        {
+            return quotient;
+        }
+
+        if (remainder > halfFromAbove)
+        {
+            return quotient + 1;
+        }
+
+        return (quotient & 1L) == 0 ? quotient : quotient + 1;
     }
 
     private static long RoundRaw(long rawValue, long quantum, MidpointRounding rounding)

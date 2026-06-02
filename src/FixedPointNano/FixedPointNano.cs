@@ -35,6 +35,8 @@ public readonly struct FixedPointNano :
 
     public static FixedPointNano Zero { get; } = new(0L);
     public static FixedPointNano One { get; } = new(Scale);
+    public static FixedPointNano MaxValue { get; } = new(long.MaxValue);
+    public static FixedPointNano MinValue { get; } = new(long.MinValue);
 
     public FixedPointNano(long rawValue)
     {
@@ -42,6 +44,10 @@ public readonly struct FixedPointNano :
     }
 
     public long RawValue { get; }
+
+    public bool IsZero => RawValue == 0;
+    public bool IsPositive => RawValue > 0;
+    public bool IsNegative => RawValue < 0;
 
     public static FixedPointNano Abs(FixedPointNano value)
     {

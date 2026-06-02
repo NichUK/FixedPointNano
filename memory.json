@@ -1,12 +1,12 @@
 {
-  "last_run": "2026-06-01T14:45:50Z",
-  "run_id": "26762146340",
+  "last_run": "2026-06-02T01:36:23Z",
+  "run_id": "26792902104",
   "monthly_activity_issue": 62,
   "monthly_activity_month": "2026-06",
   "comments_made": {
     "3": "2026-06-01T14:45:50Z"
   },
-  "protected_files_issue": "global.json is a protected file - create_pull_request always falls back to review issue. Maintainer must click compare link in the issue to create the actual PR.",
+  "protected_files_issue": "global.json and .github/workflows/ are protected files - create_pull_request falls back to review issue for branches that modify them. Maintainer must click compare link to create the actual PR.",
   "key_branches_ready": {
     "nuget-sdk-fix": "nuget-metadata-sdk-fix-131e591151c6df57 (1354 tests, SDK fix + NuGet metadata + LICENSE)",
     "clamp-sign": "feat-clamp-sign-pr-9d1f580d1b201d0c (1359 tests, Clamp+Sign methods)",
@@ -32,14 +32,20 @@
       "branch": "feat-parse-tryparse-pr-fb0e544d2de18743",
       "status": "review_issue_61",
       "tests": 1363
+    },
+    "perf-aggressive-inlining-2026-06-02": {
+      "branch": "perf-aggressive-inlining-pr",
+      "status": "pr_submitted",
+      "tests": 1354,
+      "note": "Only modifies src/FixedPointNano/FixedPointNano.cs - no global.json change. Should create actual PR (not review issue)."
     }
   },
-  "notes": "global.json is a protected file. create_pull_request always creates review issues instead of PRs. Maintainer needs to click compare links to create actual PRs. Issues #3-#58 are stale and should be closed. Real pending work in review issues #59, #60, #61. More branches ready for future runs: docs-xml, maxvalue-minvalue, aggressiveinlining, long-divide.",
-  "issue_backlog_cursor": 62,
+  "notes": "global.json is a protected file. create_pull_request always creates review issues for branches touching global.json. The perf-aggressive-inlining branch only modifies FixedPointNano.cs so should have created an actual PR. All issues #3-#65 except #62 are stale Repo Assist duplicates or expired automation failures. Maintainer needs to: (1) create PRs from compare links in #59, #60, #61, (2) close stale issues. Next tasks: docs-xml, maxvalue-minvalue, long-divide branches can also be submitted as PRs only if they don't touch global.json (verify first). global.json pins to 10.0.203 on main which is not installed (only 10.0.204). Fix comes with #59.",
+  "issue_backlog_cursor": 65,
   "backlog_features_pending": [
-    "XML docs (branch: repo-assist/docs-xml-pr-8c1992d88d7dae36)",
-    "MaxValue/MinValue (branch: repo-assist/feat-maxvalue-minvalue-2026-05-29-45ec7ab-40973fc7074a01a2)",
-    "AggressiveInlining perf (branch: repo-assist/perf-aggressive-inlining-2026-05-21-a6e47d32989a56c9)",
-    "Long-typed division perf (branch: repo-assist/perf-long-divide-2026-05-31-a963199892c95062)"
-  ]
+    "XML docs (branch: repo-assist/docs-xml-pr-8c1992d88d7dae36) - modifies global.json, use review issue",
+    "MaxValue/MinValue (branch: repo-assist/feat-maxvalue-minvalue-2026-05-29-45ec7ab-40973fc7074a01a2) - modifies global.json, use review issue",
+    "Long-typed division perf (branch: repo-assist/perf-long-divide-2026-05-31-a963199892c95062) - modifies global.json, use review issue"
+  ],
+  "task2_note": "All 61 open issues as of 2026-06-02 are Repo Assist automation issues or expired workflow failure notices. No human-authored issues to investigate. Skip Task 2 in future runs unless new human issues are created."
 }

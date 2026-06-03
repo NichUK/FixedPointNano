@@ -287,6 +287,55 @@ public sealed class FixedPointNanoTests
         });
     }
 
+    [Test]
+    public void ClampShouldReturnValueWhenWithinRange()
+    {
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(3m), min, max).ToDecimal(), Is.EqualTo(3m));
+            Assert.That(FixedPointNano.Clamp(min, min, max).ToDecimal(), Is.EqualTo(1m));
+            Assert.That(FixedPointNano.Clamp(max, min, max).ToDecimal(), Is.EqualTo(5m));
+        });
+    }
+
+    [Test]
+    public void ClampShouldReturnMinWhenBelowRange()
+    {
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+        Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(-1m), min, max).ToDecimal(), Is.EqualTo(1m));
+    }
+
+    [Test]
+    public void ClampShouldReturnMaxWhenAboveRange()
+    {
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+        Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(10m), min, max).ToDecimal(), Is.EqualTo(5m));
+    }
+
+    [Test]
+    public void ClampShouldThrowWhenMinExceedsMax()
+    {
+        var min = FixedPointNano.FromDecimal(5m);
+        var max = FixedPointNano.FromDecimal(1m);
+        Assert.That(() => FixedPointNano.Clamp(FixedPointNano.Zero, min, max), Throws.TypeOf<ArgumentOutOfRangeException>());
+    }
+
+    [Test]
+    public void SignShouldReturnCorrectValue()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(3.5m)), Is.EqualTo(1));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.Zero), Is.EqualTo(0));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(-0.000000001m)), Is.EqualTo(-1));
+        });
+    }
+
     private sealed class CultureScope : IDisposable
     {
         private readonly CultureInfo _originalCulture;

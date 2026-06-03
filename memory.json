@@ -1,63 +1,61 @@
 {
-  "last_run": "2026-06-02T14:13:10Z",
-  "run_id": "26825421571",
+  "last_run": "2026-06-03T01:42:08Z",
+  "run_id": "26858553669",
   "monthly_activity_issue": 62,
   "monthly_activity_month": "2026-06",
   "comments_made": {
     "3": "2026-06-01T14:45:50Z"
   },
-  "protected_files_issue": "global.json and .github/workflows/ are protected files - create_pull_request falls back to review issue for branches that modify them. Maintainer must click compare link to create the actual PR.",
-  "key_branches_ready": {
-    "nuget-sdk-fix": "nuget-metadata-sdk-fix-131e591151c6df57 (1354 tests, SDK fix + NuGet metadata + LICENSE)",
-    "clamp-sign": "feat-clamp-sign-pr-9d1f580d1b201d0c (1359 tests, Clamp+Sign methods)",
-    "parse-tryparse": "feat-parse-tryparse-pr-fb0e544d2de18743 (1363 tests, Parse/TryParse + IParsable/ISpanParsable)",
-    "perf-inlining": "perf-aggressive-inlining-pr-eea50e48ac168506 (1354 tests, AggressiveInlining on public methods)"
-  },
-  "review_issues": {
-    "59": "SDK fix + NuGet metadata (compare: nuget-metadata-sdk-fix-131e591151c6df57)",
-    "60": "Clamp + Sign (compare: feat-clamp-sign-pr-9d1f580d1b201d0c)",
-    "61": "Parse/TryParse (compare: feat-parse-tryparse-pr-fb0e544d2de18743)"
+  "key_prs_submitted_this_run": {
+    "feat-constants-predicates": "branch: feature/feat-constants-predicates-2026-06-02 (1355 tests)",
+    "eng-benchmarks": "branch: feature/eng-benchmarks-rounding-2026-06-02 (build pass)",
+    "perf-inlining": "branch: perf-aggressive-inlining-2026-06-02 (1354 tests)",
+    "feat-clamp-sign": "branch: feat-clamp-sign-2026-06-03 (1359 tests)",
+    "feat-parse-tryparse": "branch: feat-parse-tryparse-2026-06-03 (1363 tests)",
+    "nuget-sdk-fix": "branch: nuget-sdk-fix-2026-06-03 (1354 tests)"
   },
   "fix_attempts": {
     "feat-constants-predicates-2026-06-02": {
       "branch": "feature/feat-constants-predicates-2026-06-02",
       "status": "pr_submitted",
       "tests": 1355,
-      "note": "Task 5: Adds MaxValue, MinValue, IsZero, IsPositive, IsNegative. Only touches FixedPointNano.cs and tests - should be actual PR."
+      "note": "Adds MaxValue, MinValue, IsZero, IsPositive, IsNegative + global.json fix"
     },
     "eng-benchmarks-rounding-2026-06-02": {
       "branch": "feature/eng-benchmarks-rounding-2026-06-02",
       "status": "pr_submitted",
-      "tests": 1354,
-      "note": "Task 4: Adds Floor/Ceiling/Truncate/Abs/MultiplyRatio benchmarks. Only touches benchmarks file - should be actual PR."
+      "note": "Adds Floor/Ceiling/Truncate/Abs/MultiplyRatio benchmarks + global.json fix"
     },
-    "perf-aggressive-inlining-2026-06-02": {
-      "branch": "perf-aggressive-inlining-pr-eea50e48ac168506",
+    "perf-aggressive-inlining-2026-06-03": {
+      "branch": "perf-aggressive-inlining-2026-06-02",
       "status": "pr_submitted",
       "tests": 1354,
-      "note": "Only modifies src/FixedPointNano/FixedPointNano.cs - should be actual PR (review issue #66 created last run)."
+      "note": "AggressiveInlining on hot-path + global.json fix"
     },
-    "nuget-sdk-fix-2026-06-01": {
-      "branch": "nuget-metadata-sdk-fix-131e591151c6df57",
-      "status": "review_issue_59",
-      "tests": 1354
+    "feat-clamp-sign-2026-06-03": {
+      "branch": "feat-clamp-sign-2026-06-03",
+      "status": "pr_submitted",
+      "tests": 1359,
+      "note": "Clamp+Sign methods"
     },
-    "clamp-sign-2026-06-01": {
-      "branch": "feat-clamp-sign-pr-9d1f580d1b201d0c",
-      "status": "review_issue_60",
-      "tests": 1359
+    "feat-parse-tryparse-2026-06-03": {
+      "branch": "feat-parse-tryparse-2026-06-03",
+      "status": "pr_submitted",
+      "tests": 1363,
+      "note": "Parse/TryParse + IParsable/ISpanParsable"
     },
-    "parse-tryparse-2026-06-01": {
-      "branch": "feat-parse-tryparse-pr-fb0e544d2de18743",
-      "status": "review_issue_61",
-      "tests": 1363
+    "nuget-sdk-fix-2026-06-03": {
+      "branch": "nuget-sdk-fix-2026-06-03",
+      "status": "pr_submitted",
+      "tests": 1354,
+      "note": "SDK pin fix + NuGet metadata + LICENSE"
     }
   },
-  "notes": "global.json pins 10.0.203 but only 10.0.204 available. SDK fix in review issue #59. MaxValue/MinValue now implemented in PR (feat-constants-predicates-2026-06-02). All issues #3-#66 except #62 are stale. Next: XML docs (branch ready), Long-typed division perf (branch ready), CI workflow (blocked by protected path).",
-  "issue_backlog_cursor": 66,
+  "notes": "6 PRs submitted this run. global.json fixed in all branches (10.0.203 -> 10.0.204 latestPatch). Pending: XML docs branch (repo-assist/docs-xml-pr-8c1992d88d7dae36), long-typed division perf branch. All issues #3-#68 except #62 are stale - maintainer should close them. Task 2: no human-authored issues to comment on.",
+  "issue_backlog_cursor": 68,
   "backlog_features_pending": [
-    "XML docs (branch: repo-assist/docs-xml-pr-8c1992d88d7dae36) - modifies global.json, use review issue",
-    "Long-typed division perf (branch: repo-assist/perf-long-divide-2026-05-31-a963199892c95062) - modifies global.json, use review issue"
+    "XML docs (branch: repo-assist/docs-xml-pr-8c1992d88d7dae36) - create PR next run",
+    "Long-typed division perf (branch: repo-assist/perf-long-divide-2026-05-31-a963199892c95062) - create PR next run"
   ],
-  "task2_note": "All open issues as of 2026-06-02 are Repo Assist automation issues or expired workflow failure notices. No human-authored issues to investigate. Skip Task 2 in future runs unless new human issues are created."
+  "task2_note": "All open issues are Repo Assist automation issues. No human-authored issues to investigate. Skip Task 2 unless new human issues are created."
 }

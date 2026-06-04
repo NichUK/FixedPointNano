@@ -1160,11 +1160,11 @@ public readonly struct FixedPointNano :
         return quotient % 2 == 0 ? quotient : quotient + 1;
     }
 
-    // Fast long-only overload for Divide(value, int/long) — avoids Int128 overhead.
+    // Fast long-only overload for Divide(value, int/long) — avoids Int128 overhead on the common path.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static long DivideRoundedToNearestEven(long numerator, long denominator)
     {
-        // Fall back to Int128 for the long.MinValue edge cases to avoid negation overflow.
+        // Fall back to Int128 for long.MinValue to avoid negation overflow.
         if (numerator == long.MinValue || denominator == long.MinValue)
         {
             return (long)DivideRoundedToNearestEven((Int128)numerator, (Int128)denominator);
@@ -1185,12 +1185,12 @@ public readonly struct FixedPointNano :
     }
 
     // Both numerator and denominator are non-negative; denominator > 0.
+    // Uses (denominator - remainder) instead of 2*remainder to avoid overflow.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static long DivideRoundedToNearestEvenNonNeg(long numerator, long denominator)
     {
         var quotient = numerator / denominator;
         var remainder = numerator % denominator;
-        // Compare 2*remainder vs denominator overflow-free: remainder vs (denominator - remainder).
         var halfFromAbove = denominator - remainder;
         if (remainder < halfFromAbove)
         {

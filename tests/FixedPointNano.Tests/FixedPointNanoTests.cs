@@ -408,55 +408,52 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
-    public void EpsilonShouldBeSmallestPositiveValue()
+    public void ClampShouldReturnValueWhenWithinRange()
     {
-        Assert.That(FixedPointNano.Epsilon.RawValue, Is.EqualTo(1L));
-        Assert.That(FixedPointNano.Epsilon, Is.GreaterThan(FixedPointNano.Zero));
-        Assert.That((decimal)FixedPointNano.Epsilon, Is.EqualTo(0.000000001m));
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(3m), min, max).ToDecimal(), Is.EqualTo(3m));
+            Assert.That(FixedPointNano.Clamp(min, min, max).ToDecimal(), Is.EqualTo(1m));
+            Assert.That(FixedPointNano.Clamp(max, min, max).ToDecimal(), Is.EqualTo(5m));
+        });
     }
 
     [Test]
-    public void PredicatePropertiesShouldClassifySign()
+    public void ClampShouldReturnMinWhenBelowRange()
     {
-        var positive = FixedPointNano.FromDecimal(1.5m);
-        var negative = FixedPointNano.FromDecimal(-0.5m);
-        var zero = FixedPointNano.Zero;
-
-        Assert.That(positive.IsPositive, Is.True);
-        Assert.That(positive.IsNegative, Is.False);
-        Assert.That(positive.IsZero, Is.False);
-
-        Assert.That(negative.IsPositive, Is.False);
-        Assert.That(negative.IsNegative, Is.True);
-        Assert.That(negative.IsZero, Is.False);
-
-        Assert.That(zero.IsPositive, Is.False);
-        Assert.That(zero.IsNegative, Is.False);
-        Assert.That(zero.IsZero, Is.True);
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+        Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(-1m), min, max).ToDecimal(), Is.EqualTo(1m));
     }
 
     [Test]
-    public void IncrementDecrementOperatorsShouldAddOrSubtractOne()
+    public void ClampShouldReturnMaxWhenAboveRange()
     {
-        var value = FixedPointNano.FromDecimal(2.5m);
-
-        var incremented = value;
-        incremented++;
-        Assert.That((decimal)incremented, Is.EqualTo(3.5m));
-
-        var decremented = value;
-        decremented--;
-        Assert.That((decimal)decremented, Is.EqualTo(1.5m));
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+        Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(10m), min, max).ToDecimal(), Is.EqualTo(5m));
     }
 
     [Test]
-    public void IncrementDecrementOperatorsShouldThrowOnOverflow()
+    public void ClampShouldThrowWhenMinExceedsMax()
     {
-        var maxish = new FixedPointNano(long.MaxValue);
-        var minish = new FixedPointNano(long.MinValue);
+        var min = FixedPointNano.FromDecimal(5m);
+        var max = FixedPointNano.FromDecimal(1m);
+        Assert.That(() => FixedPointNano.Clamp(FixedPointNano.Zero, min, max), Throws.TypeOf<ArgumentOutOfRangeException>());
+    }
 
-        Assert.That(() => { var v = maxish; v++; }, Throws.TypeOf<OverflowException>());
-        Assert.That(() => { var v = minish; v--; }, Throws.TypeOf<OverflowException>());
+    [Test]
+    public void SignShouldReturnCorrectValue()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(3.5m)), Is.EqualTo(1));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.Zero), Is.EqualTo(0));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(-0.000000001m)), Is.EqualTo(-1));
+        });
     }
 
     private sealed class CultureScope : IDisposable

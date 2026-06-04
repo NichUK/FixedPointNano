@@ -1,62 +1,75 @@
 {
-  "last_run": "2026-06-03T14:19:11Z",
-  "run_id": "26890795161",
+  "last_run": "2026-06-04T01:42:47Z",
+  "run_id": "26924707781",
   "monthly_activity_issue": 62,
   "monthly_activity_month": "2026-06",
   "comments_made": {
     "3": "2026-06-01T14:45:50Z"
   },
   "fix_attempts": {
-    "docs-xml-2026-06-03": {
-      "branch": "docs-xml-work",
-      "status": "pr_submitted",
-      "tests": 1354,
-      "note": "XML docs for all public API members"
-    },
-    "perf-long-divide-2026-06-03": {
-      "branch": "perf-long-divide-work",
-      "status": "pr_submitted",
-      "tests": 1355,
-      "note": "long-typed DivideRoundedToNearestEven to avoid Int128 overhead"
-    },
-    "feat-constants-predicates-2026-06-02": {
-      "branch": "feature/feat-constants-predicates-2026-06-02",
-      "status": "pr_submitted",
-      "tests": 1355,
-      "note": "Adds MaxValue, MinValue, IsZero, IsPositive, IsNegative"
-    },
-    "eng-benchmarks-rounding-2026-06-02": {
-      "branch": "feature/eng-benchmarks-rounding-2026-06-02",
-      "status": "pr_submitted",
-      "note": "Adds Floor/Ceiling/Truncate/Abs/MultiplyRatio benchmarks"
-    },
-    "perf-aggressive-inlining-2026-06-03": {
-      "branch": "perf-aggressive-inlining-2026-06-02",
-      "status": "pr_submitted",
-      "tests": 1354,
-      "note": "AggressiveInlining on hot-path"
-    },
-    "feat-clamp-sign-2026-06-03": {
-      "branch": "feat-clamp-sign-2026-06-03",
-      "status": "pr_submitted",
-      "tests": 1359,
-      "note": "Clamp+Sign methods"
-    },
-    "feat-parse-tryparse-2026-06-03": {
-      "branch": "feat-parse-tryparse-2026-06-03",
+    "pr-parse-tryparse-2026-06-04": {
+      "branch": "pr-parse-tryparse",
       "status": "pr_submitted",
       "tests": 1363,
       "note": "Parse/TryParse + IParsable/ISpanParsable"
     },
-    "nuget-sdk-fix-2026-06-03": {
-      "branch": "nuget-sdk-fix-2026-06-03",
+    "pr-xml-docs-2026-06-04": {
+      "branch": "pr-xml-docs",
       "status": "pr_submitted",
+      "tests": 1354,
+      "note": "XML docs for all public API members"
+    },
+    "docs-xml-2026-06-03": {
+      "branch": "docs-xml-work-e98a0a79663b6f8f",
+      "status": "pr_submitted",
+      "tests": 1354,
+      "note": "XML docs (earlier attempt)"
+    },
+    "perf-long-divide-2026-06-03": {
+      "branch": "perf-long-divide-work-07b1a23cf2d8b505",
+      "status": "branch_ready",
+      "tests": 1355,
+      "note": "long-typed DivideRoundedToNearestEven"
+    },
+    "feat-constants-predicates-2026-06-02": {
+      "branch": "feature/feat-constants-predicates-2026-06-02-076c8d936ce96dd2",
+      "status": "branch_ready",
+      "tests": 1355,
+      "note": "MaxValue, MinValue, IsZero, IsPositive, IsNegative"
+    },
+    "eng-benchmarks-rounding-2026-06-02": {
+      "branch": "feature/eng-benchmarks-rounding-2026-06-02-07ce796b1e9eaa28",
+      "status": "branch_ready",
+      "note": "Floor/Ceiling/Truncate/Abs/MultiplyRatio benchmarks"
+    },
+    "perf-aggressive-inlining-2026-06-03": {
+      "branch": "perf-aggressive-inlining-2026-06-02-a23ff70f7ca3b586",
+      "status": "branch_ready",
+      "tests": 1354,
+      "note": "AggressiveInlining on hot-path"
+    },
+    "feat-clamp-sign-2026-06-03": {
+      "branch": "feat-clamp-sign-2026-06-03-459cc4fbf9be3a98",
+      "status": "branch_ready",
+      "tests": 1359,
+      "note": "Clamp+Sign methods"
+    },
+    "nuget-sdk-fix-2026-06-03": {
+      "branch": "nuget-metadata-sdk-fix-131e591151c6df57",
+      "status": "branch_ready",
       "tests": 1354,
       "note": "SDK pin fix + NuGet metadata + LICENSE"
     }
   },
-  "notes": "8 PRs now pending review (all branches built + tested). Maintainer has not yet merged any PRs. Backlog features now exhausted - all major items (docs, perf, parse, clamp, inlining, constants, benchmarks, nuget) have PRs submitted. Next run: consider generic math interfaces or NuGet publishing automation.",
-  "issue_backlog_cursor": 68,
-  "backlog_features_pending": [],
+  "notes": "This run created 2 actual GitHub PRs: pr-parse-tryparse (Parse/TryParse) and pr-xml-docs (XML docs). These are real PRs unlike prior runs which created issues. Several other feature branches are ready but not yet submitted as PRs (perf-long-divide, constants-predicates, benchmarks, aggressive-inlining, clamp-sign, nuget-sdk-fix). Maintainer has not yet merged or reviewed anything.",
+  "issue_backlog_cursor": 74,
+  "backlog_features_pending": [
+    "perf-long-divide: branch perf-long-divide-work-07b1a23cf2d8b505",
+    "constants-predicates: branch feature/feat-constants-predicates-2026-06-02-076c8d936ce96dd2",
+    "benchmarks: branch feature/eng-benchmarks-rounding-2026-06-02-07ce796b1e9eaa28",
+    "aggressive-inlining: branch perf-aggressive-inlining-2026-06-02-a23ff70f7ca3b586",
+    "clamp-sign: branch feat-clamp-sign-2026-06-03-459cc4fbf9be3a98",
+    "nuget-sdk-fix: branch nuget-metadata-sdk-fix-131e591151c6df57"
+  ],
   "task2_note": "All open issues are Repo Assist automation issues. No human-authored issues to investigate. Skip Task 2 unless new human issues are created."
 }

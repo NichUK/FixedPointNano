@@ -1,12 +1,24 @@
 {
-  "last_run": "2026-06-04T01:42:47Z",
-  "run_id": "26924707781",
+  "last_run": "2026-06-04T13:50:15Z",
+  "run_id": "26955895996",
   "monthly_activity_issue": 62,
   "monthly_activity_month": "2026-06",
   "comments_made": {
     "3": "2026-06-01T14:45:50Z"
   },
   "fix_attempts": {
+    "perf-long-divide-2026-06-04": {
+      "branch": "repo-assist/perf-long-divide-2026-06-04",
+      "status": "pr_submitted",
+      "tests": 1355,
+      "note": "long-typed DivideRoundedToNearestEven + global.json fix"
+    },
+    "feat-clamp-sign-2026-06-04": {
+      "branch": "repo-assist/feat-clamp-sign-2026-06-04",
+      "status": "pr_submitted",
+      "tests": 1359,
+      "note": "Clamp+Sign methods + global.json fix"
+    },
     "pr-parse-tryparse-2026-06-04": {
       "branch": "pr-parse-tryparse",
       "status": "pr_submitted",
@@ -18,58 +30,17 @@
       "status": "pr_submitted",
       "tests": 1354,
       "note": "XML docs for all public API members"
-    },
-    "docs-xml-2026-06-03": {
-      "branch": "docs-xml-work-e98a0a79663b6f8f",
-      "status": "pr_submitted",
-      "tests": 1354,
-      "note": "XML docs (earlier attempt)"
-    },
-    "perf-long-divide-2026-06-03": {
-      "branch": "perf-long-divide-work-07b1a23cf2d8b505",
-      "status": "branch_ready",
-      "tests": 1355,
-      "note": "long-typed DivideRoundedToNearestEven"
-    },
-    "feat-constants-predicates-2026-06-02": {
-      "branch": "feature/feat-constants-predicates-2026-06-02-076c8d936ce96dd2",
-      "status": "branch_ready",
-      "tests": 1355,
-      "note": "MaxValue, MinValue, IsZero, IsPositive, IsNegative"
-    },
-    "eng-benchmarks-rounding-2026-06-02": {
-      "branch": "feature/eng-benchmarks-rounding-2026-06-02-07ce796b1e9eaa28",
-      "status": "branch_ready",
-      "note": "Floor/Ceiling/Truncate/Abs/MultiplyRatio benchmarks"
-    },
-    "perf-aggressive-inlining-2026-06-03": {
-      "branch": "perf-aggressive-inlining-2026-06-02-a23ff70f7ca3b586",
-      "status": "branch_ready",
-      "tests": 1354,
-      "note": "AggressiveInlining on hot-path"
-    },
-    "feat-clamp-sign-2026-06-03": {
-      "branch": "feat-clamp-sign-2026-06-03-459cc4fbf9be3a98",
-      "status": "branch_ready",
-      "tests": 1359,
-      "note": "Clamp+Sign methods"
-    },
-    "nuget-sdk-fix-2026-06-03": {
-      "branch": "nuget-metadata-sdk-fix-131e591151c6df57",
-      "status": "branch_ready",
-      "tests": 1354,
-      "note": "SDK pin fix + NuGet metadata + LICENSE"
     }
   },
-  "notes": "This run created 2 actual GitHub PRs: pr-parse-tryparse (Parse/TryParse) and pr-xml-docs (XML docs). These are real PRs unlike prior runs which created issues. Several other feature branches are ready but not yet submitted as PRs (perf-long-divide, constants-predicates, benchmarks, aggressive-inlining, clamp-sign, nuget-sdk-fix). Maintainer has not yet merged or reviewed anything.",
-  "issue_backlog_cursor": 74,
+  "notes": "PRs now created properly via safeoutputs-create_pull_request with patch files. Previous runs created issues not PRs. global.json fix (10.0.203->10.0.300/latestPatch) is required for builds and is included in each PR. All open issues #3-#76 except #62 are Repo Assist automation issues. No human-authored issues to investigate.",
+  "task2_note": "All open issues are Repo Assist automation issues. No human-authored issues to investigate.",
+  "issue_backlog_cursor": 76,
   "backlog_features_pending": [
-    "perf-long-divide: branch perf-long-divide-work-07b1a23cf2d8b505",
-    "constants-predicates: branch feature/feat-constants-predicates-2026-06-02-076c8d936ce96dd2",
-    "benchmarks: branch feature/eng-benchmarks-rounding-2026-06-02-07ce796b1e9eaa28",
-    "aggressive-inlining: branch perf-aggressive-inlining-2026-06-02-a23ff70f7ca3b586",
-    "clamp-sign: branch feat-clamp-sign-2026-06-03-459cc4fbf9be3a98",
-    "nuget-sdk-fix: branch nuget-metadata-sdk-fix-131e591151c6df57"
-  ],
-  "task2_note": "All open issues are Repo Assist automation issues. No human-authored issues to investigate. Skip Task 2 unless new human issues are created."
+    "XML docs: branch pr-xml-docs-e7293da4ac635cb8 (earlier attempt, superseded)",
+    "Parse/TryParse: branch pr-parse-tryparse-d1cce4af17e102b9 (earlier attempt, superseded)",
+    "MaxValue/MinValue/IsZero/IsPositive/IsNegative: multiple branches, not yet PRed",
+    "AggressiveInlining on hot-path operators: branch perf-aggressive-inlining-pr (not yet PRed)",
+    "Benchmarks for Floor/Ceiling/Truncate/Abs/MultiplyRatio: not yet PRed",
+    "NuGet metadata + LICENSE: branch nuget-metadata-sdk-fix-131e591151c6df57"
+  ]
 }

@@ -79,10 +79,7 @@ public readonly struct FixedPointNano :
     /// </summary>
     public long RawValue { get; }
 
-    public bool IsZero => RawValue == 0;
-    public bool IsPositive => RawValue > 0;
-    public bool IsNegative => RawValue < 0;
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Abs(FixedPointNano value)
     {
         return value.RawValue < 0
@@ -179,14 +176,7 @@ public readonly struct FixedPointNano :
         return FromSingle((float)value);
     }
 
-    /// <summary>
-    /// Creates a <see cref="FixedPointNano"/> directly from a raw scaled value
-    /// without any scaling or rounding.
-    /// </summary>
-    /// <param name="rawValue">
-    /// The raw value already multiplied by <see cref="Scale"/>.
-    /// </param>
-    /// <returns>A <see cref="FixedPointNano"/> with the given raw value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano FromRaw(long rawValue)
     {
         return new FixedPointNano(rawValue);
@@ -206,25 +196,13 @@ public readonly struct FixedPointNano :
         return FromDouble(value);
     }
 
-    /// <summary>Returns the larger of two <see cref="FixedPointNano"/> values.</summary>
-    /// <param name="left">The first value.</param>
-    /// <param name="right">The second value.</param>
-    /// <returns>
-    /// <paramref name="left"/> if it is greater than or equal to <paramref name="right"/>;
-    /// otherwise <paramref name="right"/>.
-    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;
     }
 
-    /// <summary>Returns the smaller of two <see cref="FixedPointNano"/> values.</summary>
-    /// <param name="left">The first value.</param>
-    /// <param name="right">The second value.</param>
-    /// <returns>
-    /// <paramref name="left"/> if it is less than or equal to <paramref name="right"/>;
-    /// otherwise <paramref name="right"/>.
-    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Min(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue <= right.RawValue ? left : right;
@@ -256,16 +234,7 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(RoundRaw(value.RawValue, s_roundingScales[decimals], rounding));
     }
 
-    /// <summary>
-    /// Divides <paramref name="value"/> by an integer <paramref name="divisor"/>
-    /// using banker's rounding (<see cref="MidpointRounding.ToEven"/>).
-    /// </summary>
-    /// <param name="value">The dividend.</param>
-    /// <param name="divisor">The integer divisor. Must not be zero.</param>
-    /// <returns>The quotient rounded to nearest even.</returns>
-    /// <exception cref="DivideByZeroException">
-    /// Thrown when <paramref name="divisor"/> is zero.
-    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Divide(FixedPointNano value, int divisor)
     {
         return Divide(value, (long)divisor);
@@ -406,12 +375,7 @@ public readonly struct FixedPointNano :
         return FromRawChecked((Int128)rawValue);
     }
 
-    /// <summary>
-    /// Returns the integral part of <paramref name="value"/>,
-    /// discarding any fractional digits toward zero.
-    /// </summary>
-    /// <param name="value">The value to truncate.</param>
-    /// <returns>The integral part of <paramref name="value"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Truncate(FixedPointNano value)
     {
         return new FixedPointNano((value.RawValue / Scale) * Scale);
@@ -442,46 +406,43 @@ public readonly struct FixedPointNano :
         return CompareTo(other);
     }
 
-    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int CompareTo(FixedPointNano other)
     {
         return RawValue.CompareTo(other.RawValue);
     }
 
-    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(FixedPointNano other)
     {
         return RawValue == other.RawValue;
     }
 
-    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
     {
         return obj is FixedPointNano other && Equals(other);
     }
 
-    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override int GetHashCode()
     {
         return RawValue.GetHashCode();
     }
 
-    /// <summary>Converts this value to a <see cref="decimal"/>.</summary>
-    /// <returns>The value as a <see cref="decimal"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public decimal ToDecimal()
     {
         return RawValue / (decimal)Scale;
     }
 
-    /// <summary>Converts this value to a <see cref="double"/>.</summary>
-    /// <returns>The value as a <see cref="double"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double ToDouble()
     {
         return RawValue / (double)Scale;
     }
 
-    /// <summary>Converts this value to a <see cref="float"/>.</summary>
-    /// <returns>The value as a <see cref="float"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float ToSingle()
     {
         return RawValue / (float)Scale;
@@ -567,62 +528,32 @@ public readonly struct FixedPointNano :
         return ToDecimal().TryFormat(destination, out charsWritten, format, provider);
     }
 
-    /// <summary>Adds two <see cref="FixedPointNano"/> values.</summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns>The sum of <paramref name="left"/> and <paramref name="right"/>.</returns>
-    /// <exception cref="OverflowException">Thrown on arithmetic overflow.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator +(FixedPointNano left, FixedPointNano right)
     {
         return new FixedPointNano(checked(left.RawValue + right.RawValue));
     }
 
-    /// <summary>Subtracts one <see cref="FixedPointNano"/> value from another.</summary>
-    /// <param name="left">The minuend.</param>
-    /// <param name="right">The subtrahend.</param>
-    /// <returns>The difference of <paramref name="left"/> and <paramref name="right"/>.</returns>
-    /// <exception cref="OverflowException">Thrown on arithmetic overflow.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator -(FixedPointNano left, FixedPointNano right)
     {
         return new FixedPointNano(checked(left.RawValue - right.RawValue));
     }
 
-    /// <summary>Negates a <see cref="FixedPointNano"/> value.</summary>
-    /// <param name="value">The value to negate.</param>
-    /// <returns>The arithmetic negation of <paramref name="value"/>.</returns>
-    /// <exception cref="OverflowException">Thrown when negating <see cref="long.MinValue"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator -(FixedPointNano value)
     {
         return new FixedPointNano(checked(-value.RawValue));
     }
 
-    public static FixedPointNano operator ++(FixedPointNano value)
-    {
-        return new FixedPointNano(checked(value.RawValue + Scale));
-    }
-
-    public static FixedPointNano operator --(FixedPointNano value)
-    {
-        return new FixedPointNano(checked(value.RawValue - Scale));
-    }
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator *(FixedPointNano left, FixedPointNano right)
     {
         var product = (Int128)left.RawValue * right.RawValue;
         return FromRawChecked(DivideRoundedToNearestEven(product, Scale));
     }
 
-    /// <summary>Divides one <see cref="FixedPointNano"/> by another.</summary>
-    /// <param name="left">The dividend.</param>
-    /// <param name="right">The divisor.</param>
-    /// <returns>
-    /// The quotient of <paramref name="left"/> divided by <paramref name="right"/>,
-    /// rounded to nearest even.
-    /// </returns>
-    /// <exception cref="DivideByZeroException">
-    /// Thrown when <paramref name="right"/> is zero.
-    /// </exception>
-    /// <exception cref="OverflowException">Thrown on arithmetic overflow.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator /(FixedPointNano left, FixedPointNano right)
     {
         if (right.RawValue == 0)
@@ -634,15 +565,7 @@ public readonly struct FixedPointNano :
         return FromRawChecked(DivideRoundedToNearestEven(numerator, right.RawValue));
     }
 
-    /// <summary>
-    /// Returns the remainder after dividing <paramref name="left"/> by <paramref name="right"/>.
-    /// </summary>
-    /// <param name="left">The dividend.</param>
-    /// <param name="right">The divisor.</param>
-    /// <returns>The remainder of <paramref name="left"/> divided by <paramref name="right"/>.</returns>
-    /// <exception cref="DivideByZeroException">
-    /// Thrown when <paramref name="right"/> is zero.
-    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator %(FixedPointNano left, FixedPointNano right)
     {
         if (right.RawValue == 0)
@@ -653,55 +576,37 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(left.RawValue % right.RawValue);
     }
 
-    /// <summary>Returns a value indicating whether two <see cref="FixedPointNano"/> values are equal.</summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns><see langword="true"/> if equal; otherwise <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(FixedPointNano left, FixedPointNano right)
     {
         return left.Equals(right);
     }
 
-    /// <summary>Returns a value indicating whether two <see cref="FixedPointNano"/> values are not equal.</summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns><see langword="true"/> if not equal; otherwise <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(FixedPointNano left, FixedPointNano right)
     {
         return !left.Equals(right);
     }
 
-    /// <summary>Returns a value indicating whether <paramref name="left"/> is less than <paramref name="right"/>.</summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns><see langword="true"/> if <paramref name="left"/> is less than <paramref name="right"/>; otherwise <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue < right.RawValue;
     }
 
-    /// <summary>Returns a value indicating whether <paramref name="left"/> is less than or equal to <paramref name="right"/>.</summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns><see langword="true"/> if <paramref name="left"/> is less than or equal to <paramref name="right"/>; otherwise <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <=(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue <= right.RawValue;
     }
 
-    /// <summary>Returns a value indicating whether <paramref name="left"/> is greater than <paramref name="right"/>.</summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns><see langword="true"/> if <paramref name="left"/> is greater than <paramref name="right"/>; otherwise <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue > right.RawValue;
     }
 
-    /// <summary>Returns a value indicating whether <paramref name="left"/> is greater than or equal to <paramref name="right"/>.</summary>
-    /// <param name="left">The left operand.</param>
-    /// <param name="right">The right operand.</param>
-    /// <returns><see langword="true"/> if <paramref name="left"/> is greater than or equal to <paramref name="right"/>; otherwise <see langword="false"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >=(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue;

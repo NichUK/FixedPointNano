@@ -14,12 +14,37 @@ public sealed class FixedPointNanoTests
     {
         Assert.That(FixedPointNano.Zero.RawValue, Is.EqualTo(0L));
         Assert.That(FixedPointNano.One.RawValue, Is.EqualTo(FixedPointNano.Scale));
+        Assert.That(FixedPointNano.MaxValue.RawValue, Is.EqualTo(long.MaxValue));
+        Assert.That(FixedPointNano.MinValue.RawValue, Is.EqualTo(long.MinValue));
 
         var fromRaw = FixedPointNano.FromRaw(123456789L);
         var fromLong = (FixedPointNano)42L;
 
         Assert.That(fromRaw.RawValue, Is.EqualTo(123456789L));
         Assert.That(fromLong.RawValue, Is.EqualTo(42L * FixedPointNano.Scale));
+    }
+
+    [Test]
+    public void PredicatesShouldWork()
+    {
+        var positive = FixedPointNano.FromRaw(1L);
+        var negative = FixedPointNano.FromRaw(-1L);
+        var zero = FixedPointNano.Zero;
+
+        Assert.That(positive.IsPositive, Is.True);
+        Assert.That(positive.IsNegative, Is.False);
+        Assert.That(positive.IsZero, Is.False);
+
+        Assert.That(negative.IsPositive, Is.False);
+        Assert.That(negative.IsNegative, Is.True);
+        Assert.That(negative.IsZero, Is.False);
+
+        Assert.That(zero.IsPositive, Is.False);
+        Assert.That(zero.IsNegative, Is.False);
+        Assert.That(zero.IsZero, Is.True);
+
+        Assert.That(FixedPointNano.MaxValue.IsPositive, Is.True);
+        Assert.That(FixedPointNano.MinValue.IsNegative, Is.True);
     }
 
     [Test]

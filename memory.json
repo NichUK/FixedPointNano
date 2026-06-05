@@ -1,12 +1,24 @@
 {
-  "last_run": "2026-06-04T13:50:15Z",
-  "run_id": "26955895996",
+  "last_run": "2026-06-05T01:32:54Z",
+  "run_id": "26989904792",
   "monthly_activity_issue": 62,
   "monthly_activity_month": "2026-06",
   "comments_made": {
     "3": "2026-06-01T14:45:50Z"
   },
   "fix_attempts": {
+    "fix-issue-69-constants-predicates-2026-06-05": {
+      "branch": "repo-assist/fix-issue-69-constants-predicates",
+      "status": "pr_submitted",
+      "tests": 1355,
+      "note": "MaxValue, MinValue, IsZero, IsPositive, IsNegative + global.json fix"
+    },
+    "improve-aggressive-inlining-2026-06-05": {
+      "branch": "repo-assist/improve-aggressive-inlining",
+      "status": "pr_submitted",
+      "tests": 1354,
+      "note": "AggressiveInlining on hot-path operators/helpers + global.json fix"
+    },
     "perf-long-divide-2026-06-04": {
       "branch": "repo-assist/perf-long-divide-2026-06-04",
       "status": "pr_submitted",
@@ -32,15 +44,13 @@
       "note": "XML docs for all public API members"
     }
   },
-  "notes": "PRs now created properly via safeoutputs-create_pull_request with patch files. Previous runs created issues not PRs. global.json fix (10.0.203->10.0.300/latestPatch) is required for builds and is included in each PR. All open issues #3-#76 except #62 are Repo Assist automation issues. No human-authored issues to investigate.",
+  "notes": "All open issues #3-#76 except #62 are Repo Assist automation issues. No human-authored issues. global.json fix (10.0.203->10.0.204/latestPatch) included in every PR. 0 open PRs on GitHub — all submitted via safeoutputs patch mechanism. Pending: XML docs, Parse/TryParse, NuGet metadata still not merged.",
   "task2_note": "All open issues are Repo Assist automation issues. No human-authored issues to investigate.",
-  "issue_backlog_cursor": 76,
+  "issue_backlog_cursor": 78,
   "backlog_features_pending": [
-    "XML docs: branch pr-xml-docs-e7293da4ac635cb8 (earlier attempt, superseded)",
-    "Parse/TryParse: branch pr-parse-tryparse-d1cce4af17e102b9 (earlier attempt, superseded)",
-    "MaxValue/MinValue/IsZero/IsPositive/IsNegative: multiple branches, not yet PRed",
-    "AggressiveInlining on hot-path operators: branch perf-aggressive-inlining-pr (not yet PRed)",
-    "Benchmarks for Floor/Ceiling/Truncate/Abs/MultiplyRatio: not yet PRed",
-    "NuGet metadata + LICENSE: branch nuget-metadata-sdk-fix-131e591151c6df57"
+    "XML docs: branch pr-xml-docs-e7293da4ac635cb8 (submitted Jun 4)",
+    "Parse/TryParse: branch pr-parse-tryparse-d1cce4af17e102b9 (submitted Jun 4)",
+    "NuGet metadata + LICENSE: branch nuget-metadata-sdk-fix-131e591151c6df57",
+    "Benchmarks for Floor/Ceiling/Truncate/Abs/MultiplyRatio: not yet PRed"
   ]
 }

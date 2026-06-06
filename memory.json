@@ -1,17 +1,29 @@
 {
-  "last_run": "2026-06-05T13:56:00Z",
-  "run_id": "27018534484",
+  "last_run": "2026-06-06T01:28:23Z",
+  "run_id": "27048731115",
   "monthly_activity_issue": 62,
   "monthly_activity_month": "2026-06",
   "comments_made": {
     "3": "2026-06-01T14:45:50Z"
   },
   "fix_attempts": {
+    "feat-negativone-isinteger-fractionalpart-2026-06-06": {
+      "branch": "repo-assist/feat-negativone-isinteger-fractionalpart-2026-06-06",
+      "status": "pr_submitted",
+      "tests": 1356,
+      "note": "NegativeOne constant + IsInteger predicate + FractionalPart method (2 new tests)"
+    },
+    "chore-nuget-metadata-2026-06-06": {
+      "branch": "repo-assist/chore-nuget-metadata-2026-06-06",
+      "status": "pr_submitted",
+      "tests": "n/a (metadata only)",
+      "note": "MIT LICENSE + full NuGet metadata (no global.json change)"
+    },
     "perf-aggressive-inlining-2026-06-05": {
       "branch": "feature/perf-aggressive-inlining-2026-06-05",
       "status": "pr_submitted",
       "tests": 1354,
-      "note": "AggressiveInlining on hot-path operators/helpers + global.json fix (10.0.203->10.0.300/latestPatch)"
+      "note": "AggressiveInlining on hot-path operators/helpers + global.json fix"
     },
     "feat-parse-tryparse-2026-06-05": {
       "branch": "feature/feat-parse-tryparse-2026-06-05",
@@ -38,15 +50,17 @@
       "note": "Clamp+Sign methods + global.json fix"
     }
   },
-  "notes": "All open issues #3-#80 except #62 are Repo Assist automation items. No human-authored issues. global.json has been fixed in every PR (10.0.203 unavailable, updated to 10.0.300/latestPatch). PR creation tool generates patch files; actual GitHub PRs may appear as issues. Many feature branches exist on origin but main is still at 45ec7ab (original).",
+  "notes": "All open issues #3-#82 except #62 are Repo Assist automation items. No human-authored issues. global.json pins 10.0.203 (unavailable); fix exists in multiple branches but never merged. NuGet metadata PR (chore-nuget-metadata-2026-06-06) does NOT touch global.json - should create real PR. Many feature branches exist on origin but main is still at 45ec7ab (original).",
   "task2_note": "All open issues are Repo Assist automation issues. No human-authored issues to investigate.",
-  "issue_backlog_cursor": 80,
+  "issue_backlog_cursor": 82,
   "backlog_features_pending": [
+    "NegativeOne+IsInteger+FractionalPart: branch repo-assist/feat-negativone-isinteger-fractionalpart-2026-06-06",
+    "NuGet metadata + LICENSE: branch repo-assist/chore-nuget-metadata-2026-06-06 (no global.json)",
     "XML docs: branch pr-xml-docs-e7293da4ac635cb8",
     "MaxValue/MinValue/predicates: branch repo-assist/fix-issue-69-constants-predicates-596975f4b888e19b",
     "Clamp/Sign: branch repo-assist/feat-clamp-sign-2026-06-04-a0def4099d8986dd",
     "Long DivideRoundedToNearestEven: branch repo-assist/perf-long-divide-2026-06-04-143098fc498b4997",
-    "Benchmarks for Floor/Ceiling/Truncate/Abs/MultiplyRatio: not yet PRed",
-    "NuGet metadata + LICENSE: branch repo-assist/chore-nuget-metadata-2026-05-24-11c8a36d6fd43f4a"
+    "Parse/TryParse+IParsable: branch feature/feat-parse-tryparse-2026-06-05",
+    "AggressiveInlining: branch feature/perf-aggressive-inlining-2026-06-05"
   ]
 }

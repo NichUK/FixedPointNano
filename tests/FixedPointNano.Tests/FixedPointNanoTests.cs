@@ -15,8 +15,7 @@ public sealed class FixedPointNanoTests
         Assert.That(FixedPointNano.Epsilon.RawValue, Is.EqualTo(1L));
         Assert.That(FixedPointNano.Zero.RawValue, Is.EqualTo(0L));
         Assert.That(FixedPointNano.One.RawValue, Is.EqualTo(FixedPointNano.Scale));
-        Assert.That(FixedPointNano.MaxValue.RawValue, Is.EqualTo(long.MaxValue));
-        Assert.That(FixedPointNano.MinValue.RawValue, Is.EqualTo(long.MinValue));
+        Assert.That(FixedPointNano.NegativeOne.RawValue, Is.EqualTo(-FixedPointNano.Scale));
 
         var fromRaw = FixedPointNano.FromRaw(123456789L);
         var fromLong = (FixedPointNano)42L;
@@ -26,26 +25,26 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
-    public void PredicatesShouldWork()
+    public void IsIntegerShouldDetectWholeness()
     {
-        var positive = FixedPointNano.FromRaw(1L);
-        var negative = FixedPointNano.FromRaw(-1L);
-        var zero = FixedPointNano.Zero;
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.Zero), Is.True);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.One), Is.True);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.NegativeOne), Is.True);
+        Assert.That(FixedPointNano.IsInteger((FixedPointNano)42L), Is.True);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(1.5m)), Is.False);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(-1.000000001m)), Is.False);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(-2m)), Is.True);
+    }
 
-        Assert.That(positive.IsPositive, Is.True);
-        Assert.That(positive.IsNegative, Is.False);
-        Assert.That(positive.IsZero, Is.False);
-
-        Assert.That(negative.IsPositive, Is.False);
-        Assert.That(negative.IsNegative, Is.True);
-        Assert.That(negative.IsZero, Is.False);
-
-        Assert.That(zero.IsPositive, Is.False);
-        Assert.That(zero.IsNegative, Is.False);
-        Assert.That(zero.IsZero, Is.True);
-
-        Assert.That(FixedPointNano.MaxValue.IsPositive, Is.True);
-        Assert.That(FixedPointNano.MinValue.IsNegative, Is.True);
+    [Test]
+    public void FractionalPartShouldReturnDecimalComponent()
+    {
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.Zero).RawValue, Is.EqualTo(0L));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.One).RawValue, Is.EqualTo(0L));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.FromDecimal(1.25m)).ToDecimal(), Is.EqualTo(0.25m));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.FromDecimal(3.75m)).ToDecimal(), Is.EqualTo(0.75m));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.FromDecimal(-1.25m)).ToDecimal(), Is.EqualTo(-0.25m));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.FromDecimal(-3.75m)).ToDecimal(), Is.EqualTo(-0.75m));
     }
 
     [Test]

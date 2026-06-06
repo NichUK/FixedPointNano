@@ -53,8 +53,7 @@ public readonly struct FixedPointNano :
     public static FixedPointNano MinValue { get; } = new(long.MinValue);
     public static FixedPointNano Zero { get; } = new(0L);
     public static FixedPointNano One { get; } = new(Scale);
-    public static FixedPointNano MaxValue { get; } = new(long.MaxValue);
-    public static FixedPointNano MinValue { get; } = new(long.MinValue);
+    public static FixedPointNano NegativeOne { get; } = new(-Scale);
 
     /// <summary>Gets a <see cref="FixedPointNano"/> that represents one (1).</summary>
     public static FixedPointNano One { get; } = new(Scale);
@@ -121,12 +120,16 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(checked(quotient * Scale));
     }
 
-    /// <summary>
-    /// Creates a <see cref="FixedPointNano"/> from a <see cref="decimal"/> value
-    /// using banker's rounding (<see cref="MidpointRounding.ToEven"/>).
-    /// </summary>
-    /// <param name="value">The decimal value to convert.</param>
-    /// <returns>A <see cref="FixedPointNano"/> representing <paramref name="value"/>.</returns>
+    public static FixedPointNano FractionalPart(FixedPointNano value)
+    {
+        return new FixedPointNano(value.RawValue % Scale);
+    }
+
+    public static bool IsInteger(FixedPointNano value)
+    {
+        return value.RawValue % Scale == 0;
+    }
+
     public static FixedPointNano FromDecimal(decimal value)
     {
         var scaledValue = decimal.Round(value * Scale, 0, MidpointRounding.ToEven);

@@ -306,4 +306,52 @@ public sealed class FixedPointNanoTests
             CultureInfo.CurrentUICulture = _originalUiCulture;
         }
     }
+
+    [Test]
+    public void UnaryPlusOperatorShouldReturnSameValue()
+    {
+        var positive = FixedPointNano.FromDecimal(3.5m);
+        var negative = FixedPointNano.FromDecimal(-3.5m);
+        var zero = FixedPointNano.Zero;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That((+positive).RawValue, Is.EqualTo(positive.RawValue));
+            Assert.That((+negative).RawValue, Is.EqualTo(negative.RawValue));
+            Assert.That((+zero).RawValue, Is.EqualTo(zero.RawValue));
+        });
+    }
+
+    [Test]
+    public void IncrementDecrementOperatorsShouldWork()
+    {
+        var value = FixedPointNano.FromDecimal(2.5m);
+
+        var incremented = value++;
+        Assert.That(incremented.ToDecimal(), Is.EqualTo(2.5m));
+        Assert.That(value.ToDecimal(), Is.EqualTo(3.5m));
+
+        var decremented = value--;
+        Assert.That(decremented.ToDecimal(), Is.EqualTo(3.5m));
+        Assert.That(value.ToDecimal(), Is.EqualTo(2.5m));
+
+        var preinc = ++value;
+        Assert.That(preinc.ToDecimal(), Is.EqualTo(3.5m));
+
+        var predec = --value;
+        Assert.That(predec.ToDecimal(), Is.EqualTo(2.5m));
+    }
+
+    [Test]
+    public void GenericMathInterfacesShouldProvideIdentities()
+    {
+        var additiveIdentity = GetAdditiveIdentity<FixedPointNano, FixedPointNano>();
+        var multiplicativeIdentity = GetMultiplicativeIdentity<FixedPointNano, FixedPointNano>();
+
+        Assert.That(additiveIdentity, Is.EqualTo(FixedPointNano.Zero));
+        Assert.That(multiplicativeIdentity, Is.EqualTo(FixedPointNano.One));
+
+        static TResult GetAdditiveIdentity<T, TResult>() where T : IAdditiveIdentity<T, TResult> => T.AdditiveIdentity;
+        static TResult GetMultiplicativeIdentity<T, TResult>() where T : IMultiplicativeIdentity<T, TResult> => T.MultiplicativeIdentity;
+    }
 }

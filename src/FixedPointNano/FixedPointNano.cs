@@ -13,7 +13,19 @@ public readonly struct FixedPointNano :
     IEquatable<FixedPointNano>,
     IFormattable,
     ISpanFormattable,
-    IConvertible
+    IConvertible,
+    IAdditiveIdentity<FixedPointNano, FixedPointNano>,
+    IMultiplicativeIdentity<FixedPointNano, FixedPointNano>,
+    IAdditionOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    ISubtractionOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    IMultiplyOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    IDivisionOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    IModulusOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    IUnaryNegationOperators<FixedPointNano, FixedPointNano>,
+    IUnaryPlusOperators<FixedPointNano, FixedPointNano>,
+    IIncrementOperators<FixedPointNano>,
+    IDecrementOperators<FixedPointNano>,
+    IComparisonOperators<FixedPointNano, FixedPointNano, bool>
 {
     public const int DecimalPlaces = 9;
     public const long Scale = 1_000_000_000L;
@@ -35,6 +47,9 @@ public readonly struct FixedPointNano :
 
     public static FixedPointNano Zero { get; } = new(0L);
     public static FixedPointNano One { get; } = new(Scale);
+
+    static FixedPointNano IAdditiveIdentity<FixedPointNano, FixedPointNano>.AdditiveIdentity => Zero;
+    static FixedPointNano IMultiplicativeIdentity<FixedPointNano, FixedPointNano>.MultiplicativeIdentity => One;
 
     public FixedPointNano(long rawValue)
     {
@@ -329,6 +344,21 @@ public readonly struct FixedPointNano :
     public static FixedPointNano operator -(FixedPointNano value)
     {
         return new FixedPointNano(checked(-value.RawValue));
+    }
+
+    public static FixedPointNano operator +(FixedPointNano value)
+    {
+        return value;
+    }
+
+    public static FixedPointNano operator ++(FixedPointNano value)
+    {
+        return new FixedPointNano(checked(value.RawValue + Scale));
+    }
+
+    public static FixedPointNano operator --(FixedPointNano value)
+    {
+        return new FixedPointNano(checked(value.RawValue - Scale));
     }
 
     public static FixedPointNano operator *(FixedPointNano left, FixedPointNano right)

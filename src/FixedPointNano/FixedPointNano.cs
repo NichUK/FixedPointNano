@@ -35,6 +35,7 @@ public readonly struct FixedPointNano :
 
     public static FixedPointNano Zero { get; } = new(0L);
     public static FixedPointNano One { get; } = new(Scale);
+    public static FixedPointNano NegativeOne { get; } = new(-Scale);
 
     public FixedPointNano(long rawValue)
     {
@@ -72,6 +73,16 @@ public readonly struct FixedPointNano :
         }
 
         return new FixedPointNano(checked(quotient * Scale));
+    }
+
+    public static FixedPointNano FractionalPart(FixedPointNano value)
+    {
+        return new FixedPointNano(value.RawValue % Scale);
+    }
+
+    public static bool IsInteger(FixedPointNano value)
+    {
+        return value.RawValue % Scale == 0;
     }
 
     public static FixedPointNano FromDecimal(decimal value)

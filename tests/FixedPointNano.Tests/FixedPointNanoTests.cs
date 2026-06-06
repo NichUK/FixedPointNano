@@ -14,12 +14,36 @@ public sealed class FixedPointNanoTests
     {
         Assert.That(FixedPointNano.Zero.RawValue, Is.EqualTo(0L));
         Assert.That(FixedPointNano.One.RawValue, Is.EqualTo(FixedPointNano.Scale));
+        Assert.That(FixedPointNano.NegativeOne.RawValue, Is.EqualTo(-FixedPointNano.Scale));
 
         var fromRaw = FixedPointNano.FromRaw(123456789L);
         var fromLong = (FixedPointNano)42L;
 
         Assert.That(fromRaw.RawValue, Is.EqualTo(123456789L));
         Assert.That(fromLong.RawValue, Is.EqualTo(42L * FixedPointNano.Scale));
+    }
+
+    [Test]
+    public void IsIntegerShouldDetectWholeness()
+    {
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.Zero), Is.True);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.One), Is.True);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.NegativeOne), Is.True);
+        Assert.That(FixedPointNano.IsInteger((FixedPointNano)42L), Is.True);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(1.5m)), Is.False);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(-1.000000001m)), Is.False);
+        Assert.That(FixedPointNano.IsInteger(FixedPointNano.FromDecimal(-2m)), Is.True);
+    }
+
+    [Test]
+    public void FractionalPartShouldReturnDecimalComponent()
+    {
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.Zero).RawValue, Is.EqualTo(0L));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.One).RawValue, Is.EqualTo(0L));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.FromDecimal(1.25m)).ToDecimal(), Is.EqualTo(0.25m));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.FromDecimal(3.75m)).ToDecimal(), Is.EqualTo(0.75m));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.FromDecimal(-1.25m)).ToDecimal(), Is.EqualTo(-0.25m));
+        Assert.That(FixedPointNano.FractionalPart(FixedPointNano.FromDecimal(-3.75m)).ToDecimal(), Is.EqualTo(-0.75m));
     }
 
     [Test]

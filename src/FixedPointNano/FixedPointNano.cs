@@ -21,9 +21,19 @@ public readonly struct FixedPointNano :
     IEquatable<FixedPointNano>,
     IFormattable,
     ISpanFormattable,
-    IParsable<FixedPointNano>,
-    ISpanParsable<FixedPointNano>,
-    IConvertible
+    IConvertible,
+    IAdditiveIdentity<FixedPointNano, FixedPointNano>,
+    IMultiplicativeIdentity<FixedPointNano, FixedPointNano>,
+    IAdditionOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    ISubtractionOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    IMultiplyOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    IDivisionOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    IModulusOperators<FixedPointNano, FixedPointNano, FixedPointNano>,
+    IUnaryNegationOperators<FixedPointNano, FixedPointNano>,
+    IUnaryPlusOperators<FixedPointNano, FixedPointNano>,
+    IIncrementOperators<FixedPointNano>,
+    IDecrementOperators<FixedPointNano>,
+    IComparisonOperators<FixedPointNano, FixedPointNano, bool>
 {
     /// <summary>The number of decimal places supported by <see cref="FixedPointNano"/>.</summary>
     public const int DecimalPlaces = 9;
@@ -55,18 +65,9 @@ public readonly struct FixedPointNano :
     public static FixedPointNano One { get; } = new(Scale);
     public static FixedPointNano NegativeOne { get; } = new(-Scale);
 
-    /// <summary>Gets a <see cref="FixedPointNano"/> that represents one (1).</summary>
-    public static FixedPointNano One { get; } = new(Scale);
-    /// <summary>The maximum representable value (raw value <see cref="long.MaxValue"/>: approximately ±9.223 billion).</summary>
-    public static FixedPointNano MaxValue { get; } = new(long.MaxValue);
-    /// <summary>The minimum representable value (raw value <see cref="long.MinValue"/>: approximately −9.223 billion).</summary>
-    public static FixedPointNano MinValue { get; } = new(long.MinValue);
+    static FixedPointNano IAdditiveIdentity<FixedPointNano, FixedPointNano>.AdditiveIdentity => Zero;
+    static FixedPointNano IMultiplicativeIdentity<FixedPointNano, FixedPointNano>.MultiplicativeIdentity => One;
 
-    /// <summary>Initialises a <see cref="FixedPointNano"/> from a raw scaled value.</summary>
-    /// <param name="rawValue">
-    /// The raw value already multiplied by <see cref="Scale"/>.
-    /// Use <see cref="FromRaw"/> for a named alternative.
-    /// </param>
     public FixedPointNano(long rawValue)
     {
         RawValue = rawValue;
@@ -587,7 +588,21 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(checked(-value.RawValue));
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static FixedPointNano operator +(FixedPointNano value)
+    {
+        return value;
+    }
+
+    public static FixedPointNano operator ++(FixedPointNano value)
+    {
+        return new FixedPointNano(checked(value.RawValue + Scale));
+    }
+
+    public static FixedPointNano operator --(FixedPointNano value)
+    {
+        return new FixedPointNano(checked(value.RawValue - Scale));
+    }
+
     public static FixedPointNano operator *(FixedPointNano left, FixedPointNano right)
     {
         var product = (Int128)left.RawValue * right.RawValue;

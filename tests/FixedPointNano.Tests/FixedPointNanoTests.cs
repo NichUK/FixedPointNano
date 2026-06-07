@@ -118,6 +118,28 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
+    public void PowShouldWork()
+    {
+        var two = FixedPointNano.FromDecimal(2m);
+        var negTwo = FixedPointNano.FromDecimal(-2m);
+        var half = FixedPointNano.FromDecimal(0.5m);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Pow(two, 0), Is.EqualTo(FixedPointNano.One));
+            Assert.That(FixedPointNano.Pow(two, 1), Is.EqualTo(two));
+            Assert.That(FixedPointNano.Pow(two, 10).ToDecimal(), Is.EqualTo(1024m));
+            Assert.That(FixedPointNano.Pow(negTwo, 3).ToDecimal(), Is.EqualTo(-8m));
+            Assert.That(FixedPointNano.Pow(negTwo, 4).ToDecimal(), Is.EqualTo(16m));
+            Assert.That(FixedPointNano.Pow(half, 3).ToDecimal(), Is.EqualTo(0.125m));
+            Assert.That(FixedPointNano.Pow(FixedPointNano.Zero, 5), Is.EqualTo(FixedPointNano.Zero));
+            Assert.That(FixedPointNano.Pow(FixedPointNano.One, 100), Is.EqualTo(FixedPointNano.One));
+        });
+
+        Assert.That(() => FixedPointNano.Pow(two, -1), Throws.TypeOf<ArgumentOutOfRangeException>());
+    }
+
+    [Test]
     [NonParallelizable]
     public void ToStringShouldRespectCurrentCulture()
     {

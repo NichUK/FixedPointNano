@@ -166,6 +166,38 @@ public readonly struct FixedPointNano :
         return value * value;
     }
 
+    public static FixedPointNano Pow(FixedPointNano value, int exponent)
+    {
+        if (exponent < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(exponent), "Exponent must not be negative.");
+        }
+
+        if (exponent == 0)
+        {
+            return One;
+        }
+
+        var result = One;
+        var current = value;
+        var remaining = exponent;
+        while (remaining > 0)
+        {
+            if ((remaining & 1) != 0)
+            {
+                result = result * current;
+            }
+
+            remaining >>= 1;
+            if (remaining > 0)
+            {
+                current = current * current;
+            }
+        }
+
+        return result;
+    }
+
     public static FixedPointNano PopulationVariance(FixedPointNano sum, Int128 sumOfRawSquares, int count)
     {
         if (count <= 0)

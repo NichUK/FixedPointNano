@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-06-06T13:14:02Z",
-  "run_id": "27063245512",
+  "last_run": "2026-06-07T13:14:51Z",
+  "run_id": "27093587425",
   "monthly_activity_issue": 62,
   "monthly_activity_month": "2026-06",
   "comments_made": {
@@ -11,7 +11,7 @@
       "branch": "repo-assist/fix-global-json-2026-06-06",
       "status": "pr_submitted",
       "tests": 1354,
-      "note": "Update global.json SDK pin from 10.0.203 to 10.0.300/latestPatch — critical blocker"
+      "note": "Update global.json SDK pin from 10.0.203 to 10.0.300/latestPatch \u2014 critical blocker"
     },
     "feat-operator-interfaces-2026-06-06": {
       "branch": "repo-assist/feat-operator-interfaces-2026-06-06",
@@ -60,13 +60,20 @@
       "status": "pr_submitted",
       "tests": 1359,
       "note": "Clamp+Sign methods"
+    },
+    "improve-pow-2026-06-07": {
+      "branch": "repo-assist/improve-pow-2026-06-07",
+      "status": "pr_submitted",
+      "tests": 1364,
+      "note": "Add Pow(FixedPointNano, int) binary exponentiation + fix global.json SDK pin 10.0.203\u219210.0.300"
     }
   },
-  "notes": "All open issues #3-#84 except #62 are Repo Assist automation items. No human-authored issues. global.json pins 10.0.203 (unavailable in env: 10.0.108, 10.0.204, 10.0.300); fix submitted in branch repo-assist/fix-global-json-2026-06-06. Many feature branches exist on origin but main is still at 45ec7ab (original). create_pull_request creates issues not PRs (list_pull_requests returns empty). Next opportunity: INumber<T>/INumberBase<T> once Parse/TryParse lands.",
+  "notes": "All open issues #3-#84 except #62 are Repo Assist automation items (issues not PRs). No human-authored issues. global.json pins 10.0.203 (unavailable); fix submitted multiple times. Many feature branches on origin but main is still at 45ec7ab (original). create_pull_request creates issues not PRs. Task 2: nothing to comment on (all issues are Repo Assist automation). Next good opportunity: INumber<T>/INumberBase<T> once Parse/TryParse lands.",
   "task2_note": "All open issues are Repo Assist automation issues. No human-authored issues to investigate.",
   "issue_backlog_cursor": 84,
   "backlog_features_pending": [
-    "global.json fix: branch repo-assist/fix-global-json-2026-06-06 (CRITICAL BLOCKER)",
+    "global.json fix: branch repo-assist/fix-global-json-2026-06-06 (also fixed in improve-pow-2026-06-07)",
+    "Pow(value, int): branch repo-assist/improve-pow-2026-06-07 (NEW - 1364 tests pass)",
     "Operator interfaces: branch repo-assist/feat-operator-interfaces-2026-06-06",
     "NegativeOne+IsInteger+FractionalPart: branch repo-assist/feat-negativone-isinteger-fractionalpart-2026-06-06",
     "NuGet metadata + LICENSE: branch repo-assist/chore-nuget-metadata-2026-06-06",

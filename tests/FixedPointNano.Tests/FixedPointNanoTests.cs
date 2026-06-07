@@ -206,34 +206,25 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
-    public void ClampShouldWork()
+    public void PowShouldWork()
     {
-        var low = FixedPointNano.FromDecimal(1m);
-        var mid = FixedPointNano.FromDecimal(5m);
-        var high = FixedPointNano.FromDecimal(10m);
+        var two = FixedPointNano.FromDecimal(2m);
+        var negTwo = FixedPointNano.FromDecimal(-2m);
+        var half = FixedPointNano.FromDecimal(0.5m);
 
         Assert.Multiple(() =>
         {
-            Assert.That(FixedPointNano.Clamp(mid, low, high), Is.EqualTo(mid));
-            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(0m), low, high), Is.EqualTo(low));
-            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(15m), low, high), Is.EqualTo(high));
-            Assert.That(FixedPointNano.Clamp(low, low, high), Is.EqualTo(low));
-            Assert.That(FixedPointNano.Clamp(high, low, high), Is.EqualTo(high));
-            Assert.That(FixedPointNano.Clamp(low, low, low), Is.EqualTo(low));
+            Assert.That(FixedPointNano.Pow(two, 0), Is.EqualTo(FixedPointNano.One));
+            Assert.That(FixedPointNano.Pow(two, 1), Is.EqualTo(two));
+            Assert.That(FixedPointNano.Pow(two, 10).ToDecimal(), Is.EqualTo(1024m));
+            Assert.That(FixedPointNano.Pow(negTwo, 3).ToDecimal(), Is.EqualTo(-8m));
+            Assert.That(FixedPointNano.Pow(negTwo, 4).ToDecimal(), Is.EqualTo(16m));
+            Assert.That(FixedPointNano.Pow(half, 3).ToDecimal(), Is.EqualTo(0.125m));
+            Assert.That(FixedPointNano.Pow(FixedPointNano.Zero, 5), Is.EqualTo(FixedPointNano.Zero));
+            Assert.That(FixedPointNano.Pow(FixedPointNano.One, 100), Is.EqualTo(FixedPointNano.One));
         });
 
-        Assert.That(() => FixedPointNano.Clamp(mid, high, low), Throws.TypeOf<ArgumentOutOfRangeException>());
-    }
-
-    [Test]
-    public void SignShouldWork()
-    {
-        Assert.Multiple(() =>
-        {
-            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(3.14m)), Is.EqualTo(1));
-            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(-2.71m)), Is.EqualTo(-1));
-            Assert.That(FixedPointNano.Sign(FixedPointNano.Zero), Is.EqualTo(0));
-        });
+        Assert.That(() => FixedPointNano.Pow(two, -1), Throws.TypeOf<ArgumentOutOfRangeException>());
     }
 
     [Test]

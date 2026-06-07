@@ -188,6 +188,20 @@ public sealed class FixedPointNanoMathComparisonTests
         AssertMatchesDecimalReference(valueDecimal * valueDecimal, FixedPointNano.Square(value));
     }
 
+    [TestCase(2.0, 3, 8.0)]
+    [TestCase(-2.0, 3, -8.0)]
+    [TestCase(-2.0, 4, 16.0)]
+    [TestCase(1.5, 2, 2.25)]
+    [TestCase(1.5, 5, 7.59375)]
+    [TestCase(0.5, 4, 0.0625)]
+    [TestCase(0.5, 8, 0.00390625)]
+    [TestCase(3.0, 0, 1.0)]
+    [TestCase(3.0, 1, 3.0)]
+    public void PowMatchesDecimalReference(decimal valueDecimal, int exponent, decimal expectedDecimal)
+    {
+        AssertMatchesDecimalReference(expectedDecimal, FixedPointNano.Pow(FixedPointNano.FromDecimal(valueDecimal), exponent));
+    }
+
     [Test]
     public void PopulationVarianceAndStandardDeviationMatchDecimalReference()
     {

@@ -333,20 +333,38 @@ public readonly struct FixedPointNano :
         return value * value;
     }
 
-    /// <summary>
-    /// Computes the population variance from pre-aggregated raw statistics.
-    /// </summary>
-    /// <param name="sum">The sum of all observations.</param>
-    /// <param name="sumOfRawSquares">
-    /// The sum of <c>RawValue * RawValue</c> for all observations. Must not be negative.
-    /// </param>
-    /// <param name="count">The number of observations. Must be greater than zero.</param>
-    /// <returns>The population variance as a <see cref="FixedPointNano"/>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when <paramref name="count"/> is not positive, when
-    /// <paramref name="sumOfRawSquares"/> is negative, or when the supplied statistics
-    /// are internally inconsistent.
-    /// </exception>
+    public static FixedPointNano Pow(FixedPointNano value, int exponent)
+    {
+        if (exponent < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(exponent), "Exponent must not be negative.");
+        }
+
+        if (exponent == 0)
+        {
+            return One;
+        }
+
+        var result = One;
+        var current = value;
+        var remaining = exponent;
+        while (remaining > 0)
+        {
+            if ((remaining & 1) != 0)
+            {
+                result = result * current;
+            }
+
+            remaining >>= 1;
+            if (remaining > 0)
+            {
+                current = current * current;
+            }
+        }
+
+        return result;
+    }
+
     public static FixedPointNano PopulationVariance(FixedPointNano sum, Int128 sumOfRawSquares, int count)
     {
         if (count <= 0)

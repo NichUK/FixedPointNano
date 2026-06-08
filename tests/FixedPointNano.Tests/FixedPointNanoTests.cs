@@ -287,6 +287,35 @@ public sealed class FixedPointNanoTests
         });
     }
 
+    [Test]
+    public void DeconstructShouldSplitIntoIntegerAndFractionalParts()
+    {
+        var positive = FixedPointNano.FromDecimal(3.75m);
+        var negative = FixedPointNano.FromDecimal(-2.25m);
+        var whole = FixedPointNano.FromDecimal(5m);
+        var zero = FixedPointNano.Zero;
+
+        var (posInt, posFrac) = positive;
+        var (negInt, negFrac) = negative;
+        var (wholeInt, wholeFrac) = whole;
+        var (zeroInt, zeroFrac) = zero;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(posInt, Is.EqualTo(3L));
+            Assert.That(posFrac.ToDecimal(), Is.EqualTo(0.75m));
+
+            Assert.That(negInt, Is.EqualTo(-2L));
+            Assert.That(negFrac.ToDecimal(), Is.EqualTo(-0.25m));
+
+            Assert.That(wholeInt, Is.EqualTo(5L));
+            Assert.That(wholeFrac, Is.EqualTo(FixedPointNano.Zero));
+
+            Assert.That(zeroInt, Is.EqualTo(0L));
+            Assert.That(zeroFrac, Is.EqualTo(FixedPointNano.Zero));
+        });
+    }
+
     private sealed class CultureScope : IDisposable
     {
         private readonly CultureInfo _originalCulture;

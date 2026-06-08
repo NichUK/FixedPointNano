@@ -490,7 +490,12 @@ public readonly struct FixedPointNano :
         return RawValue.GetHashCode();
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Deconstruct(out long integerPart, out FixedPointNano fractionalPart)
+    {
+        integerPart = RawValue / Scale;
+        fractionalPart = new FixedPointNano(RawValue % Scale);
+    }
+
     public decimal ToDecimal()
     {
         return RawValue / (decimal)Scale;
@@ -1307,7 +1312,15 @@ public readonly struct FixedPointNano :
 
     private static void ThrowIfInvalidFloatingPoint<T>(T value) where T : IFloatingPointIeee754<T>
     {
-        if (T.IsNaN(value) || T.IsInfinity(value))
+        if (!double.IsFinite(value))
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), "Floating-point values must be finite.");
+        }
+    }
+
+    private static void ThrowIfInvalidFloatingPoint(float value)
+    {
+        if (!float.IsFinite(value))
         {
             throw new ArgumentOutOfRangeException(nameof(value), "Floating-point values must be finite.");
         }

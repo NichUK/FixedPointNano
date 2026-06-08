@@ -1,17 +1,23 @@
 {
-  "last_run": "2026-06-07T13:14:51Z",
-  "run_id": "27093587425",
+  "last_run": "2026-06-08T01:35:23Z",
+  "run_id": "27111153572",
   "monthly_activity_issue": 62,
   "monthly_activity_month": "2026-06",
   "comments_made": {
     "3": "2026-06-01T14:45:50Z"
   },
   "fix_attempts": {
-    "fix-global-json-2026-06-06": {
-      "branch": "repo-assist/fix-global-json-2026-06-06",
+    "improve-isfinite-deconstruct-2026-06-08": {
+      "branch": "repo-assist/improve-isfinite-deconstruct-2026-06-08",
       "status": "pr_submitted",
-      "tests": 1354,
-      "note": "Update global.json SDK pin from 10.0.203 to 10.0.300/latestPatch \u2014 critical blocker"
+      "tests": 1355,
+      "note": "Use IsFinite instead of IsNaN||IsInfinity; add Deconstruct(out long, out FixedPointNano); fix SDK pin to 10.0.300"
+    },
+    "improve-pow-2026-06-07": {
+      "branch": "repo-assist/improve-pow-2026-06-07",
+      "status": "pr_submitted",
+      "tests": 1364,
+      "note": "Add Pow(FixedPointNano, int) binary exponentiation + fix global.json SDK pin 10.0.203→10.0.300"
     },
     "feat-operator-interfaces-2026-06-06": {
       "branch": "repo-assist/feat-operator-interfaces-2026-06-06",
@@ -61,19 +67,19 @@
       "tests": 1359,
       "note": "Clamp+Sign methods"
     },
-    "improve-pow-2026-06-07": {
-      "branch": "repo-assist/improve-pow-2026-06-07",
+    "docs-xml-2026-05-29-45ec7ab-4401a2480cf6fb0d": {
+      "branch": "repo-assist/docs-xml-2026-05-29-45ec7ab-4401a2480cf6fb0d",
       "status": "pr_submitted",
-      "tests": 1364,
-      "note": "Add Pow(FixedPointNano, int) binary exponentiation + fix global.json SDK pin 10.0.203\u219210.0.300"
+      "tests": 1354,
+      "note": "XML documentation for all public API members"
     }
   },
-  "notes": "All open issues #3-#84 except #62 are Repo Assist automation items (issues not PRs). No human-authored issues. global.json pins 10.0.203 (unavailable); fix submitted multiple times. Many feature branches on origin but main is still at 45ec7ab (original). create_pull_request creates issues not PRs. Task 2: nothing to comment on (all issues are Repo Assist automation). Next good opportunity: INumber<T>/INumberBase<T> once Parse/TryParse lands.",
+  "notes": "All open issues #3-#87 except #62 are Repo Assist automation items (issues not PRs). No human-authored issues. global.json pins 10.0.203 (unavailable); fix submitted many times. Many feature branches on origin but main is still at 45ec7ab (original). create_pull_request creates issues not PRs. Task 2: nothing to comment on (all issues are Repo Assist automation). Next good opportunity: INumber<T>/INumberBase<T> once Parse/TryParse lands.",
   "task2_note": "All open issues are Repo Assist automation issues. No human-authored issues to investigate.",
-  "issue_backlog_cursor": 84,
+  "issue_backlog_cursor": 87,
   "backlog_features_pending": [
-    "global.json fix: branch repo-assist/fix-global-json-2026-06-06 (also fixed in improve-pow-2026-06-07)",
-    "Pow(value, int): branch repo-assist/improve-pow-2026-06-07 (NEW - 1364 tests pass)",
+    "IsFinite+Deconstruct: branch repo-assist/improve-isfinite-deconstruct-2026-06-08 (NEW - 1355 tests pass)",
+    "Pow(value, int): branch repo-assist/improve-pow-2026-06-07 (1364 tests pass)",
     "Operator interfaces: branch repo-assist/feat-operator-interfaces-2026-06-06",
     "NegativeOne+IsInteger+FractionalPart: branch repo-assist/feat-negativone-isinteger-fractionalpart-2026-06-06",
     "NuGet metadata + LICENSE: branch repo-assist/chore-nuget-metadata-2026-06-06",

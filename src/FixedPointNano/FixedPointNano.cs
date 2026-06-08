@@ -200,7 +200,21 @@ public readonly struct FixedPointNano :
         return FromDouble(value);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static FixedPointNano CopySign(FixedPointNano value, FixedPointNano sign)
+    {
+        if (sign.RawValue >= 0)
+        {
+            return value.RawValue < 0 ? new FixedPointNano(checked(-value.RawValue)) : value;
+        }
+
+        return value.RawValue > 0 ? new FixedPointNano(-value.RawValue) : value;
+    }
+
+    public static FixedPointNano Lerp(FixedPointNano start, FixedPointNano end, FixedPointNano amount)
+    {
+        return start + (end - start) * amount;
+    }
+
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;

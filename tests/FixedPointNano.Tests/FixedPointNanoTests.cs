@@ -206,29 +206,46 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
-    public void PowShouldWork()
+    public void CopySignShouldReturnValueWithSignOfSign()
     {
-        var two = FixedPointNano.FromDecimal(2m);
-        var negTwo = FixedPointNano.FromDecimal(-2m);
-        var half = FixedPointNano.FromDecimal(0.5m);
+        var pos = FixedPointNano.FromDecimal(3m);
+        var neg = FixedPointNano.FromDecimal(-2m);
+        var zero = FixedPointNano.Zero;
 
         Assert.Multiple(() =>
         {
-            Assert.That(FixedPointNano.Pow(two, 0), Is.EqualTo(FixedPointNano.One));
-            Assert.That(FixedPointNano.Pow(two, 1), Is.EqualTo(two));
-            Assert.That(FixedPointNano.Pow(two, 10).ToDecimal(), Is.EqualTo(1024m));
-            Assert.That(FixedPointNano.Pow(negTwo, 3).ToDecimal(), Is.EqualTo(-8m));
-            Assert.That(FixedPointNano.Pow(negTwo, 4).ToDecimal(), Is.EqualTo(16m));
-            Assert.That(FixedPointNano.Pow(half, 3).ToDecimal(), Is.EqualTo(0.125m));
-            Assert.That(FixedPointNano.Pow(FixedPointNano.Zero, 5), Is.EqualTo(FixedPointNano.Zero));
-            Assert.That(FixedPointNano.Pow(FixedPointNano.One, 100), Is.EqualTo(FixedPointNano.One));
+            Assert.That(FixedPointNano.CopySign(pos, pos).ToDecimal(), Is.EqualTo(3m));
+            Assert.That(FixedPointNano.CopySign(pos, neg).ToDecimal(), Is.EqualTo(-3m));
+            Assert.That(FixedPointNano.CopySign(neg, pos).ToDecimal(), Is.EqualTo(2m));
+            Assert.That(FixedPointNano.CopySign(neg, neg).ToDecimal(), Is.EqualTo(-2m));
+            Assert.That(FixedPointNano.CopySign(zero, pos).ToDecimal(), Is.EqualTo(0m));
+            Assert.That(FixedPointNano.CopySign(zero, neg).ToDecimal(), Is.EqualTo(0m));
         });
 
-        Assert.That(() => FixedPointNano.Pow(two, -1), Throws.TypeOf<ArgumentOutOfRangeException>());
+        Assert.That(() => FixedPointNano.CopySign(new FixedPointNano(long.MinValue), pos),
+            Throws.TypeOf<OverflowException>());
     }
 
     [Test]
-    [NonParallelizable]
+    public void LerpShouldInterpolateCorrectly()
+    {
+        var start = FixedPointNano.FromDecimal(0m);
+        var end = FixedPointNano.FromDecimal(10m);
+        var half = FixedPointNano.FromDecimal(0.5m);
+        var zero = FixedPointNano.Zero;
+        var one = FixedPointNano.One;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Lerp(start, end, zero).ToDecimal(), Is.EqualTo(0m));
+            Assert.That(FixedPointNano.Lerp(start, end, one).ToDecimal(), Is.EqualTo(10m));
+            Assert.That(FixedPointNano.Lerp(start, end, half).ToDecimal(), Is.EqualTo(5m));
+            Assert.That(FixedPointNano.Lerp(FixedPointNano.FromDecimal(1m), FixedPointNano.FromDecimal(3m), half).ToDecimal(),
+                Is.EqualTo(2m));
+        });
+    }
+
+
     public void ToStringShouldRespectCurrentCulture()
     {
         using var cultureScope = new CultureScope(new CultureInfo("fr-FR"));

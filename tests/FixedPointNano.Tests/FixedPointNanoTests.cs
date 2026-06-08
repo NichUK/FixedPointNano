@@ -118,7 +118,46 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
-    [NonParallelizable]
+    public void CopySignShouldReturnValueWithSignOfSign()
+    {
+        var pos = FixedPointNano.FromDecimal(3m);
+        var neg = FixedPointNano.FromDecimal(-2m);
+        var zero = FixedPointNano.Zero;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.CopySign(pos, pos).ToDecimal(), Is.EqualTo(3m));
+            Assert.That(FixedPointNano.CopySign(pos, neg).ToDecimal(), Is.EqualTo(-3m));
+            Assert.That(FixedPointNano.CopySign(neg, pos).ToDecimal(), Is.EqualTo(2m));
+            Assert.That(FixedPointNano.CopySign(neg, neg).ToDecimal(), Is.EqualTo(-2m));
+            Assert.That(FixedPointNano.CopySign(zero, pos).ToDecimal(), Is.EqualTo(0m));
+            Assert.That(FixedPointNano.CopySign(zero, neg).ToDecimal(), Is.EqualTo(0m));
+        });
+
+        Assert.That(() => FixedPointNano.CopySign(new FixedPointNano(long.MinValue), pos),
+            Throws.TypeOf<OverflowException>());
+    }
+
+    [Test]
+    public void LerpShouldInterpolateCorrectly()
+    {
+        var start = FixedPointNano.FromDecimal(0m);
+        var end = FixedPointNano.FromDecimal(10m);
+        var half = FixedPointNano.FromDecimal(0.5m);
+        var zero = FixedPointNano.Zero;
+        var one = FixedPointNano.One;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Lerp(start, end, zero).ToDecimal(), Is.EqualTo(0m));
+            Assert.That(FixedPointNano.Lerp(start, end, one).ToDecimal(), Is.EqualTo(10m));
+            Assert.That(FixedPointNano.Lerp(start, end, half).ToDecimal(), Is.EqualTo(5m));
+            Assert.That(FixedPointNano.Lerp(FixedPointNano.FromDecimal(1m), FixedPointNano.FromDecimal(3m), half).ToDecimal(),
+                Is.EqualTo(2m));
+        });
+    }
+
+
     public void ToStringShouldRespectCurrentCulture()
     {
         using var cultureScope = new CultureScope(new CultureInfo("fr-FR"));

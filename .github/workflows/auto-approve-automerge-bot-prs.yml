@@ -1,0 +1,81 @@
+name: Auto Approve and Merge Bot PRs
+
+on:
+  pull_request_target:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-approve-automerge:
+    if: |
+      github.event.pull_request.user.type == 'Bot' &&
+      (startsWith(github.event.pull_request.user.login, 'github-actions') || endsWith(github.event.pull_request.user.login, '[bot]'))
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Auto approve and queue bot-authored PR for automerge
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { pull_request: pr } = context.payload;
+            const botAuthors = new Set([
+              "github-actions[bot]",
+              "github-copilot[bot]",
+              "copilot",
+            ]);
+
+            if (!botAuthors.has(pr.user.login) && !pr.user.login.startsWith("github-actions")) {
+              return;
+            }
+
+            const reviewBody = "Auto-approving bot-authored PR and enabling automerge.";
+
+            try {
+              await github.graphql(
+                `mutation ApprovePullRequest($input: AddPullRequestReviewInput!) {
+                  addPullRequestReview(input: $input) {
+                    clientMutationId
+                  }
+                }`,
+                {
+                  input: {
+                    pullRequestId: pr.node_id,
+                    event: "APPROVE",
+                    body: reviewBody,
+                  },
+                },
+              );
+            } catch (error) {
+              if (!/already approved/i.test(error.message)) {
+                throw error;
+              }
+            }
+
+            try {
+              await github.graphql(
+                `mutation EnableAutoMerge($input: EnablePullRequestAutoMergeInput!) {
+                  enablePullRequestAutoMerge(input: $input) {
+                    clientMutationId
+                  }
+                }`,
+                {
+                  input: {
+                    pullRequestId: pr.node_id,
+                    mergeMethod: "SQUASH",
+                  },
+                },
+              );
+            } catch (error) {
+              core.warning(error.message);
+            }

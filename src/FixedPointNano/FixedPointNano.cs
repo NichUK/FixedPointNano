@@ -106,6 +106,7 @@ public readonly struct FixedPointNano :
         return FromSingle((float)value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano FromRaw(long rawValue)
     {
         return new FixedPointNano(rawValue);
@@ -170,6 +171,7 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(RoundRaw(value.RawValue, s_roundingScales[decimals], rounding));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Divide(FixedPointNano value, int divisor)
     {
         return Divide(value, (long)divisor);
@@ -283,6 +285,7 @@ public readonly struct FixedPointNano :
         return RawValue == other.RawValue;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
     {
         return obj is FixedPointNano other && Equals(other);
@@ -294,21 +297,25 @@ public readonly struct FixedPointNano :
         return RawValue.GetHashCode();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public decimal ToDecimal()
     {
         return RawValue / (decimal)Scale;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double ToDouble()
     {
         return RawValue / (double)Scale;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float ToSingle()
     {
         return RawValue / (float)Scale;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Half ToHalf()
     {
         return (Half)ToSingle();
@@ -439,51 +446,61 @@ public readonly struct FixedPointNano :
         return left.RawValue >= right.RawValue;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator FixedPointNano(byte value)
     {
         return FromInteger((long)value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator FixedPointNano(sbyte value)
     {
         return FromInteger((long)value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator FixedPointNano(short value)
     {
         return FromInteger((long)value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator FixedPointNano(ushort value)
     {
         return FromInteger((long)value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator FixedPointNano(int value)
     {
         return FromInteger((long)value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator FixedPointNano(uint value)
     {
         return FromInteger((ulong)value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator FixedPointNano(long value)
     {
         return FromInteger(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator FixedPointNano(ulong value)
     {
         return FromInteger(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator FixedPointNano(nint value)
     {
         return FromInteger((long)value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator FixedPointNano(nuint value)
     {
         return FromInteger((ulong)value);
@@ -524,71 +541,85 @@ public readonly struct FixedPointNano :
         return FromInteger(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator byte(FixedPointNano value)
     {
         return checked((byte)(value.RawValue / Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator sbyte(FixedPointNano value)
     {
         return checked((sbyte)(value.RawValue / Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator short(FixedPointNano value)
     {
         return checked((short)(value.RawValue / Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator ushort(FixedPointNano value)
     {
         return checked((ushort)(value.RawValue / Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator int(FixedPointNano value)
     {
         return checked((int)(value.RawValue / Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator uint(FixedPointNano value)
     {
         return checked((uint)(value.RawValue / Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator long(FixedPointNano value)
     {
         return value.RawValue / Scale;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator ulong(FixedPointNano value)
     {
         return checked((ulong)(value.RawValue / Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nint(FixedPointNano value)
     {
         return checked((nint)(value.RawValue / Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(FixedPointNano value)
     {
         return checked((nuint)(value.RawValue / Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator Half(FixedPointNano value)
     {
         return value.ToHalf();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator float(FixedPointNano value)
     {
         return value.ToSingle();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator double(FixedPointNano value)
     {
         return value.ToDouble();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator decimal(FixedPointNano value)
     {
         return value.ToDecimal();

@@ -63,6 +63,7 @@ public readonly struct FixedPointNano :
     public static FixedPointNano MinValue { get; } = new(long.MinValue);
     public static FixedPointNano Zero { get; } = new(0L);
     public static FixedPointNano One { get; } = new(Scale);
+    public static FixedPointNano Epsilon { get; } = new(1L);
     public static FixedPointNano NegativeOne { get; } = new(-Scale);
 
     static FixedPointNano IAdditiveIdentity<FixedPointNano, FixedPointNano>.AdditiveIdentity => Zero;
@@ -479,11 +480,6 @@ public readonly struct FixedPointNano :
     public static FixedPointNano Frac(FixedPointNano value)
     {
         return new FixedPointNano(value.RawValue % Scale);
-    }
-
-    public static bool IsInteger(FixedPointNano value)
-    {
-        return value.RawValue % Scale == 0;
     }
 
     public int CompareTo(object? obj)

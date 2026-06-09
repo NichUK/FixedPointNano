@@ -402,6 +402,57 @@ public sealed class FixedPointNanoMathComparisonTests
     }
 
     [Test]
+    public void AdditionAndSubtractionThrowOnOverflow()
+    {
+        var maxValue = FixedPointNano.FromRaw(long.MaxValue);
+        var minValue = FixedPointNano.FromRaw(long.MinValue);
+        var one = FixedPointNano.FromRaw(1L);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(() => _ = maxValue + one, Throws.TypeOf<OverflowException>());
+            Assert.That(() => _ = minValue - one, Throws.TypeOf<OverflowException>());
+            Assert.That(() => _ = -minValue, Throws.TypeOf<OverflowException>());
+        });
+    }
+
+    [Test]
+    public void NarrowIntegerCastThrowsOnOverflow()
+    {
+        var tooLargeForInt = FixedPointNano.FromDecimal(3_000_000_000m);
+        var tooLargeForShort = FixedPointNano.FromDecimal(40_000m);
+        var tooLargeForByte = FixedPointNano.FromDecimal(300m);
+        var negative = FixedPointNano.FromDecimal(-1m);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(() => _ = (int)tooLargeForInt, Throws.TypeOf<OverflowException>());
+            Assert.That(() => _ = (short)tooLargeForShort, Throws.TypeOf<OverflowException>());
+            Assert.That(() => _ = (byte)tooLargeForByte, Throws.TypeOf<OverflowException>());
+            Assert.That(() => _ = (sbyte)tooLargeForShort, Throws.TypeOf<OverflowException>());
+            Assert.That(() => _ = (ushort)negative, Throws.TypeOf<OverflowException>());
+            Assert.That(() => _ = (uint)negative, Throws.TypeOf<OverflowException>());
+        });
+    }
+
+    [Test]
+    public void FromSingleRejectsOutOfRangeValues()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(() => FixedPointNano.FromSingle(float.MaxValue), Throws.TypeOf<OverflowException>());
+            Assert.That(() => FixedPointNano.FromSingle(-float.MaxValue), Throws.TypeOf<OverflowException>());
+        });
+    }
+
+    [Test]
+    public void FromDecimalRejectsOutOfRangeValues()
+    {
+        Assert.That(() => FixedPointNano.FromDecimal(decimal.MaxValue), Throws.TypeOf<OverflowException>());
+        Assert.That(() => FixedPointNano.FromDecimal(decimal.MinValue), Throws.TypeOf<OverflowException>());
+    }
+
+    [Test]
     public void SqrtCorrectsHighDoubleEstimates()
     {
         var method = typeof(FixedPointNano).GetMethod(

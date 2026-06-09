@@ -243,6 +243,49 @@ public sealed class FixedPointNanoMathComparisonTests
         });
     }
 
+    [Test]
+    public void SampleVarianceAndStandardDeviationMatchDecimalReference()
+    {
+        var values = new[]
+        {
+            1.200000001m,
+            1.200100002m,
+            1.199900003m,
+            1.200200004m,
+            1.199800005m,
+        };
+        var sum = 0m;
+        var sumRaw = 0L;
+        var sumSquares = 0m;
+        var sumOfRawSquares = Int128.Zero;
+
+        foreach (var value in values)
+        {
+            var fixedValue = FixedPointNano.FromDecimal(value);
+            var decimalValue = fixedValue.ToDecimal();
+
+            sum += decimalValue;
+            sumRaw = checked(sumRaw + fixedValue.RawValue);
+            sumSquares += decimalValue * decimalValue;
+            sumOfRawSquares = checked(sumOfRawSquares + ((Int128)fixedValue.RawValue * fixedValue.RawValue));
+        }
+
+        var n = values.Length;
+        var mean = sum / n;
+        var expectedSampleVariance = ((sumSquares / n) - (mean * mean)) * n / (n - 1);
+        var expectedSampleStdDevRaw = FixedPointNano.FromDecimal(DecimalSqrt(expectedSampleVariance)).RawValue;
+
+        Assert.Multiple(() =>
+        {
+            AssertMatchesDecimalReference(
+                expectedSampleVariance,
+                FixedPointNano.SampleVariance(FixedPointNano.FromRaw(sumRaw), sumOfRawSquares, n));
+            Assert.That(
+                Math.Abs(FixedPointNano.SampleStandardDeviation(FixedPointNano.FromRaw(sumRaw), sumOfRawSquares, n).RawValue - expectedSampleStdDevRaw),
+                Is.LessThanOrEqualTo(1L));
+        });
+    }
+
     [TestCase(-12.5, -7)]
     [TestCase(-12.5, -3)]
     [TestCase(-12.5, 2)]
@@ -366,6 +409,9 @@ public sealed class FixedPointNanoMathComparisonTests
             Assert.That(() => FixedPointNano.PopulationVariance(FixedPointNano.Zero, Int128.Zero, 0), Throws.TypeOf<ArgumentOutOfRangeException>());
             Assert.That(() => FixedPointNano.PopulationVariance(FixedPointNano.Zero, -1, 1), Throws.TypeOf<ArgumentOutOfRangeException>());
             Assert.That(() => FixedPointNano.PopulationVariance(FixedPointNano.One, 0, 1), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => FixedPointNano.SampleVariance(FixedPointNano.Zero, Int128.Zero, 1), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => FixedPointNano.SampleVariance(FixedPointNano.Zero, -1, 2), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => FixedPointNano.SampleVariance(FixedPointNano.One, 0, 2), Throws.TypeOf<ArgumentOutOfRangeException>());
             Assert.That(
                 () => FixedPointNano.Round(FixedPointNano.One, 2, (MidpointRounding)999),
                 Throws.TypeOf<ArgumentOutOfRangeException>());

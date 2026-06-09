@@ -167,6 +167,66 @@ public class FixedPointNanoMathBenchmarks
     }
 
     [Benchmark]
+    public Fpn FloorDecimalReference()
+    {
+        return Fpn.FromDecimal(decimal.Floor(_left.ToDecimal()));
+    }
+
+    [Benchmark]
+    public Fpn FloorRaw()
+    {
+        return Fpn.Floor(_left);
+    }
+
+    [Benchmark]
+    public Fpn CeilingDecimalReference()
+    {
+        return Fpn.FromDecimal(decimal.Ceiling(_left.ToDecimal()));
+    }
+
+    [Benchmark]
+    public Fpn CeilingRaw()
+    {
+        return Fpn.Ceiling(_left);
+    }
+
+    [Benchmark]
+    public Fpn TruncateDecimalReference()
+    {
+        return Fpn.FromDecimal(decimal.Truncate(_left.ToDecimal()));
+    }
+
+    [Benchmark]
+    public Fpn TruncateRaw()
+    {
+        return Fpn.Truncate(_left);
+    }
+
+    [Benchmark]
+    public Fpn AbsDecimalReference()
+    {
+        return Fpn.FromDecimal(Math.Abs(_left.ToDecimal()));
+    }
+
+    [Benchmark]
+    public Fpn AbsRaw()
+    {
+        return Fpn.Abs(_left);
+    }
+
+    [Benchmark]
+    public Fpn MultiplyRatioDecimalReference()
+    {
+        return Fpn.FromDecimal(_left.ToDecimal() * 3m / 7m);
+    }
+
+    [Benchmark]
+    public Fpn MultiplyRatioRaw()
+    {
+        return Fpn.MultiplyRatio(_left, 3L, 7L);
+    }
+
+    [Benchmark]
     public double SmaLoopDoubleReference()
     {
         var sum = 0d;

@@ -5,3 +5,5 @@ BenchmarkDotNet.Artifacts/
 .vs/
 *.user
 *.suo
+.env
+.env.*

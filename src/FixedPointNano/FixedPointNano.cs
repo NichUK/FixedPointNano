@@ -196,6 +196,36 @@ public readonly struct FixedPointNano :
         return Sqrt(PopulationVariance(sum, sumOfRawSquares, count));
     }
 
+    public static FixedPointNano SampleVariance(FixedPointNano sum, Int128 sumOfRawSquares, int count)
+    {
+        if (count < 2)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater than or equal to 2.");
+        }
+
+        if (sumOfRawSquares < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sumOfRawSquares), "Sum of raw squares must not be negative.");
+        }
+
+        var countValue = (Int128)count;
+        var numerator = checked((sumOfRawSquares * countValue) - ((Int128)sum.RawValue * sum.RawValue));
+        if (numerator < 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(sumOfRawSquares),
+                "Sum of raw squares is inconsistent with the supplied sum and count.");
+        }
+
+        var denominator = checked(countValue * (countValue - 1) * Scale);
+        return FromRawChecked(DivideRoundedToNearestEven(numerator, denominator));
+    }
+
+    public static FixedPointNano SampleStandardDeviation(FixedPointNano sum, Int128 sumOfRawSquares, int count)
+    {
+        return Sqrt(SampleVariance(sum, sumOfRawSquares, count));
+    }
+
     public static FixedPointNano Sqrt(FixedPointNano value)
     {
         if (value.RawValue < 0)

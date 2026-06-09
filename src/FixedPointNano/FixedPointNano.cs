@@ -93,6 +93,7 @@ public readonly struct FixedPointNano :
     /// </summary>
     /// <param name="value">The value to ceiling.</param>
     /// <returns>The ceiling of <paramref name="value"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Ceiling(FixedPointNano value)
     {
         var quotient = value.RawValue / Scale;
@@ -110,6 +111,7 @@ public readonly struct FixedPointNano :
     /// </summary>
     /// <param name="value">The value to floor.</param>
     /// <returns>The floor of <paramref name="value"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Floor(FixedPointNano value)
     {
         var quotient = value.RawValue / Scale;
@@ -122,11 +124,13 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(checked(quotient * Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano FractionalPart(FixedPointNano value)
     {
         return new FixedPointNano(value.RawValue % Scale);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsInteger(FixedPointNano value)
     {
         return value.RawValue % Scale == 0;
@@ -201,6 +205,7 @@ public readonly struct FixedPointNano :
         return FromDouble(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano CopySign(FixedPointNano value, FixedPointNano sign)
     {
         if (sign.RawValue >= 0)
@@ -216,6 +221,7 @@ public readonly struct FixedPointNano :
         return start + (end - start) * amount;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;
@@ -247,6 +253,7 @@ public readonly struct FixedPointNano :
         return value;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Sign(FixedPointNano value)
     {
         return value.RawValue switch
@@ -551,12 +558,14 @@ public readonly struct FixedPointNano :
         return RawValue.GetHashCode();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Deconstruct(out long integerPart, out FixedPointNano fractionalPart)
     {
         integerPart = RawValue / Scale;
         fractionalPart = new FixedPointNano(RawValue % Scale);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public decimal ToDecimal()
     {
         return RawValue / (decimal)Scale;
@@ -672,16 +681,19 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(checked(-value.RawValue));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator +(FixedPointNano value)
     {
         return value;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator ++(FixedPointNano value)
     {
         return new FixedPointNano(checked(value.RawValue + Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator --(FixedPointNano value)
     {
         return new FixedPointNano(checked(value.RawValue - Scale));

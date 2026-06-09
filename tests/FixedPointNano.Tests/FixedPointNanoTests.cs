@@ -287,6 +287,81 @@ public sealed class FixedPointNanoTests
         });
     }
 
+    [Test]
+    public void CeilingAndFloorShouldHandleNegativeAndExactValues()
+    {
+        Assert.Multiple(() =>
+        {
+            // Ceiling rounds toward positive infinity
+            Assert.That(FixedPointNano.Ceiling(FixedPointNano.FromDecimal(-1.1m)).ToDecimal(), Is.EqualTo(-1m));
+            Assert.That(FixedPointNano.Ceiling(FixedPointNano.FromDecimal(-1.9m)).ToDecimal(), Is.EqualTo(-1m));
+            Assert.That(FixedPointNano.Ceiling(FixedPointNano.FromDecimal(2.0m)).ToDecimal(), Is.EqualTo(2m));
+
+            // Floor rounds toward negative infinity
+            Assert.That(FixedPointNano.Floor(FixedPointNano.FromDecimal(-0.1m)).ToDecimal(), Is.EqualTo(-1m));
+            Assert.That(FixedPointNano.Floor(FixedPointNano.FromDecimal(-1.9m)).ToDecimal(), Is.EqualTo(-2m));
+            Assert.That(FixedPointNano.Floor(FixedPointNano.FromDecimal(2.0m)).ToDecimal(), Is.EqualTo(2m));
+
+            // Truncate discards the fractional part regardless of sign
+            Assert.That(FixedPointNano.Truncate(FixedPointNano.FromDecimal(1.9m)).ToDecimal(), Is.EqualTo(1m));
+        });
+    }
+
+    [Test]
+    public void RoundShouldSupportAllMidpointRoundingModes()
+    {
+        var half = FixedPointNano.FromDecimal(1.5m);
+        var twoAndHalf = FixedPointNano.FromDecimal(2.5m);
+        var negativeHalf = FixedPointNano.FromDecimal(-1.5m);
+
+        Assert.Multiple(() =>
+        {
+            // ToEven (banker's rounding): rounds to nearest even integer at midpoint
+            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.ToEven).ToDecimal(), Is.EqualTo(2m));
+            Assert.That(FixedPointNano.Round(twoAndHalf, 0, MidpointRounding.ToEven).ToDecimal(), Is.EqualTo(2m));
+
+            // AwayFromZero: always rounds midpoint away from zero
+            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.AwayFromZero).ToDecimal(), Is.EqualTo(2m));
+            Assert.That(FixedPointNano.Round(negativeHalf, 0, MidpointRounding.AwayFromZero).ToDecimal(), Is.EqualTo(-2m));
+
+            // ToZero: always rounds midpoint toward zero (truncates)
+            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.ToZero).ToDecimal(), Is.EqualTo(1m));
+            Assert.That(FixedPointNano.Round(negativeHalf, 0, MidpointRounding.ToZero).ToDecimal(), Is.EqualTo(-1m));
+
+            // ToNegativeInfinity: rounds midpoint toward negative infinity
+            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.ToNegativeInfinity).ToDecimal(), Is.EqualTo(1m));
+            Assert.That(FixedPointNano.Round(negativeHalf, 0, MidpointRounding.ToNegativeInfinity).ToDecimal(), Is.EqualTo(-2m));
+
+            // ToPositiveInfinity: rounds midpoint toward positive infinity
+            Assert.That(FixedPointNano.Round(half, 0, MidpointRounding.ToPositiveInfinity).ToDecimal(), Is.EqualTo(2m));
+            Assert.That(FixedPointNano.Round(negativeHalf, 0, MidpointRounding.ToPositiveInfinity).ToDecimal(), Is.EqualTo(-1m));
+        });
+    }
+
+    [Test]
+    public void FastMathHelpersShouldWork()
+    {
+        var value = FixedPointNano.FromDecimal(10m);
+
+        Assert.Multiple(() =>
+        {
+            // Divide by int delegates to the long overload
+            Assert.That(FixedPointNano.Divide(value, 4).ToDecimal(), Is.EqualTo(2.5m));
+            Assert.That(FixedPointNano.Divide(value, 4L).ToDecimal(), Is.EqualTo(2.5m));
+
+            // MultiplyRatio: (10 * 3) / 4 = 7.5
+            Assert.That(FixedPointNano.MultiplyRatio(value, 3L, 4L).ToDecimal(), Is.EqualTo(7.5m));
+
+            // Square: 10^2 = 100
+            Assert.That(FixedPointNano.Square(value).ToDecimal(), Is.EqualTo(100m));
+
+            // Sqrt: sqrt(4) = 2
+            Assert.That(
+                FixedPointNano.Sqrt(FixedPointNano.FromDecimal(4m)).ToDecimal(),
+                Is.EqualTo(2m));
+        });
+    }
+
     private sealed class CultureScope : IDisposable
     {
         private readonly CultureInfo _originalCulture;

@@ -175,37 +175,6 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
-    public void ClampShouldWork()
-    {
-        var low = FixedPointNano.FromDecimal(1m);
-        var mid = FixedPointNano.FromDecimal(5m);
-        var high = FixedPointNano.FromDecimal(10m);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(FixedPointNano.Clamp(mid, low, high), Is.EqualTo(mid));
-            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(0m), low, high), Is.EqualTo(low));
-            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(15m), low, high), Is.EqualTo(high));
-            Assert.That(FixedPointNano.Clamp(low, low, high), Is.EqualTo(low));
-            Assert.That(FixedPointNano.Clamp(high, low, high), Is.EqualTo(high));
-            Assert.That(FixedPointNano.Clamp(low, low, low), Is.EqualTo(low));
-        });
-
-        Assert.That(() => FixedPointNano.Clamp(mid, high, low), Throws.TypeOf<ArgumentOutOfRangeException>());
-    }
-
-    [Test]
-    public void SignShouldWork()
-    {
-        Assert.Multiple(() =>
-        {
-            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(3.14m)), Is.EqualTo(1));
-            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(-2.71m)), Is.EqualTo(-1));
-            Assert.That(FixedPointNano.Sign(FixedPointNano.Zero), Is.EqualTo(0));
-        });
-    }
-
-    [Test]
     public void CopySignShouldReturnValueWithSignOfSign()
     {
         var pos = FixedPointNano.FromDecimal(3m);

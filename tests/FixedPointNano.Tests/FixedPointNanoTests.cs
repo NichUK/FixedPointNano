@@ -118,6 +118,37 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
+    public void ClampShouldWork()
+    {
+        var min = FixedPointNano.FromDecimal(1m);
+        var max = FixedPointNano.FromDecimal(5m);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(3m), min, max).ToDecimal(), Is.EqualTo(3m));
+            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(0m), min, max).ToDecimal(), Is.EqualTo(1m));
+            Assert.That(FixedPointNano.Clamp(FixedPointNano.FromDecimal(10m), min, max).ToDecimal(), Is.EqualTo(5m));
+            Assert.That(FixedPointNano.Clamp(min, min, max), Is.EqualTo(min));
+            Assert.That(FixedPointNano.Clamp(max, min, max), Is.EqualTo(max));
+        });
+
+        Assert.That(
+            () => FixedPointNano.Clamp(FixedPointNano.Zero, max, min),
+            Throws.TypeOf<ArgumentException>());
+    }
+
+    [Test]
+    public void SignShouldWork()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(3.5m)), Is.EqualTo(1));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.FromDecimal(-2.25m)), Is.EqualTo(-1));
+            Assert.That(FixedPointNano.Sign(FixedPointNano.Zero), Is.EqualTo(0));
+        });
+    }
+
+    [Test]
     [NonParallelizable]
     public void ToStringShouldRespectCurrentCulture()
     {

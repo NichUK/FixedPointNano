@@ -22,7 +22,7 @@
 #
 # For more information: https://github.github.com/gh-aw/introduction/overview/
 #
-# A friendly repository assistant that runs 2 times a day to support contributors and maintainers.
+# A friendly repository assistant that runs 1 time a day to support contributors and maintainers.
 # Can also be triggered on-demand via '/repo-assist <instructions>' to perform specific tasks.
 # - Labels and triages open issues
 # - Comments helpfully on open issues to unblock contributors and onboard newcomers
@@ -80,7 +80,7 @@ name: "Repo Assist"
     - created
     - edited
   schedule:
-  - cron: "46 */12 * * *"
+  - cron: "46 0 * * *"
   workflow_dispatch:
     inputs:
       aw_context:
@@ -1376,7 +1376,7 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
           WORKFLOW_NAME: "Repo Assist"
-          WORKFLOW_DESCRIPTION: "A friendly repository assistant that runs 2 times a day to support contributors and maintainers.\nCan also be triggered on-demand via '/repo-assist <instructions>' to perform specific tasks.\n- Labels and triages open issues\n- Comments helpfully on open issues to unblock contributors and onboard newcomers\n- Identifies issues that can be fixed and creates draft pull requests with fixes\n- Improves performance, testing, and code quality via PRs\n- Makes engineering investments: dependency updates, CI improvements, tooling\n- Updates its own PRs when CI fails or merge conflicts arise\n- Nudges stale PRs waiting for author response\n- Takes the repository forward with proactive improvements\n- Maintains a persistent memory of work done and what remains\nAlways polite, constructive, and mindful of the project's goals."
+          WORKFLOW_DESCRIPTION: "A friendly repository assistant that runs 1 time a day to support contributors and maintainers.\nCan also be triggered on-demand via '/repo-assist <instructions>' to perform specific tasks.\n- Labels and triages open issues\n- Comments helpfully on open issues to unblock contributors and onboard newcomers\n- Identifies issues that can be fixed and creates draft pull requests with fixes\n- Improves performance, testing, and code quality via PRs\n- Makes engineering investments: dependency updates, CI improvements, tooling\n- Updates its own PRs when CI fails or merge conflicts arise\n- Nudges stale PRs waiting for author response\n- Takes the repository forward with proactive improvements\n- Maintains a persistent memory of work done and what remains\nAlways polite, constructive, and mindful of the project's goals."
           HAS_PATCH: ${{ needs.agent.outputs.has_patch }}
         with:
           script: |

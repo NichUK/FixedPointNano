@@ -80,6 +80,7 @@ safe-outputs:
   create-pull-request:
     draft: true
     title-prefix: "[repo-assist] "
+    allowed-base-branches: [main, develop]
     labels: [automation, repo-assist]
     protected-files: fallback-to-issue
     max: 4

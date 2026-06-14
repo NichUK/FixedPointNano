@@ -1,30 +1,24 @@
 {
-  "last_run": "2026-06-09T13:43:49Z",
-  "run_id": "27210347646",
-  "monthly_activity_issue": "new-2026-06 (aw_act202606)",
+  "last_run": "2026-06-14T13:21:51Z",
+  "run_id": "27500137749",
+  "monthly_activity_issue": "new-2026-06 (#aw_act202606b)",
   "monthly_activity_month": "2026-06",
   "comments_made": {
-    "3": "2026-06-01T14:45:50Z"
+    "179": "2026-06-14T13:21:51Z"
   },
   "fix_attempts": {
-    "perf-inlining-hotpath-2026-06-09": {
-      "branch": "repo-assist/perf-inlining-hotpath-2026-06-09",
+    "improve-iparsable-2026-06-14": {
+      "branch": "repo-assist/improve-iparsable-2026-06-14",
       "status": "pr_submitted",
       "tests": 1426,
-      "note": "AggressiveInlining on Ceiling, Floor, FractionalPart, IsInteger, Max, CopySign, Sign, Deconstruct, ToDecimal, unary+, ++, -- (Task 8)"
-    },
-    "eng-nuget-publish-2026-06-09": {
-      "branch": "repo-assist/eng-nuget-publish-2026-06-09",
-      "status": "pr_submitted",
-      "tests": "n/a (workflow only)",
-      "note": "NuGet publish workflow triggered on GitHub release publication; uses NUGET_API_KEY secret (Task 4)"
+      "note": "IParsable<FixedPointNano> and ISpanParsable<FixedPointNano> declared; Parse/TryParse methods already existed (Task 10)"
     }
   },
-  "notes": "Maintainer NichUK merged ALL prior Repo Assist PRs in one batch, tagged v0.1, created develop branch, set up CI (build+test on push/PR to main/develop), and auto-merge workflow for bot PRs. Monthly activity issue #62 was closed. New monthly activity issue created this run. Bot PRs should target develop branch (auto-merge enabled). Test count is now 1426.",
-  "task2_note": "No human-authored open issues. All prior open issues closed by maintainer.",
+  "notes": "Maintainer NichUK merged ALL prior Repo Assist PRs, tagged v0.1, created develop branch, set up CI, raised Repo Assist token budget to 25M. Bot PRs should target develop branch (auto-merge enabled). Test count is now 1426. IParsable/ISpanParsable declared this run — next step is INumber<T>/INumberBase<T>.",
+  "task2_note": "Issue #179 is automated failure issue (token budget exhausted on prior run). Commented it's resolved.",
   "issue_backlog_cursor": 0,
   "backlog_features_pending": [
-    "INumber<T>/INumberBase<T> generic math once IParsable is stable",
+    "INumber<T>/INumberBase<T> generic math (IParsable milestone done — this is next)",
     "CI code coverage reporting (coverlet integration)"
   ]
 }

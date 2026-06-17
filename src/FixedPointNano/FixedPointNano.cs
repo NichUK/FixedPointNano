@@ -33,7 +33,10 @@ public readonly struct FixedPointNano :
     IUnaryPlusOperators<FixedPointNano, FixedPointNano>,
     IIncrementOperators<FixedPointNano>,
     IDecrementOperators<FixedPointNano>,
-    IComparisonOperators<FixedPointNano, FixedPointNano, bool>
+    IComparisonOperators<FixedPointNano, FixedPointNano, bool>,
+    IParsable<FixedPointNano>,
+    ISpanParsable<FixedPointNano>,
+    IMinMaxValue<FixedPointNano>
 {
     /// <summary>The number of decimal places supported by <see cref="FixedPointNano"/>.</summary>
     public const int DecimalPlaces = 9;

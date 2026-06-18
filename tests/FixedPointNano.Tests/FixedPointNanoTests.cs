@@ -63,7 +63,7 @@ public sealed class FixedPointNanoTests
     {
         Assert.That(FixedPointNano.IsZero(FixedPointNano.Zero), Is.True);
         Assert.That(FixedPointNano.IsZero(FixedPointNano.Epsilon), Is.False);
-        Assert.That(FixedPointNano.IsZero(new FixedPointNano(-1L)), Is.False);
+        Assert.That(FixedPointNano.IsZero(-FixedPointNano.Epsilon), Is.False);
         Assert.That(FixedPointNano.IsZero(FixedPointNano.One), Is.False);
         Assert.That(FixedPointNano.IsZero(FixedPointNano.NegativeOne), Is.False);
     }

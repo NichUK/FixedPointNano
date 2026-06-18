@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Numerics;
-using Moq;
 using Seerstone;
 
 namespace Seerstone.Tests;
@@ -263,18 +262,17 @@ public sealed class FixedPointNanoTests
         numberFormat.NumberDecimalSeparator = "_";
         numberFormat.NumberGroupSeparator = " ";
 
-        var provider = new Mock<IFormatProvider>(MockBehavior.Strict);
-        provider.Setup(x => x.GetFormat(typeof(NumberFormatInfo))).Returns(numberFormat);
+        var provider = new TrackingFormatProvider(numberFormat);
 
         var value = FixedPointNano.FromDecimal(1234.5m);
         Span<char> buffer = stackalloc char[32];
 
-        Assert.That(value.ToString(provider.Object), Is.EqualTo("1234_5"));
-        Assert.That(value.ToString("N2", provider.Object), Is.EqualTo("1 234_50"));
-        Assert.That(value.TryFormat(buffer, out var charsWritten, "F3", provider.Object), Is.True);
+        Assert.That(value.ToString(provider), Is.EqualTo("1234_5"));
+        Assert.That(value.ToString("N2", provider), Is.EqualTo("1 234_50"));
+        Assert.That(value.TryFormat(buffer, out var charsWritten, "F3", provider), Is.True);
         Assert.That(new string(buffer[..charsWritten]), Is.EqualTo("1234_500"));
 
-        provider.Verify(x => x.GetFormat(typeof(NumberFormatInfo)), Times.AtLeastOnce);
+        Assert.That(provider.GetFormatCallCount, Is.GreaterThan(0));
     }
 
     [Test]
@@ -461,6 +459,24 @@ public sealed class FixedPointNanoTests
         {
             CultureInfo.CurrentCulture = _originalCulture;
             CultureInfo.CurrentUICulture = _originalUiCulture;
+        }
+    }
+
+    private sealed class TrackingFormatProvider : IFormatProvider
+    {
+        private readonly NumberFormatInfo _numberFormat;
+
+        public int GetFormatCallCount { get; private set; }
+
+        public TrackingFormatProvider(NumberFormatInfo numberFormat)
+        {
+            _numberFormat = numberFormat;
+        }
+
+        public object? GetFormat(Type? formatType)
+        {
+            GetFormatCallCount++;
+            return formatType == typeof(NumberFormatInfo) ? _numberFormat : null;
         }
     }
 

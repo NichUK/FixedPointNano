@@ -33,7 +33,7 @@ jobs:
         run: dotnet build -c Release --no-restore
 
       - name: Run tests
-        run: dotnet test -c Release --no-build --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
+        run: dotnet test -c Release --no-build --logger "trx;LogFileName=test-results.trx" --results-directory TestResults --collect "XPlat Code Coverage" --settings tests/coverlet.runsettings
 
       - name: Upload test results
         if: always()
@@ -41,4 +41,12 @@ jobs:
         with:
           name: test-results
           path: TestResults/**/*.trx
+          if-no-files-found: warn
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: TestResults/**/coverage.cobertura.xml
           if-no-files-found: warn

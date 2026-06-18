@@ -135,6 +135,30 @@ public readonly struct FixedPointNano :
         return value.RawValue % Scale == 0;
     }
 
+    /// <summary>Returns <see langword="true"/> if <paramref name="value"/> is strictly greater than zero.</summary>
+    /// <param name="value">The value to test.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsPositive(FixedPointNano value)
+    {
+        return value.RawValue > 0;
+    }
+
+    /// <summary>Returns <see langword="true"/> if <paramref name="value"/> is strictly less than zero.</summary>
+    /// <param name="value">The value to test.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNegative(FixedPointNano value)
+    {
+        return value.RawValue < 0;
+    }
+
+    /// <summary>Returns <see langword="true"/> if <paramref name="value"/> is exactly zero.</summary>
+    /// <param name="value">The value to test.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsZero(FixedPointNano value)
+    {
+        return value.RawValue == 0;
+    }
+
     public static FixedPointNano FromDecimal(decimal value)
     {
         var scaledValue = decimal.Round(value * Scale, 0, MidpointRounding.ToEven);

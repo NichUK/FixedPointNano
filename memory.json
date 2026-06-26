@@ -1,47 +1,53 @@
 {
-  "last_run": "2026-06-18T13:53:59Z",
-  "run_id": "27764304709",
-  "monthly_activity_issue": 192,
+  "last_run": "2026-06-26T13:31:08Z",
+  "run_id": "28241157096",
+  "monthly_activity_issue": 203,
   "monthly_activity_month": "2026-06",
   "comments_made": {
     "179": "2026-06-14T13:21:51Z"
   },
   "fix_attempts": {
+    "test-coverage-gaps-2026-06-26": {
+      "branch": "repo-assist/test-coverage-gaps-2026-06-26",
+      "status": "pr_submitted",
+      "tests": 1446,
+      "date": "2026-06-26",
+      "note": "6 tests: Frac(2), Pow negative exponent, ++/-­- overflow(2), [Test] attr restore. 1440→1446"
+    },
     "improve-predicates-ispositive-2026-06-18": {
       "branch": "repo-assist/improve-predicates-ispositive-2026-06-18",
-      "status": "pr_submitted",
+      "status": "merged_as_pr_193",
       "tests": 1440,
       "date": "2026-06-18",
-      "note": "Added IsPositive, IsNegative, IsZero predicates with 3 tests; total 1440"
+      "note": "IsPositive, IsNegative, IsZero predicates merged"
     },
     "eng-remove-moq-2026-06-18": {
       "branch": "repo-assist/eng-remove-moq-2026-06-18",
-      "status": "pr_submitted",
+      "status": "merged_as_pr_194",
       "tests": 1437,
       "date": "2026-06-18",
-      "note": "Removed Moq dependency; replaced with TrackingFormatProvider helper"
+      "note": "Moq removed, merged as PR #194"
     },
     "eng-cpm-2026-06-18": {
       "branch": "repo-assist/eng-cpm-2026-06-18",
-      "status": "pr_submitted",
+      "status": "branch_ready",
       "tests": 1437,
       "date": "2026-06-18",
-      "note": "Central Package Management - Directory.Packages.props added"
+      "note": "Central Package Management — branch ready, no PR yet"
     },
     "improve-interfaces-2026-06-17": {
       "branch": "repo-assist/improve-interfaces-2026-06-17",
       "status": "merged_as_pr_187",
       "tests": 1437,
       "date": "2026-06-17",
-      "note": "Declared IParsable<T>, ISpanParsable<T>, IMinMaxValue<T>; merged to develop"
+      "note": "IParsable/ISpanParsable/IMinMaxValue merged as PR #187"
     }
   },
-  "notes": "Test count is now 1440. IsPositive/IsNegative/IsZero added (groundwork for INumber<T>). Moq removed from test project. CPM PR pending. Issue #190 should be closed. Issue #189 for CI coverage requires manual PR creation. Bot PRs should target develop branch. Next areas: INumber<T>/ISignedNumber<T> generic math (predicates now in place), System.Text.Json JsonConverter, NuGet publish automation.",
+  "notes": "Test count is now 1446. PRs #187, #193, #194 all merged into develop. eng-cpm branch still needs review. Next areas: INumber<T>/ISignedNumber<T> generic math, System.Text.Json JsonConverter, NuGet publish automation.",
   "issue_backlog_cursor": 0,
-  "issues_to_close": [190],
   "backlog_features_pending": [
     "INumber<T>/ISignedNumber<T> generic math (IsPositive/IsNegative/IsZero now in place)",
     "System.Text.Json JsonConverter for serialization",
-    "NuGet publish automation (workflow already added to main)"
+    "NuGet publish automation"
   ]
 }

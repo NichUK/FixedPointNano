@@ -1,18 +1,25 @@
 {
-  "last_run": "2026-06-26T13:31:08Z",
-  "run_id": "28241157096",
-  "monthly_activity_issue": 203,
+  "last_run": "2026-06-27T00:00:00Z",
+  "run_id": "28274439216",
+  "monthly_activity_issue": 204,
   "monthly_activity_month": "2026-06",
   "comments_made": {
     "179": "2026-06-14T13:21:51Z"
   },
   "fix_attempts": {
+    "improve-inumber-isignednumber-2026-06-27": {
+      "branch": "repo-assist/improve-inumber-isignednumber-2026-06-27",
+      "status": "pr_submitted",
+      "tests": 1495,
+      "date": "2026-06-27",
+      "note": "INumber<T> + ISignedNumber<T> full generic math. 55 new tests. 1440→1495"
+    },
     "test-coverage-gaps-2026-06-26": {
       "branch": "repo-assist/test-coverage-gaps-2026-06-26",
-      "status": "pr_submitted",
+      "status": "pr_open_as_203",
       "tests": 1446,
       "date": "2026-06-26",
-      "note": "6 tests: Frac(2), Pow negative exponent, ++/-­- overflow(2), [Test] attr restore. 1440→1446"
+      "note": "6 tests: Frac(2), Pow negative exponent, ++/-- overflow(2), [Test] attr restore. 1440→1446"
     },
     "improve-predicates-ispositive-2026-06-18": {
       "branch": "repo-assist/improve-predicates-ispositive-2026-06-18",
@@ -30,10 +37,10 @@
     },
     "eng-cpm-2026-06-18": {
       "branch": "repo-assist/eng-cpm-2026-06-18",
-      "status": "branch_ready",
+      "status": "merged_as_pr_196",
       "tests": 1437,
       "date": "2026-06-18",
-      "note": "Central Package Management — branch ready, no PR yet"
+      "note": "Central Package Management merged as PR #196"
     },
     "improve-interfaces-2026-06-17": {
       "branch": "repo-assist/improve-interfaces-2026-06-17",
@@ -43,11 +50,11 @@
       "note": "IParsable/ISpanParsable/IMinMaxValue merged as PR #187"
     }
   },
-  "notes": "Test count is now 1446. PRs #187, #193, #194 all merged into develop. eng-cpm branch still needs review. Next areas: INumber<T>/ISignedNumber<T> generic math, System.Text.Json JsonConverter, NuGet publish automation.",
+  "notes": "Test count is 1495 on INumber branch (1440 on develop). Two open PRs awaiting review: #203 (coverage gaps) and INumber/ISignedNumber branch. Next areas: System.Text.Json JsonConverter, NuGet publish automation, XML doc comments.",
   "issue_backlog_cursor": 0,
   "backlog_features_pending": [
-    "INumber<T>/ISignedNumber<T> generic math (IsPositive/IsNegative/IsZero now in place)",
     "System.Text.Json JsonConverter for serialization",
-    "NuGet publish automation"
+    "NuGet publish automation",
+    "XML documentation comments for public API"
   ]
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace Seerstone;
 
@@ -15,6 +16,7 @@ namespace Seerstone;
 /// (<see cref="MidpointRounding.ToEven"/>) by default.
 /// </remarks>
 [DebuggerDisplay("{ToString(),nq}")]
+[JsonConverter(typeof(FixedPointNanoJsonConverter))]
 public readonly struct FixedPointNano :
     IComparable,
     IComparable<FixedPointNano>,

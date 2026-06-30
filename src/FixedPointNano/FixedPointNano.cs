@@ -96,16 +96,13 @@ public readonly struct FixedPointNano :
     /// </summary>
     /// <param name="value">The value to ceiling.</param>
     /// <returns>The ceiling of <paramref name="value"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Ceiling(FixedPointNano value)
     {
-        var quotient = value.RawValue / Scale;
         var remainder = value.RawValue % Scale;
-        if (remainder > 0)
-        {
-            quotient = checked(quotient + 1);
-        }
-
-        return new FixedPointNano(checked(quotient * Scale));
+        return remainder <= 0
+            ? new FixedPointNano(value.RawValue - remainder)
+            : new FixedPointNano(checked(value.RawValue - remainder + Scale));
     }
 
     /// <summary>
@@ -113,23 +110,22 @@ public readonly struct FixedPointNano :
     /// </summary>
     /// <param name="value">The value to floor.</param>
     /// <returns>The floor of <paramref name="value"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Floor(FixedPointNano value)
     {
-        var quotient = value.RawValue / Scale;
         var remainder = value.RawValue % Scale;
-        if (remainder < 0)
-        {
-            quotient = checked(quotient - 1);
-        }
-
-        return new FixedPointNano(checked(quotient * Scale));
+        return remainder >= 0
+            ? new FixedPointNano(value.RawValue - remainder)
+            : new FixedPointNano(checked(value.RawValue - remainder - Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano FractionalPart(FixedPointNano value)
     {
         return new FixedPointNano(value.RawValue % Scale);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsInteger(FixedPointNano value)
     {
         return value.RawValue % Scale == 0;
@@ -243,6 +239,7 @@ public readonly struct FixedPointNano :
         return start + (end - start) * amount;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;
@@ -531,9 +528,10 @@ public readonly struct FixedPointNano :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Truncate(FixedPointNano value)
     {
-        return new FixedPointNano((value.RawValue / Scale) * Scale);
+        return new FixedPointNano(value.RawValue - (value.RawValue % Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Frac(FixedPointNano value)
     {
         return new FixedPointNano(value.RawValue % Scale);

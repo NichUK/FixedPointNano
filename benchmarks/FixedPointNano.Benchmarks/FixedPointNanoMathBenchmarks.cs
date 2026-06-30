@@ -379,4 +379,43 @@ public class FixedPointNanoMathBenchmarks
 
         return current;
     }
+
+    [Benchmark]
+    public string ToStringRaw()
+    {
+        return _left.ToString();
+    }
+
+    [Benchmark]
+    public string ToStringDecimalReference()
+    {
+        return _left.ToDecimal().ToString();
+    }
+
+    [Benchmark]
+    public bool TryFormatRaw()
+    {
+        Span<char> buf = stackalloc char[32];
+        return _left.TryFormat(buf, out _, default, null);
+    }
+
+    [Benchmark]
+    public bool TryFormatDecimalReference()
+    {
+        Span<char> buf = stackalloc char[32];
+        return _left.ToDecimal().TryFormat(buf, out _, default, null);
+    }
+
+    [Benchmark]
+    public Fpn ParseRaw()
+    {
+        return Fpn.Parse("1234.56789", null);
+    }
+
+    [Benchmark]
+    public Fpn TryParseRaw()
+    {
+        Fpn.TryParse("1234.56789", null, out var result);
+        return result;
+    }
 }

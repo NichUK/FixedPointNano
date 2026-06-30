@@ -479,4 +479,130 @@ public sealed class FixedPointNanoTests
         static TResult GetAdditiveIdentity<T, TResult>() where T : IAdditiveIdentity<T, TResult> => T.AdditiveIdentity;
         static TResult GetMultiplicativeIdentity<T, TResult>() where T : IMultiplicativeIdentity<T, TResult> => T.MultiplicativeIdentity;
     }
+
+    [Test]
+    public void ParseShouldRoundtripFormattedValues()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Parse("1.5", null), Is.EqualTo(FixedPointNano.FromDecimal(1.5m)));
+            Assert.That(FixedPointNano.Parse("0", null), Is.EqualTo(FixedPointNano.Zero));
+            Assert.That(FixedPointNano.Parse("-3.141592653", null), Is.EqualTo(FixedPointNano.FromDecimal(-3.141592653m)));
+            Assert.That(FixedPointNano.Parse("1000000000.123456789", null), Is.EqualTo(FixedPointNano.FromDecimal(1000000000.123456789m)));
+        });
+    }
+
+    [Test]
+    public void ParseSpanShouldRoundtripFormattedValues()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.Parse("1.5".AsSpan(), null), Is.EqualTo(FixedPointNano.FromDecimal(1.5m)));
+            Assert.That(FixedPointNano.Parse("0".AsSpan(), null), Is.EqualTo(FixedPointNano.Zero));
+            Assert.That(FixedPointNano.Parse("-42.000000001".AsSpan(), null), Is.EqualTo(FixedPointNano.FromDecimal(-42.000000001m)));
+        });
+    }
+
+    [Test]
+    public void ParseShouldThrowOnInvalidInput()
+    {
+        Assert.Throws<FormatException>(() => FixedPointNano.Parse("not-a-number", null));
+        Assert.Throws<FormatException>(() => FixedPointNano.Parse("", null));
+        Assert.Throws<FormatException>(() => FixedPointNano.Parse("1.2.3", null));
+    }
+
+    [Test]
+    public void TryParseShouldReturnTrueForValidInput()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.TryParse("2.718281828", null, out var result1), Is.True);
+            Assert.That(result1, Is.EqualTo(FixedPointNano.FromDecimal(2.718281828m)));
+
+            Assert.That(FixedPointNano.TryParse("-1", null, out var result2), Is.True);
+            Assert.That(result2, Is.EqualTo(FixedPointNano.NegativeOne));
+
+            Assert.That(FixedPointNano.TryParse("0.000000001", null, out var result3), Is.True);
+            Assert.That(result3, Is.EqualTo(FixedPointNano.Epsilon));
+        });
+    }
+
+    [Test]
+    public void TryParseShouldReturnFalseForInvalidInput()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.TryParse((string?)null, null, out _), Is.False);
+            Assert.That(FixedPointNano.TryParse("not-a-number", null, out _), Is.False);
+            Assert.That(FixedPointNano.TryParse("", null, out _), Is.False);
+        });
+    }
+
+    [Test]
+    public void TryParseSpanShouldWorkCorrectly()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.TryParse("1.23456789".AsSpan(), null, out var result1), Is.True);
+            Assert.That(result1, Is.EqualTo(FixedPointNano.FromDecimal(1.23456789m)));
+
+            Assert.That(FixedPointNano.TryParse("abc".AsSpan(), null, out _), Is.False);
+            Assert.That(FixedPointNano.TryParse(ReadOnlySpan<char>.Empty, null, out _), Is.False);
+        });
+    }
+
+    [Test]
+    public void TryParseConvenienceOverloadsShouldWork()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(FixedPointNano.TryParse("5.5", out var result1), Is.True);
+            Assert.That(result1, Is.EqualTo(FixedPointNano.FromDecimal(5.5m)));
+
+            Assert.That(FixedPointNano.TryParse("5.5".AsSpan(), out var result2), Is.True);
+            Assert.That(result2, Is.EqualTo(FixedPointNano.FromDecimal(5.5m)));
+        });
+    }
+
+    [Test]
+    public void ParseShouldUseFormatProviderForCultureSpecificInput()
+    {
+        var deDE = CultureInfo.GetCultureInfo("de-DE");
+
+        Assert.That(FixedPointNano.TryParse("1,5", deDE, out var result), Is.True);
+        Assert.That(result, Is.EqualTo(FixedPointNano.FromDecimal(1.5m)));
+    }
+
+    [Test]
+    public void IParsableInterfaceShouldWork()
+    {
+        var parsed = ParseViaInterface<FixedPointNano>("3.14", null);
+        Assert.That(parsed, Is.EqualTo(FixedPointNano.FromDecimal(3.14m)));
+
+        static T ParseViaInterface<T>(string s, IFormatProvider? provider) where T : IParsable<T>
+            => T.Parse(s, provider);
+    }
+
+    [Test]
+    public void ISpanParsableInterfaceShouldWork()
+    {
+        var parsed = ParseSpanViaInterface<FixedPointNano>("2.71828".AsSpan(), null);
+        Assert.That(parsed, Is.EqualTo(FixedPointNano.FromDecimal(2.71828m)));
+
+        static T ParseSpanViaInterface<T>(ReadOnlySpan<char> s, IFormatProvider? provider) where T : ISpanParsable<T>
+            => T.Parse(s, provider);
+    }
+
+    [Test]
+    public void IMinMaxValueInterfaceShouldExposeCorrectBounds()
+    {
+        var maxValue = GetMaxValue<FixedPointNano>();
+        var minValue = GetMinValue<FixedPointNano>();
+
+        Assert.That(maxValue, Is.EqualTo(FixedPointNano.MaxValue));
+        Assert.That(minValue, Is.EqualTo(FixedPointNano.MinValue));
+
+        static T GetMaxValue<T>() where T : IMinMaxValue<T> => T.MaxValue;
+        static T GetMinValue<T>() where T : IMinMaxValue<T> => T.MinValue;
+    }
 }

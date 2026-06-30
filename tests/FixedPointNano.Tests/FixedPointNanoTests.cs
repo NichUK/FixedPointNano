@@ -37,6 +37,38 @@ public sealed class FixedPointNanoTests
     }
 
     [Test]
+    public void IsPositiveShouldReturnTrueOnlyForPositiveValues()
+    {
+        Assert.That(FixedPointNano.IsPositive(FixedPointNano.Zero), Is.False);
+        Assert.That(FixedPointNano.IsPositive(FixedPointNano.Epsilon), Is.True);
+        Assert.That(FixedPointNano.IsPositive(FixedPointNano.One), Is.True);
+        Assert.That(FixedPointNano.IsPositive(FixedPointNano.MaxValue), Is.True);
+        Assert.That(FixedPointNano.IsPositive(FixedPointNano.NegativeOne), Is.False);
+        Assert.That(FixedPointNano.IsPositive(FixedPointNano.MinValue), Is.False);
+    }
+
+    [Test]
+    public void IsNegativeShouldReturnTrueOnlyForNegativeValues()
+    {
+        Assert.That(FixedPointNano.IsNegative(FixedPointNano.Zero), Is.False);
+        Assert.That(FixedPointNano.IsNegative(FixedPointNano.Epsilon), Is.False);
+        Assert.That(FixedPointNano.IsNegative(FixedPointNano.One), Is.False);
+        Assert.That(FixedPointNano.IsNegative(FixedPointNano.MaxValue), Is.False);
+        Assert.That(FixedPointNano.IsNegative(FixedPointNano.NegativeOne), Is.True);
+        Assert.That(FixedPointNano.IsNegative(FixedPointNano.MinValue), Is.True);
+    }
+
+    [Test]
+    public void IsZeroShouldReturnTrueOnlyForZero()
+    {
+        Assert.That(FixedPointNano.IsZero(FixedPointNano.Zero), Is.True);
+        Assert.That(FixedPointNano.IsZero(FixedPointNano.Epsilon), Is.False);
+        Assert.That(FixedPointNano.IsZero(-FixedPointNano.Epsilon), Is.False);
+        Assert.That(FixedPointNano.IsZero(FixedPointNano.One), Is.False);
+        Assert.That(FixedPointNano.IsZero(FixedPointNano.NegativeOne), Is.False);
+    }
+
+    [Test]
     public void FractionalPartShouldReturnDecimalComponent()
     {
         Assert.That(FixedPointNano.FractionalPart(FixedPointNano.Zero).RawValue, Is.EqualTo(0L));

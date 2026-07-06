@@ -1,22 +1,37 @@
 {
-  "last_run": "2026-06-30T13:27:00Z",
-  "run_id": "28447794157",
-  "monthly_activity_issue": 204,
-  "monthly_activity_month": "2026-06",
+  "last_run": "2026-07-06T00:00:00Z",
+  "run_id": "28761877576",
+  "monthly_activity_issue": null,
+  "monthly_activity_month": "2026-07",
+  "monthly_activity_note": "July 2026 issue created this run (PR numbers for new PRs TBD)",
   "comments_made": {
     "179": "2026-06-14T13:21:51Z"
   },
   "fix_attempts": {
+    "test-parse-round-2026-07-06": {
+      "branch": "repo-assist/test-parse-round-2026-07-06",
+      "status": "pr_submitted",
+      "tests": 1450,
+      "date": "2026-07-06",
+      "note": "24 new tests for Parse/TryParse all overloads + Round invalid MidpointRounding. 1426→1450"
+    },
+    "perf-add-sub-benchmarks-2026-07-06": {
+      "branch": "repo-assist/perf-add-sub-benchmarks-2026-07-06",
+      "status": "pr_submitted",
+      "tests": 1426,
+      "date": "2026-07-06",
+      "note": "AggressiveInlining on Square. 7 new benchmarks: Add/Subtract/FromDecimal (raw+decimal+double reference)"
+    },
     "perf-floor-ceil-inlining-2026-06-30": {
       "branch": "repo-assist/perf-floor-ceil-inlining-2026-06-30",
-      "status": "pr_submitted",
+      "status": "open_as_pr_209",
       "tests": 1440,
       "date": "2026-06-30",
       "note": "Ceiling/Floor/Truncate: eliminate imul, AggressiveInlining on Max/FractionalPart/IsInteger/Frac, 6 new string benchmarks"
     },
     "feat-json-converter-2026-06-30": {
       "branch": "repo-assist/feat-json-converter-2026-06-30",
-      "status": "pr_submitted",
+      "status": "open_as_pr_210",
       "tests": 1456,
       "date": "2026-06-30",
       "note": "FixedPointNanoJsonConverter + [JsonConverter] attr + 16 tests (1440→1456)"
@@ -64,10 +79,11 @@
       "note": "IParsable/ISpanParsable/IMinMaxValue merged as PR #187"
     }
   },
-  "notes": "4 open PRs awaiting review: #203 (coverage gaps), #205 (INumber/ISignedNumber), plus 2 new from this run (perf + JsonConverter, PR numbers TBD). Next areas: NuGet publish automation, XML doc comments.",
+  "notes": "6 open Repo Assist PRs awaiting review: #203 (coverage gaps, develop), #205 (INumber/ISignedNumber, develop), #209 (perf Ceiling/Floor/Truncate, main), #210 (JsonConverter, main), plus 2 new from this run (test-parse-round + perf-square-benchmarks, PR numbers TBD). Next areas: NuGet publish automation, XML doc comments, Parse/TryParse README entry.",
   "issue_backlog_cursor": 0,
   "backlog_features_pending": [
     "NuGet publish automation",
-    "XML documentation comments for public API"
+    "XML documentation comments for public API",
+    "Parse/TryParse entry in README"
   ]
 }

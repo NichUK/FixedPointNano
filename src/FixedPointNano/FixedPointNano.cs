@@ -216,6 +216,7 @@ public readonly struct FixedPointNano :
         return value.RawValue > 0 ? new FixedPointNano(-value.RawValue) : value;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Lerp(FixedPointNano start, FixedPointNano end, FixedPointNano amount)
     {
         return start + (end - start) * amount;
@@ -514,6 +515,7 @@ public readonly struct FixedPointNano :
         return new FixedPointNano((value.RawValue / Scale) * Scale);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Frac(FixedPointNano value)
     {
         return new FixedPointNano(value.RawValue % Scale);

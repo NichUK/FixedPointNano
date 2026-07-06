@@ -14,6 +14,13 @@ public class FixedPointNanoMathBenchmarks
     private readonly double _rightDouble = 7.123456789d;
     private readonly double _sqrtInputDouble = 1234.567890123d;
     private readonly double _doubleValue = 1234.567890123d;
+    private readonly Fpn _lerpAmount = Fpn.FromDecimal(0.5m);
+    private readonly decimal _lerpAmountDecimal = 0.5m;
+    private readonly double _lerpAmountDouble = 0.5d;
+    private readonly Fpn _clampMin = Fpn.FromDecimal(0m);
+    private readonly Fpn _clampMax = Fpn.FromDecimal(10000m);
+    private readonly decimal _clampMinDecimal = 0m;
+    private readonly decimal _clampMaxDecimal = 10000m;
     private Fpn[] _fixedValues = [];
     private decimal[] _decimalValues = [];
     private double[] _doubleValues = [];
@@ -200,6 +207,38 @@ public class FixedPointNanoMathBenchmarks
     public Fpn TruncateRaw()
     {
         return Fpn.Truncate(_left);
+    }
+
+    [Benchmark]
+    public Fpn LerpDecimalReference()
+    {
+        var start = _left.ToDecimal();
+        var end = _right.ToDecimal();
+        return Fpn.FromDecimal(start + (end - start) * _lerpAmountDecimal);
+    }
+
+    [Benchmark]
+    public double LerpDoubleReference()
+    {
+        return _leftDouble + (_rightDouble - _leftDouble) * _lerpAmountDouble;
+    }
+
+    [Benchmark]
+    public Fpn LerpRaw()
+    {
+        return Fpn.Lerp(_left, _right, _lerpAmount);
+    }
+
+    [Benchmark]
+    public Fpn ClampDecimalReference()
+    {
+        return Fpn.FromDecimal(Math.Clamp(_left.ToDecimal(), _clampMinDecimal, _clampMaxDecimal));
+    }
+
+    [Benchmark]
+    public Fpn ClampRaw()
+    {
+        return Fpn.Clamp(_left, _clampMin, _clampMax);
     }
 
     [Benchmark]

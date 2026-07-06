@@ -35,6 +35,48 @@ public class FixedPointNanoMathBenchmarks
     }
 
     [Benchmark]
+    public Fpn AddDecimalReference()
+    {
+        return Fpn.FromDecimal(_left.ToDecimal() + _right.ToDecimal());
+    }
+
+    [Benchmark]
+    public double AddDoubleReference()
+    {
+        return _leftDouble + _rightDouble;
+    }
+
+    [Benchmark]
+    public Fpn AddRaw()
+    {
+        return _left + _right;
+    }
+
+    [Benchmark]
+    public Fpn SubtractDecimalReference()
+    {
+        return Fpn.FromDecimal(_left.ToDecimal() - _right.ToDecimal());
+    }
+
+    [Benchmark]
+    public double SubtractDoubleReference()
+    {
+        return _leftDouble - _rightDouble;
+    }
+
+    [Benchmark]
+    public Fpn SubtractRaw()
+    {
+        return _left - _right;
+    }
+
+    [Benchmark]
+    public Fpn FromDecimalRaw()
+    {
+        return Fpn.FromDecimal(_left.ToDecimal());
+    }
+
+    [Benchmark]
     public Fpn MultiplyDecimalReference()
     {
         return Fpn.FromDecimal(_left.ToDecimal() * _right.ToDecimal());

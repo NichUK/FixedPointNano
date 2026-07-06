@@ -380,6 +380,7 @@ public readonly struct FixedPointNano :
     /// <summary>Returns the square of <paramref name="value"/>.</summary>
     /// <param name="value">The value to square.</param>
     /// <returns><paramref name="value"/> multiplied by itself.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Square(FixedPointNano value)
     {
         return value * value;

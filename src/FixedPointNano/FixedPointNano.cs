@@ -36,7 +36,9 @@ public readonly struct FixedPointNano :
     IComparisonOperators<FixedPointNano, FixedPointNano, bool>,
     IParsable<FixedPointNano>,
     ISpanParsable<FixedPointNano>,
-    IMinMaxValue<FixedPointNano>
+    IMinMaxValue<FixedPointNano>,
+    INumber<FixedPointNano>,
+    ISignedNumber<FixedPointNano>
 {
     /// <summary>The number of decimal places supported by <see cref="FixedPointNano"/>.</summary>
     public const int DecimalPlaces = 9;
@@ -157,6 +159,22 @@ public readonly struct FixedPointNano :
     public static bool IsZero(FixedPointNano value)
     {
         return value.RawValue == 0;
+    }
+
+    /// <summary>Returns <see langword="true"/> if <paramref name="value"/> is an even integer.</summary>
+    /// <param name="value">The value to test.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsEvenInteger(FixedPointNano value)
+    {
+        return IsInteger(value) && (value.RawValue / Scale) % 2L == 0L;
+    }
+
+    /// <summary>Returns <see langword="true"/> if <paramref name="value"/> is an odd integer.</summary>
+    /// <param name="value">The value to test.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsOddInteger(FixedPointNano value)
+    {
+        return IsInteger(value) && (value.RawValue / Scale) % 2L != 0L;
     }
 
     public static FixedPointNano FromDecimal(decimal value)
@@ -336,6 +354,66 @@ public readonly struct FixedPointNano :
 
     public static bool TryParse(ReadOnlySpan<char> s, out FixedPointNano result)
         => TryParse(s, CultureInfo.InvariantCulture, out result);
+
+    /// <summary>Parses <paramref name="s"/> using the specified <see cref="NumberStyles"/>.</summary>
+    /// <param name="s">The string to parse.</param>
+    /// <param name="style">The number styles to allow.</param>
+    /// <param name="provider">An optional format provider.</param>
+    /// <returns>The parsed value.</returns>
+    /// <exception cref="FormatException">Thrown when <paramref name="s"/> cannot be parsed.</exception>
+    public static FixedPointNano Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider = null)
+    {
+        if (!TryParse(s, style, provider, out var result))
+        {
+            throw new FormatException($"The input '{s}' is not a valid {nameof(FixedPointNano)}.");
+        }
+
+        return result;
+    }
+
+    /// <summary>Parses <paramref name="s"/> using the specified <see cref="NumberStyles"/>.</summary>
+    /// <param name="s">The string to parse.</param>
+    /// <param name="style">The number styles to allow.</param>
+    /// <param name="provider">An optional format provider.</param>
+    /// <returns>The parsed value.</returns>
+    /// <exception cref="FormatException">Thrown when <paramref name="s"/> cannot be parsed.</exception>
+    public static FixedPointNano Parse(string s, NumberStyles style, IFormatProvider? provider = null)
+        => Parse(s.AsSpan(), style, provider);
+
+    /// <summary>Attempts to parse <paramref name="s"/> using the specified <see cref="NumberStyles"/>.</summary>
+    /// <param name="s">The span to parse.</param>
+    /// <param name="style">The number styles to allow.</param>
+    /// <param name="provider">An optional format provider.</param>
+    /// <param name="result">The parsed value on success.</param>
+    /// <returns><see langword="true"/> on success; otherwise <see langword="false"/>.</returns>
+    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out FixedPointNano result)
+    {
+        if (!decimal.TryParse(s, style, provider ?? CultureInfo.InvariantCulture, out var d))
+        {
+            result = default;
+            return false;
+        }
+
+        result = FromDecimal(d);
+        return true;
+    }
+
+    /// <summary>Attempts to parse <paramref name="s"/> using the specified <see cref="NumberStyles"/>.</summary>
+    /// <param name="s">The string to parse.</param>
+    /// <param name="style">The number styles to allow.</param>
+    /// <param name="provider">An optional format provider.</param>
+    /// <param name="result">The parsed value on success.</param>
+    /// <returns><see langword="true"/> on success; otherwise <see langword="false"/>.</returns>
+    public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out FixedPointNano result)
+    {
+        if (s is null)
+        {
+            result = default;
+            return false;
+        }
+
+        return TryParse(s.AsSpan(), style, provider, out result);
+    }
 
     public static FixedPointNano Round(FixedPointNano value, int decimals, MidpointRounding rounding = MidpointRounding.ToEven)
     {
@@ -1412,5 +1490,499 @@ public readonly struct FixedPointNano :
         {
             throw new ArgumentOutOfRangeException(nameof(value), "Floating-point values must be finite.");
         }
+    }
+
+    // INumberBase<FixedPointNano>
+    static int INumberBase<FixedPointNano>.Radix => 10;
+
+    static FixedPointNano INumberBase<FixedPointNano>.Abs(FixedPointNano value) => Abs(value);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsCanonical(FixedPointNano value) => true;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsComplexNumber(FixedPointNano value) => false;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsEvenInteger(FixedPointNano value) => IsEvenInteger(value);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsFinite(FixedPointNano value) => true;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsImaginaryNumber(FixedPointNano value) => false;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsInfinity(FixedPointNano value) => false;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsInteger(FixedPointNano value) => IsInteger(value);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsNaN(FixedPointNano value) => false;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsNegative(FixedPointNano value) => IsNegative(value);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsNegativeInfinity(FixedPointNano value) => false;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsNormal(FixedPointNano value) => !IsZero(value);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsOddInteger(FixedPointNano value) => IsOddInteger(value);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsPositive(FixedPointNano value) => IsPositive(value);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsPositiveInfinity(FixedPointNano value) => false;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsRealNumber(FixedPointNano value) => true;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsSubnormal(FixedPointNano value) => false;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool INumberBase<FixedPointNano>.IsZero(FixedPointNano value) => IsZero(value);
+
+    static FixedPointNano INumberBase<FixedPointNano>.MaxMagnitude(FixedPointNano x, FixedPointNano y)
+        => MaxMagnitudeCore(x, y);
+
+    static FixedPointNano INumberBase<FixedPointNano>.MaxMagnitudeNumber(FixedPointNano x, FixedPointNano y)
+        => MaxMagnitudeCore(x, y);
+
+    static FixedPointNano INumberBase<FixedPointNano>.MinMagnitude(FixedPointNano x, FixedPointNano y)
+        => MinMagnitudeCore(x, y);
+
+    static FixedPointNano INumberBase<FixedPointNano>.MinMagnitudeNumber(FixedPointNano x, FixedPointNano y)
+        => MinMagnitudeCore(x, y);
+
+    static FixedPointNano INumberBase<FixedPointNano>.CreateChecked<TOther>(TOther value)
+    {
+        if (typeof(TOther) == typeof(FixedPointNano))
+        {
+            return (FixedPointNano)(object)value!;
+        }
+
+        if (!TryConvertFromCheckedCore(value, out var result))
+        {
+            throw new NotSupportedException($"Cannot convert from {typeof(TOther).Name} to {nameof(FixedPointNano)}.");
+        }
+
+        return result;
+    }
+
+    static FixedPointNano INumberBase<FixedPointNano>.CreateSaturating<TOther>(TOther value)
+    {
+        if (typeof(TOther) == typeof(FixedPointNano))
+        {
+            return (FixedPointNano)(object)value!;
+        }
+
+        if (!TryConvertFromSaturatingCore(value, out var result))
+        {
+            throw new NotSupportedException($"Cannot convert from {typeof(TOther).Name} to {nameof(FixedPointNano)}.");
+        }
+
+        return result;
+    }
+
+    static FixedPointNano INumberBase<FixedPointNano>.CreateTruncating<TOther>(TOther value)
+    {
+        if (typeof(TOther) == typeof(FixedPointNano))
+        {
+            return (FixedPointNano)(object)value!;
+        }
+
+        if (!TryConvertFromTruncatingCore(value, out var result))
+        {
+            throw new NotSupportedException($"Cannot convert from {typeof(TOther).Name} to {nameof(FixedPointNano)}.");
+        }
+
+        return result;
+    }
+
+    static bool INumberBase<FixedPointNano>.TryConvertFromChecked<TOther>(TOther value, out FixedPointNano result)
+        => TryConvertFromCheckedCore(value, out result);
+
+    static bool INumberBase<FixedPointNano>.TryConvertFromSaturating<TOther>(TOther value, out FixedPointNano result)
+        => TryConvertFromSaturatingCore(value, out result);
+
+    static bool INumberBase<FixedPointNano>.TryConvertFromTruncating<TOther>(TOther value, out FixedPointNano result)
+        => TryConvertFromTruncatingCore(value, out result);
+
+    static bool INumberBase<FixedPointNano>.TryConvertToChecked<TOther>(FixedPointNano value, out TOther result)
+        => TryConvertToCheckedCore(value, out result);
+
+    static bool INumberBase<FixedPointNano>.TryConvertToSaturating<TOther>(FixedPointNano value, out TOther result)
+        => TryConvertToSaturatingCore(value, out result);
+
+    static bool INumberBase<FixedPointNano>.TryConvertToTruncating<TOther>(FixedPointNano value, out TOther result)
+        => TryConvertToTruncatingCore(value, out result);
+
+    // INumber<FixedPointNano>
+    static FixedPointNano INumber<FixedPointNano>.MaxNumber(FixedPointNano x, FixedPointNano y) => Max(x, y);
+
+    static FixedPointNano INumber<FixedPointNano>.MinNumber(FixedPointNano x, FixedPointNano y) => Min(x, y);
+
+    private static FixedPointNano MaxMagnitudeCore(FixedPointNano x, FixedPointNano y)
+    {
+        var absX = Abs(x);
+        var absY = Abs(y);
+        if (absX > absY)
+        {
+            return x;
+        }
+
+        if (absX < absY)
+        {
+            return y;
+        }
+
+        return IsNegative(x) ? y : x;
+    }
+
+    private static FixedPointNano MinMagnitudeCore(FixedPointNano x, FixedPointNano y)
+    {
+        var absX = Abs(x);
+        var absY = Abs(y);
+        if (absX < absY)
+        {
+            return x;
+        }
+
+        if (absX > absY)
+        {
+            return y;
+        }
+
+        return IsNegative(x) ? x : y;
+    }
+
+    private static bool TryConvertFromCheckedCore<TOther>(TOther value, out FixedPointNano result) where TOther : INumberBase<TOther>
+    {
+        if (typeof(TOther) == typeof(byte)) { result = (FixedPointNano)(byte)(object)value!; return true; }
+        if (typeof(TOther) == typeof(sbyte)) { result = (FixedPointNano)(sbyte)(object)value!; return true; }
+        if (typeof(TOther) == typeof(short)) { result = (FixedPointNano)(short)(object)value!; return true; }
+        if (typeof(TOther) == typeof(ushort)) { result = (FixedPointNano)(ushort)(object)value!; return true; }
+        if (typeof(TOther) == typeof(int)) { result = (FixedPointNano)(int)(object)value!; return true; }
+        if (typeof(TOther) == typeof(uint)) { result = (FixedPointNano)(uint)(object)value!; return true; }
+        if (typeof(TOther) == typeof(long)) { result = (FixedPointNano)(long)(object)value!; return true; }
+        if (typeof(TOther) == typeof(ulong)) { result = (FixedPointNano)(ulong)(object)value!; return true; }
+        if (typeof(TOther) == typeof(nint)) { result = (FixedPointNano)(nint)(object)value!; return true; }
+        if (typeof(TOther) == typeof(nuint)) { result = (FixedPointNano)(nuint)(object)value!; return true; }
+        if (typeof(TOther) == typeof(Int128)) { result = (FixedPointNano)(Int128)(object)value!; return true; }
+        if (typeof(TOther) == typeof(UInt128)) { result = (FixedPointNano)(UInt128)(object)value!; return true; }
+        if (typeof(TOther) == typeof(Half)) { result = (FixedPointNano)(Half)(object)value!; return true; }
+        if (typeof(TOther) == typeof(float)) { result = (FixedPointNano)(float)(object)value!; return true; }
+        if (typeof(TOther) == typeof(double)) { result = (FixedPointNano)(double)(object)value!; return true; }
+        if (typeof(TOther) == typeof(decimal)) { result = (FixedPointNano)(decimal)(object)value!; return true; }
+        if (typeof(TOther) == typeof(BigInteger)) { result = (FixedPointNano)(BigInteger)(object)value!; return true; }
+        result = default;
+        return false;
+    }
+
+    private static bool TryConvertFromSaturatingCore<TOther>(TOther value, out FixedPointNano result) where TOther : INumberBase<TOther>
+    {
+        // Small integer types always fit in FixedPointNano range — no saturation needed.
+        if (typeof(TOther) == typeof(byte)) { result = (FixedPointNano)(byte)(object)value!; return true; }
+        if (typeof(TOther) == typeof(sbyte)) { result = (FixedPointNano)(sbyte)(object)value!; return true; }
+        if (typeof(TOther) == typeof(short)) { result = (FixedPointNano)(short)(object)value!; return true; }
+        if (typeof(TOther) == typeof(ushort)) { result = (FixedPointNano)(ushort)(object)value!; return true; }
+        if (typeof(TOther) == typeof(int)) { result = (FixedPointNano)(int)(object)value!; return true; }
+        if (typeof(TOther) == typeof(uint)) { result = (FixedPointNano)(uint)(object)value!; return true; }
+
+        // Larger integer types can exceed FixedPointNano range — clamp.
+        const long maxSafeInteger = long.MaxValue / Scale;
+        const long minSafeInteger = long.MinValue / Scale;
+
+        if (typeof(TOther) == typeof(long))
+        {
+            var v = (long)(object)value!;
+            if (v > maxSafeInteger) { result = MaxValue; return true; }
+            if (v < minSafeInteger) { result = MinValue; return true; }
+            result = new FixedPointNano(v * Scale);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(ulong))
+        {
+            var v = (ulong)(object)value!;
+            if (v > (ulong)maxSafeInteger) { result = MaxValue; return true; }
+            result = new FixedPointNano((long)v * Scale);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(nint))
+        {
+            var v = (long)(nint)(object)value!;
+            if (v > maxSafeInteger) { result = MaxValue; return true; }
+            if (v < minSafeInteger) { result = MinValue; return true; }
+            result = new FixedPointNano(v * Scale);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(nuint))
+        {
+            var v = (ulong)(nuint)(object)value!;
+            if (v > (ulong)maxSafeInteger) { result = MaxValue; return true; }
+            result = new FixedPointNano((long)v * Scale);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(Int128))
+        {
+            var v = (Int128)(object)value!;
+            if (v > maxSafeInteger) { result = MaxValue; return true; }
+            if (v < minSafeInteger) { result = MinValue; return true; }
+            result = new FixedPointNano((long)v * Scale);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(UInt128))
+        {
+            var v = (UInt128)(object)value!;
+            if (v > (ulong)maxSafeInteger) { result = MaxValue; return true; }
+            result = new FixedPointNano((long)v * Scale);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(BigInteger))
+        {
+            var v = (BigInteger)(object)value!;
+            if (v > maxSafeInteger) { result = MaxValue; return true; }
+            if (v < minSafeInteger) { result = MinValue; return true; }
+            result = new FixedPointNano((long)v * Scale);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(Half))
+        {
+            var v = (Half)(object)value!;
+            if (Half.IsNaN(v)) { result = Zero; return true; }
+            if (Half.IsPositiveInfinity(v) || (double)v * Scale >= MaxRawValueAsDoubleExclusive) { result = MaxValue; return true; }
+            if (Half.IsNegativeInfinity(v) || (double)v * Scale < MinRawValueAsDoubleInclusive) { result = MinValue; return true; }
+            result = FromDouble((double)v);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(float))
+        {
+            var v = (float)(object)value!;
+            if (float.IsNaN(v)) { result = Zero; return true; }
+            if (float.IsPositiveInfinity(v) || (double)v * Scale >= MaxRawValueAsDoubleExclusive) { result = MaxValue; return true; }
+            if (float.IsNegativeInfinity(v) || (double)v * Scale < MinRawValueAsDoubleInclusive) { result = MinValue; return true; }
+            result = FromDouble(v);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(double))
+        {
+            var v = (double)(object)value!;
+            if (double.IsNaN(v)) { result = Zero; return true; }
+            if (double.IsPositiveInfinity(v) || v * Scale >= MaxRawValueAsDoubleExclusive) { result = MaxValue; return true; }
+            if (double.IsNegativeInfinity(v) || v * Scale < MinRawValueAsDoubleInclusive) { result = MinValue; return true; }
+            result = FromDouble(v);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(decimal))
+        {
+            var v = (decimal)(object)value!;
+            try
+            {
+                result = FromDecimal(v);
+            }
+            catch (OverflowException)
+            {
+                result = v > decimal.Zero ? MaxValue : MinValue;
+            }
+
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    private static bool TryConvertFromTruncatingCore<TOther>(TOther value, out FixedPointNano result) where TOther : INumberBase<TOther>
+    {
+        if (typeof(TOther) == typeof(byte)) { result = (FixedPointNano)(byte)(object)value!; return true; }
+        if (typeof(TOther) == typeof(sbyte)) { result = (FixedPointNano)(sbyte)(object)value!; return true; }
+        if (typeof(TOther) == typeof(short)) { result = (FixedPointNano)(short)(object)value!; return true; }
+        if (typeof(TOther) == typeof(ushort)) { result = (FixedPointNano)(ushort)(object)value!; return true; }
+        if (typeof(TOther) == typeof(int)) { result = (FixedPointNano)(int)(object)value!; return true; }
+        if (typeof(TOther) == typeof(uint)) { result = (FixedPointNano)(uint)(object)value!; return true; }
+
+        // Large integer truncating: use unchecked arithmetic to wrap on overflow.
+        if (typeof(TOther) == typeof(long)) { result = new FixedPointNano(unchecked((long)(object)value! * Scale)); return true; }
+        if (typeof(TOther) == typeof(ulong)) { result = new FixedPointNano(unchecked((long)(ulong)(object)value! * Scale)); return true; }
+        if (typeof(TOther) == typeof(nint)) { result = new FixedPointNano(unchecked((long)(nint)(object)value! * Scale)); return true; }
+        if (typeof(TOther) == typeof(nuint)) { result = new FixedPointNano(unchecked((long)(nuint)(object)value! * Scale)); return true; }
+        if (typeof(TOther) == typeof(Int128)) { result = new FixedPointNano(unchecked((long)(Int128)(object)value! * Scale)); return true; }
+        if (typeof(TOther) == typeof(UInt128)) { result = new FixedPointNano(unchecked((long)(UInt128)(object)value! * Scale)); return true; }
+        if (typeof(TOther) == typeof(BigInteger))
+        {
+            var v = (BigInteger)(object)value!;
+            result = new FixedPointNano(unchecked((long)(v * Scale)));
+            return true;
+        }
+
+        // Floating-point truncating: clamp NaN/infinity, convert otherwise.
+        if (typeof(TOther) == typeof(Half))
+        {
+            var v = (Half)(object)value!;
+            if (Half.IsNaN(v)) { result = Zero; return true; }
+            if (Half.IsPositiveInfinity(v) || (double)v * Scale >= MaxRawValueAsDoubleExclusive) { result = MaxValue; return true; }
+            if (Half.IsNegativeInfinity(v) || (double)v * Scale < MinRawValueAsDoubleInclusive) { result = MinValue; return true; }
+            result = FromDouble((double)v);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(float))
+        {
+            var v = (float)(object)value!;
+            if (float.IsNaN(v)) { result = Zero; return true; }
+            if (float.IsPositiveInfinity(v) || (double)v * Scale >= MaxRawValueAsDoubleExclusive) { result = MaxValue; return true; }
+            if (float.IsNegativeInfinity(v) || (double)v * Scale < MinRawValueAsDoubleInclusive) { result = MinValue; return true; }
+            result = FromDouble(v);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(double))
+        {
+            var v = (double)(object)value!;
+            if (double.IsNaN(v)) { result = Zero; return true; }
+            if (double.IsPositiveInfinity(v) || v * Scale >= MaxRawValueAsDoubleExclusive) { result = MaxValue; return true; }
+            if (double.IsNegativeInfinity(v) || v * Scale < MinRawValueAsDoubleInclusive) { result = MinValue; return true; }
+            result = FromDouble(v);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(decimal))
+        {
+            var v = (decimal)(object)value!;
+            try
+            {
+                result = FromDecimal(v);
+            }
+            catch (OverflowException)
+            {
+                result = v > decimal.Zero ? MaxValue : MinValue;
+            }
+
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    private static bool TryConvertToCheckedCore<TOther>(FixedPointNano value, out TOther result) where TOther : INumberBase<TOther>
+    {
+        var intPart = value.RawValue / Scale;
+        if (typeof(TOther) == typeof(byte)) { result = (TOther)(object)checked((byte)intPart); return true; }
+        if (typeof(TOther) == typeof(sbyte)) { result = (TOther)(object)checked((sbyte)intPart); return true; }
+        if (typeof(TOther) == typeof(short)) { result = (TOther)(object)checked((short)intPart); return true; }
+        if (typeof(TOther) == typeof(ushort)) { result = (TOther)(object)checked((ushort)intPart); return true; }
+        if (typeof(TOther) == typeof(int)) { result = (TOther)(object)checked((int)intPart); return true; }
+        if (typeof(TOther) == typeof(uint)) { result = (TOther)(object)checked((uint)intPart); return true; }
+        if (typeof(TOther) == typeof(long)) { result = (TOther)(object)intPart; return true; }
+        if (typeof(TOther) == typeof(ulong)) { result = (TOther)(object)checked((ulong)intPart); return true; }
+        if (typeof(TOther) == typeof(nint)) { result = (TOther)(object)checked((nint)intPart); return true; }
+        if (typeof(TOther) == typeof(nuint)) { result = (TOther)(object)checked((nuint)intPart); return true; }
+        if (typeof(TOther) == typeof(Int128)) { result = (TOther)(object)(Int128)intPart; return true; }
+        if (typeof(TOther) == typeof(UInt128)) { result = (TOther)(object)checked((UInt128)intPart); return true; }
+        if (typeof(TOther) == typeof(BigInteger)) { result = (TOther)(object)(BigInteger)intPart; return true; }
+        if (typeof(TOther) == typeof(Half)) { result = (TOther)(object)(Half)value; return true; }
+        if (typeof(TOther) == typeof(float)) { result = (TOther)(object)(float)value; return true; }
+        if (typeof(TOther) == typeof(double)) { result = (TOther)(object)(double)value; return true; }
+        if (typeof(TOther) == typeof(decimal)) { result = (TOther)(object)(decimal)value; return true; }
+        if (typeof(TOther) == typeof(FixedPointNano)) { result = (TOther)(object)value; return true; }
+        result = default!;
+        return false;
+    }
+
+    private static bool TryConvertToSaturatingCore<TOther>(FixedPointNano value, out TOther result) where TOther : INumberBase<TOther>
+    {
+        var intPart = value.RawValue / Scale;
+        if (typeof(TOther) == typeof(byte))
+        {
+            result = (TOther)(object)(byte)Math.Clamp(intPart, byte.MinValue, byte.MaxValue);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(sbyte))
+        {
+            result = (TOther)(object)(sbyte)Math.Clamp(intPart, sbyte.MinValue, sbyte.MaxValue);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(short))
+        {
+            result = (TOther)(object)(short)Math.Clamp(intPart, short.MinValue, short.MaxValue);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(ushort))
+        {
+            result = (TOther)(object)(ushort)Math.Clamp(intPart, ushort.MinValue, ushort.MaxValue);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(int))
+        {
+            result = (TOther)(object)(int)Math.Clamp(intPart, int.MinValue, int.MaxValue);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(uint))
+        {
+            result = (TOther)(object)(uint)Math.Clamp(intPart, uint.MinValue, uint.MaxValue);
+            return true;
+        }
+
+        if (typeof(TOther) == typeof(long)) { result = (TOther)(object)intPart; return true; }
+        if (typeof(TOther) == typeof(ulong)) { result = (TOther)(object)(ulong)Math.Max(intPart, 0L); return true; }
+        if (typeof(TOther) == typeof(nint)) { result = (TOther)(object)(nint)Math.Clamp(intPart, nint.MinValue, nint.MaxValue); return true; }
+        if (typeof(TOther) == typeof(nuint)) { result = (TOther)(object)(nuint)Math.Max(intPart, 0L); return true; }
+        if (typeof(TOther) == typeof(Int128)) { result = (TOther)(object)(Int128)intPart; return true; }
+        if (typeof(TOther) == typeof(UInt128)) { result = (TOther)(object)(UInt128)Math.Max(intPart, 0L); return true; }
+        if (typeof(TOther) == typeof(BigInteger)) { result = (TOther)(object)(BigInteger)intPart; return true; }
+        if (typeof(TOther) == typeof(Half)) { result = (TOther)(object)(Half)value; return true; }
+        if (typeof(TOther) == typeof(float)) { result = (TOther)(object)(float)value; return true; }
+        if (typeof(TOther) == typeof(double)) { result = (TOther)(object)(double)value; return true; }
+        if (typeof(TOther) == typeof(decimal)) { result = (TOther)(object)(decimal)value; return true; }
+        if (typeof(TOther) == typeof(FixedPointNano)) { result = (TOther)(object)value; return true; }
+        result = default!;
+        return false;
+    }
+
+    private static bool TryConvertToTruncatingCore<TOther>(FixedPointNano value, out TOther result) where TOther : INumberBase<TOther>
+    {
+        var intPart = value.RawValue / Scale;
+        if (typeof(TOther) == typeof(byte)) { result = (TOther)(object)unchecked((byte)intPart); return true; }
+        if (typeof(TOther) == typeof(sbyte)) { result = (TOther)(object)unchecked((sbyte)intPart); return true; }
+        if (typeof(TOther) == typeof(short)) { result = (TOther)(object)unchecked((short)intPart); return true; }
+        if (typeof(TOther) == typeof(ushort)) { result = (TOther)(object)unchecked((ushort)intPart); return true; }
+        if (typeof(TOther) == typeof(int)) { result = (TOther)(object)unchecked((int)intPart); return true; }
+        if (typeof(TOther) == typeof(uint)) { result = (TOther)(object)unchecked((uint)intPart); return true; }
+        if (typeof(TOther) == typeof(long)) { result = (TOther)(object)intPart; return true; }
+        if (typeof(TOther) == typeof(ulong)) { result = (TOther)(object)unchecked((ulong)intPart); return true; }
+        if (typeof(TOther) == typeof(nint)) { result = (TOther)(object)unchecked((nint)intPart); return true; }
+        if (typeof(TOther) == typeof(nuint)) { result = (TOther)(object)unchecked((nuint)intPart); return true; }
+        if (typeof(TOther) == typeof(Int128)) { result = (TOther)(object)(Int128)intPart; return true; }
+        if (typeof(TOther) == typeof(UInt128)) { result = (TOther)(object)unchecked((UInt128)intPart); return true; }
+        if (typeof(TOther) == typeof(BigInteger)) { result = (TOther)(object)(BigInteger)intPart; return true; }
+        if (typeof(TOther) == typeof(Half)) { result = (TOther)(object)(Half)value; return true; }
+        if (typeof(TOther) == typeof(float)) { result = (TOther)(object)(float)value; return true; }
+        if (typeof(TOther) == typeof(double)) { result = (TOther)(object)(double)value; return true; }
+        if (typeof(TOther) == typeof(decimal)) { result = (TOther)(object)(decimal)value; return true; }
+        if (typeof(TOther) == typeof(FixedPointNano)) { result = (TOther)(object)value; return true; }
+        result = default!;
+        return false;
     }
 }

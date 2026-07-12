@@ -1,30 +1,37 @@
 {
-  "last_run": "2026-07-07T01:23:23Z",
-  "run_id": "28834771914",
+  "last_run": "2026-07-12T13:14:56Z",
+  "run_id": "29194014623",
   "monthly_activity_issue": 217,
   "monthly_activity_month": "2026-07",
   "comments_made": {},
   "fix_attempts": {
+    "improve-xml-docs-2026-07-12": {
+      "branch": "repo-assist/improve-xml-docs-2026-07-12",
+      "status": "pr_submitted",
+      "tests": 1426,
+      "date": "2026-07-12",
+      "note": "XML docs for all previously undocumented public members + README features list update. PR ~#222."
+    },
+    "perf-multiply-inline-2026-07-12": {
+      "branch": "repo-assist/perf-multiply-inline-2026-07-12",
+      "status": "pr_submitted",
+      "tests": 1426,
+      "date": "2026-07-12",
+      "note": "AggressiveInlining on operator *. PR ~#223."
+    },
     "eng-dependabot-2026-07-07": {
       "branch": "repo-assist/eng-dependabot-2026-07-07",
       "status": "pr_submitted",
       "tests": 1426,
       "date": "2026-07-07",
-      "note": "Add .github/dependabot.yml for NuGet and GitHub Actions weekly updates. PR ~#220."
+      "note": "Add .github/dependabot.yml. PR #220."
     },
     "perf-missing-benchmarks-2026-07-07": {
       "branch": "repo-assist/perf-missing-benchmarks-2026-07-07",
       "status": "pr_submitted",
       "tests": 1426,
       "date": "2026-07-07",
-      "note": "9 new benchmarks: Pow(raw/decimal/double ref), PopulationVariance, SampleVariance, Parse, TryParse. PR ~#221."
-    },
-    "eng-ci-cache-timeout-2026-07-06": {
-      "branch": "repo-assist/eng-ci-cache-timeout-2026-07-06",
-      "status": "open_as_issue_218",
-      "tests": 1426,
-      "date": "2026-07-06",
-      "note": "NuGet caching + timeout-minutes:15 in ci.yml and publish.yml. Created as issue #218 (not PR)."
+      "note": "9 new benchmarks: Pow, PopulationVariance, SampleVariance, Parse, TryParse. PR #221."
     },
     "perf-frac-lerp-inlining-2026-07-06": {
       "branch": "repo-assist/perf-frac-lerp-inlining-2026-07-06-24e434fa7cb1abde",
@@ -38,49 +45,48 @@
       "status": "open_as_pr_216",
       "tests": 1450,
       "date": "2026-07-06",
-      "note": "24 new tests for Parse/TryParse all overloads + Round invalid MidpointRounding. 1426->1450"
+      "note": "24 new tests for Parse/TryParse + Round invalid MidpointRounding. PR #216."
     },
     "perf-add-sub-benchmarks-2026-07-06": {
       "branch": "repo-assist/perf-add-sub-benchmarks-2026-07-06-5515e79bd7618809",
       "status": "open_as_pr_215",
       "tests": 1426,
       "date": "2026-07-06",
-      "note": "AggressiveInlining on Square. 7 new benchmarks: Add/Subtract/FromDecimal (raw+decimal+double reference)"
+      "note": "AggressiveInlining on Square. 7 new benchmarks. PR #215."
     },
     "perf-floor-ceil-inlining-2026-06-30": {
       "branch": "repo-assist/perf-floor-ceil-inlining-2026-06-30-5d3eb8fea7993bd2",
       "status": "open_as_pr_209",
       "tests": 1440,
       "date": "2026-06-30",
-      "note": "Ceiling/Floor/Truncate: eliminate imul, AggressiveInlining on Max/FractionalPart/IsInteger/Frac, 6 new string benchmarks"
+      "note": "Ceiling/Floor/Truncate optimise, string benchmarks. PR #209."
     },
     "feat-json-converter-2026-06-30": {
       "branch": "repo-assist/feat-json-converter-2026-06-30-2b7fb38d8b8eecb0",
       "status": "open_as_pr_210",
       "tests": 1456,
       "date": "2026-06-30",
-      "note": "FixedPointNanoJsonConverter + [JsonConverter] attr + 16 tests (1440->1456)"
+      "note": "FixedPointNanoJsonConverter + [JsonConverter] attr + 16 tests. PR #210."
     },
     "improve-inumber-isignednumber-2026-06-27": {
       "branch": "repo-assist/improve-inumber-isignednumber-2026-06-27-6d7282059ff100fa",
       "status": "open_as_pr_205",
       "tests": 1495,
       "date": "2026-06-27",
-      "note": "INumber<T> + ISignedNumber<T> full generic math. 55 new tests. 1440->1495"
+      "note": "INumber<T> + ISignedNumber<T>. PR #205 (targets develop)."
     },
     "test-coverage-gaps-2026-06-26": {
       "branch": "repo-assist/test-coverage-gaps-2026-06-26-d2adec47261e03c3",
       "status": "open_as_pr_203",
       "tests": 1446,
       "date": "2026-06-26",
-      "note": "6 tests: Frac(2), Pow negative exponent, ++/-- overflow(2), [Test] attr restore. 1426->1446"
+      "note": "6 coverage-gap tests. PR #203 (targets develop)."
     }
   },
-  "notes": "8 open Repo Assist PRs: #203 (coverage gaps, develop), #205 (INumber/ISignedNumber, develop), #209 (perf Ceiling/Floor, main), #210 (JsonConverter, main), #215 (perf Square+benchmarks, main), #216 (test Parse/TryParse, main), #219 (perf Frac/Lerp inlining+benchmarks, main). Also issue #218 (CI cache - created as issue, not PR). Task 2 not applicable this run (all open issues are infra failures). 13 '[aw] Repo Assist failed' issues (#197-#214) are stale and should be closed by maintainer. Dependabot PR ~#220, Benchmarks PR ~#221.",
+  "notes": "10 open Repo Assist PRs: #203(coverage,develop), #205(INumber,develop), #209(perf Ceil/Floor,main), #210(JsonConverter,main), #215(perf Square+benchmarks,main), #216(test Parse/TryParse,main), #219(perf Frac/Lerp,main), #220(Dependabot,main), #221(benchmarks Pow/Variance/Parse,main), ~#222(XML docs,main), ~#223(perf operator*,main). Issue #218 (CI cache - created as issue, not PR). 13 '[aw] Repo Assist failed' issues (#197-#214) stale, should be closed by maintainer. XML docs PR covers the backlog item. No new human issues to comment on.",
   "issue_backlog_cursor": 0,
   "backlog_features_pending": [
-    "XML documentation comments for public API",
-    "Parse/TryParse entry in README",
-    "AggressiveInlining on Lerp/Frac already in PR #219 - do not duplicate"
+    "NuGet package metadata and publish automation",
+    "Serialization helpers (binary/MessagePack)"
   ]
 }

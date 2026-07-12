@@ -17,8 +17,10 @@ The library is intended for domains where deterministic 9-decimal fixed-point va
 - Conversion operators for .NET numeric types
 - `IConvertible` support
 - Standard numeric formatting via `ToString(...)` and `TryFormat(...)`
+- Parsing via `Parse` / `TryParse` (invariant culture by default)
 - Raw scaled arithmetic and comparison operators
-- Fast helper methods for `Square`, `Sqrt`, population variance/standard deviation, integer division, and ratio multiplication
+- Fast helper methods for `Square`, `Sqrt`, population/sample variance and standard deviation, integer division, and ratio multiplication
+- Math helpers: `Abs`, `Ceiling`, `Floor`, `Truncate`, `Frac`, `Round`, `Clamp`, `Sign`, `CopySign`, `Lerp`, `Pow`
 - Explicit finite-only `double` conversion with nano-scale rounding
 
 ## Example

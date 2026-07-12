@@ -246,6 +246,7 @@ public sealed class FixedPointNanoTests
     }
 
 
+    [Test]
     public void ToStringShouldRespectCurrentCulture()
     {
         using var cultureScope = new CultureScope(new CultureInfo("fr-FR"));

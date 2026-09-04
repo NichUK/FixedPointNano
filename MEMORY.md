@@ -11,4 +11,7 @@
   and `tests/FixedPointNano.Tests/TestResults/parsing-after.trx` (ignored artifacts).
 - Logical review: provider and rounding unchanged; catch limited to conversion overflow;
   invalid styles continue to throw, including with null `TryParse` input.
-- Parent task owns final independent review and PR coordination. No push performed.
+- Independent parent review found no actionable issues; completion confidence is 93%.
+- Published as https://github.com/NichUK/FixedPointNano/pull/226 against develop.
+- Parsing README content sits before the example to combine cleanly with the JSON PR.
+- Original #216 is superseded by #226; parent task owns final PR disposition and CI monitoring.

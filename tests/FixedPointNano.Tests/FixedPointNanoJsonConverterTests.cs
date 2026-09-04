@@ -48,8 +48,12 @@ public sealed class FixedPointNanoJsonConverterTests
     {
         var options = CreateOptions();
 
-        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<FixedPointNano>(text, options));
-        Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<FixedPointNano>(JsonSerializer.Serialize(text), options));
+        var numberException = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<FixedPointNano>(text, options));
+        var stringException = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<FixedPointNano>(JsonSerializer.Serialize(text), options));
+
+        Assert.That(numberException!.Message, Does.Contain("outside"));
+        Assert.That(stringException!.Message, Does.Contain("outside"));
+        Assert.That(stringException.InnerException, Is.TypeOf<OverflowException>());
     }
 
     [TestCase("true")]
@@ -71,6 +75,22 @@ public sealed class FixedPointNanoJsonConverterTests
     public void NumberShouldAcceptExponentNotation()
     {
         Assert.That(JsonSerializer.Deserialize<FixedPointNano>("1e-9", CreateOptions()), Is.EqualTo(FixedPointNano.Epsilon));
+    }
+
+    [Test]
+    public void InvalidStringShouldRetainFormatDiagnostics()
+    {
+        var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<FixedPointNano>("\"invalid\"", CreateOptions()));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<FormatException>());
+    }
+
+    [Test]
+    public void NumericFixedPointOverflowShouldRetainRangeDiagnostics()
+    {
+        var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<FixedPointNano>("10000000000", CreateOptions()));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<OverflowException>());
     }
 
     [Test]

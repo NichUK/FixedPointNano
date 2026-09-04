@@ -360,6 +360,7 @@ public readonly struct FixedPointNano :
     /// <param name="provider">An optional format provider.</param>
     /// <returns>The parsed value.</returns>
     /// <exception cref="FormatException">Thrown when <paramref name="s"/> cannot be parsed.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="s"/> is null.</exception>
     public static FixedPointNano Parse(string s, NumberStyles style, IFormatProvider? provider = null)
     {
         ArgumentNullException.ThrowIfNull(s);

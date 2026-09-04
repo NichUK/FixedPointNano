@@ -35,6 +35,18 @@ var volatility = FixedPointNano.Sqrt(FixedPointNano.Square(price - average));
 Console.WriteLine(total.ToString("F9"));
 ```
 
+## Parsing
+
+`Parse` and `TryParse` accept strings or character spans, optional format providers,
+and optional `NumberStyles`. A null provider uses the invariant culture. Parsed
+values round to nine decimal places using midpoint-to-even rounding.
+
+`TryParse` returns `false` and sets the result to its default (zero) for null,
+malformed, or out-of-range input. `Parse` throws `ArgumentNullException` for a
+null string and `FormatException` for malformed or out-of-range input, consistently
+across overloads. Unsupported number styles throw `ArgumentException`, including
+when passed to `TryParse` with null input.
+
 ## Benchmarks
 
 BenchmarkDotNet microbenchmarks live under `benchmarks/FixedPointNano.Benchmarks`.

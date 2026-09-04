@@ -6,8 +6,10 @@ namespace FixedPointNano.Benchmarks;
 [MemoryDiagnoser]
 public class FixedPointNanoClampBenchmarks
 {
-    private readonly Fpn _minimum = Fpn.Zero;
-    private readonly Fpn _maximum = Fpn.FromDecimal(10000m);
+    private const decimal Minimum = 0m;
+    private const decimal Maximum = 10000m;
+    private readonly Fpn _minimum = Fpn.FromDecimal(Minimum);
+    private readonly Fpn _maximum = Fpn.FromDecimal(Maximum);
     private Fpn _value;
     private decimal _decimalValue;
 
@@ -30,6 +32,6 @@ public class FixedPointNanoClampBenchmarks
     [Benchmark]
     public Fpn ClampDecimalReference()
     {
-        return Fpn.FromDecimal(Math.Clamp(_decimalValue, 0m, 10000m));
+        return Fpn.FromDecimal(Math.Clamp(_decimalValue, Minimum, Maximum));
     }
 }

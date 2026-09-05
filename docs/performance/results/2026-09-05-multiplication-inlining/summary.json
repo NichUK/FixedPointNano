@@ -1,0 +1,167 @@
+{
+  "experimentDate": "2026-09-05",
+  "runtime": ".NET 10.0.9",
+  "sdk": "10.0.301",
+  "benchmarkDotNet": "0.14.0",
+  "baselineSha": "c4263974dbab1c3692ee9f01b46fc5176e16b197",
+  "candidateSha": "48ff2f09673c2c190099d192c7f289060080e62c",
+  "candidateChange": "MethodImplOptions.AggressiveInlining on operator * only",
+  "protocol": {
+    "blocks": 5,
+    "order": "ABBA",
+    "invocations": 20,
+    "launchCount": 1,
+    "warmupCount": 10,
+    "iterationCount": 15,
+    "iterationTimeMs": 250,
+    "bootstrapSeed": 20260905,
+    "bootstrapResamples": 100000
+  },
+  "functional": {
+    "baselineTestsPassed": 1560,
+    "candidateTestsPassed": 1560,
+    "mathComparisonTestsPassedEach": 1356,
+    "checksumByteEqual": true
+  },
+  "defaultRuntime": {
+    "methods": {
+      "IndependentMultiplyBatch": {
+        "geometricMeanRatio": 1.0618824627934038,
+        "bootstrap95Low": 0.9671941758470088,
+        "bootstrap95High": 1.1750243577052693,
+        "candidateFasterCount": 4,
+        "pairCount": 10,
+        "baselineGeometricMeanNs": 9.208795552489935,
+        "candidateGeometricMeanNs": 9.778658500638958,
+        "allocationsEqualZero": true
+      },
+      "DependentMultiplyChain": {
+        "geometricMeanRatio": 0.9848319634588476,
+        "bootstrap95Low": 0.9123046990728837,
+        "bootstrap95High": 1.0552134808916487,
+        "candidateFasterCount": 6,
+        "pairCount": 10,
+        "baselineGeometricMeanNs": 5.814192892963568,
+        "candidateGeometricMeanNs": 5.72600300270579,
+        "allocationsEqualZero": true
+      },
+      "NotionalBatch": {
+        "geometricMeanRatio": 1.006118651479734,
+        "bootstrap95Low": 0.9153269058208361,
+        "bootstrap95High": 1.1003311497577453,
+        "candidateFasterCount": 5,
+        "pairCount": 10,
+        "baselineGeometricMeanNs": 7.955082261949157,
+        "candidateGeometricMeanNs": 8.00375663780264,
+        "allocationsEqualZero": true
+      },
+      "LerpBatch": {
+        "geometricMeanRatio": 1.0643575858882548,
+        "bootstrap95Low": 0.8918811583024772,
+        "bootstrap95High": 1.2633022528716789,
+        "candidateFasterCount": 5,
+        "pairCount": 10,
+        "baselineGeometricMeanNs": 11.024770087335252,
+        "candidateGeometricMeanNs": 11.734297675129193,
+        "allocationsEqualZero": true
+      },
+      "SquareBatch": {
+        "geometricMeanRatio": 0.9517718025382297,
+        "bootstrap95Low": 0.821679594689229,
+        "bootstrap95High": 1.1031275703188985,
+        "candidateFasterCount": 6,
+        "pairCount": 10,
+        "baselineGeometricMeanNs": 7.375960614968228,
+        "candidateGeometricMeanNs": 7.0202313299593,
+        "allocationsEqualZero": true
+      },
+      "PowBatch": {
+        "geometricMeanRatio": 1.0712566700407842,
+        "bootstrap95Low": 0.9318531952400574,
+        "bootstrap95High": 1.239482384556569,
+        "candidateFasterCount": 6,
+        "pairCount": 10,
+        "baselineGeometricMeanNs": 42.365383600496074,
+        "candidateGeometricMeanNs": 45.3841997608679,
+        "allocationsEqualZero": true
+      },
+      "AggregateSix": {
+        "geometricMeanRatio": 1.022351612114452,
+        "bootstrap95Low": 0.9803361017006766,
+        "bootstrap95High": 1.0640444258456931,
+        "candidateFasterCount": 4,
+        "pairCount": 10
+      }
+    },
+    "multimodalWarningRuns": 15,
+    "commandFailures": 0
+  },
+  "codeSizeBytes": {
+    "default": {
+      "baseline": {
+        "IndependentMultiplyBatch": 3680,
+        "DependentMultiplyChain": 3926,
+        "NotionalBatch": 3914,
+        "LerpBatch": 3484,
+        "SquareBatch": 3955,
+        "PowBatch": 4328
+      },
+      "candidate": {
+        "IndependentMultiplyBatch": 3680,
+        "DependentMultiplyChain": 3926,
+        "NotionalBatch": 3914,
+        "LerpBatch": 3484,
+        "SquareBatch": 3955,
+        "PowBatch": 4328
+      }
+    },
+    "tieredCompilationOff": {
+      "baseline": {
+        "IndependentMultiplyBatch": 863,
+        "DependentMultiplyChain": 840,
+        "NotionalBatch": 871,
+        "LerpBatch": 903,
+        "SquareBatch": 831,
+        "PowBatch": 489
+      },
+      "candidate": {
+        "IndependentMultiplyBatch": 863,
+        "DependentMultiplyChain": 840,
+        "NotionalBatch": 871,
+        "LerpBatch": 903,
+        "SquareBatch": 831,
+        "PowBatch": 489
+      }
+    }
+  },
+  "assemblyEquivalentAfterAddressNormalization": {
+    "default": {
+      "IndependentMultiplyBatch": true,
+      "DependentMultiplyChain": false,
+      "NotionalBatch": true,
+      "LerpBatch": false,
+      "SquareBatch": false,
+      "PowBatch": true
+    },
+    "tieredCompilationOff": {
+      "IndependentMultiplyBatch": true,
+      "DependentMultiplyChain": true,
+      "NotionalBatch": true,
+      "LerpBatch": true,
+      "SquareBatch": true,
+      "PowBatch": true
+    }
+  },
+  "decision": {
+    "adoptionGatePassed": false,
+    "statisticalClassification": "inconclusive",
+    "recommendation": "reject",
+    "action": "Do not implement the attribute; close stale PR 223 intentionally."
+  },
+  "limitations": [
+    "15 of 20 timing invocations emitted a BenchmarkDotNet multimodal-distribution warning.",
+    "All workload confidence intervals cross 1.00.",
+    "The machine is a developer laptop rather than an isolated performance lab.",
+    "The exact tested fixture invoked each workload once for checksum validation during GlobalSetup before ten warmup iterations; the retained fixture moves that validation to the explicit checksum command."
+  ]
+}

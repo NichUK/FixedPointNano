@@ -80,9 +80,11 @@ assuming the pin selected a particular installed patch.
 
 The primary job uses the runtime defaults, including tiered compilation and
 dynamic PGO. Give it enough warmup to reach optimized Tier 1 code, then use at
-least 15 measurement iterations of at least 250 ms. Use at least three launches
-per process invocation. Do not set `DOTNET_TieredPGO`, `DOTNET_ReadyToRun`, or JIT
-diagnostic variables in this job.
+least 15 measurement iterations of at least 250 ms. Set BenchmarkDotNet's
+`LaunchCount=1`: each A or B entry in the ABBA protocol below is a separate
+process invocation and one paired observation; iterations within that invocation
+are not additional observations. Do not set `DOTNET_TieredPGO`,
+`DOTNET_ReadyToRun`, or JIT diagnostic variables in this job.
 
 Run a secondary diagnostic job with `DOTNET_TieredCompilation=0`. It shows the
 fully optimized non-tiered heuristic and helps explain a result, but an improvement

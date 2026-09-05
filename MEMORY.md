@@ -1,17 +1,30 @@
-# Parsing PR follow-up
+# FixedPointNano delivery state
 
-- Branch: `codex/fixedpoint-parsing`, based on `origin/develop`.
-- Scope: approved remaining parsing gaps from PR #216; no arithmetic or inlining changes.
-- Shared span parser now handles conversion overflow consistently for all overloads.
-- String `Parse` with styles rejects null; styles validation still comes from decimal parsing.
-- Parsing boundary fixture: 23 tests; baseline had 11 failures, candidate passes all.
-- Full Release test suite: 1,524 passed, zero failed or skipped.
-- Release solution build: zero warnings and errors. `git diff --check` passes.
-- Local test evidence: `tests/FixedPointNano.Tests/TestResults/parsing-before.trx`
-  and `tests/FixedPointNano.Tests/TestResults/parsing-after.trx` (ignored artifacts).
-- Logical review: provider and rounding unchanged; catch limited to conversion overflow;
-  invalid styles continue to throw, including with null `TryParse` input.
-- Independent parent review found no actionable issues; completion confidence is 93%.
-- Published as https://github.com/NichUK/FixedPointNano/pull/226 against develop.
-- Parsing README content sits before the example to combine cleanly with the JSON PR.
-- Original #216 is superseded by #226; parent task owns final PR disposition and CI monitoring.
+Last updated: 2026-09-05
+
+## Completed Copilot PR review
+
+- PR 225 merged into `develop` as `2687d7a6911f012d78f8d33cfe3fb06be32b756d`.
+  It adds opt-in JSON conversion with invariant parsing, precise JSON errors, and
+  compatibility, rounding, range, nullable, collection, and path coverage.
+- PR 226 merged into `develop` as `3a5da0a8e3fc28ec85c27a3114832c1634af36f6`.
+  It makes parsing overflow and null handling consistent across overloads and
+  adds 23 boundary cases; 11 failed before the fix.
+- PR 227 merged into `develop` as `f5827326ab39fefcba12b5de967fccf13dae2740`.
+  It consolidates corrected benchmark coverage without adopting unmeasured
+  arithmetic rewrites or inlining hints.
+- Exact-head Copilot follow-up reviews found no remaining actionable issues.
+  Individual CI and post-merge `develop` CI run `33962663152` passed.
+- Combined local validation passed 1,560 tests and a zero-warning Release build.
+  BenchmarkDotNet Dry smoke executed all 33 selected benchmark cases.
+- Replacement source branches, their local worktrees, and the seven superseded
+  Repo Assist source branches were deleted after merge/closure verification.
+
+## Retained work
+
+- PR 223 remains intentionally open as a draft on
+  `repo-assist/perf-multiply-inline-2026-07-12-d0c46fd9cc0e034f`.
+- Do not adopt its multiplication inlining hint until a current `develop`
+  candidate has controlled baseline-versus-candidate BenchmarkDotNet evidence
+  for multiplication and representative loops, with numerical equivalence and
+  generated-code/code-size inspection.

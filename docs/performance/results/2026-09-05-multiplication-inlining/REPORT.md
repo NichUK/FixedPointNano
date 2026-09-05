@@ -48,4 +48,3 @@ Fifteen of 20 default-runtime invocations emitted a multimodal-distribution warn
 - Timing: `timing-default/`, `paired-ratios.csv`, `paired-analysis.txt`
 - Secondary sensitivity: `tieredoff-sensitivity.txt`
 - Machine-readable result: `summary.json`
-

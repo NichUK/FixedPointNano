@@ -32,7 +32,8 @@ Last updated: 2026-09-05
 - The attribute was rejected because it demonstrated no repeatable consumer
   benefit. It is absent from the delivery branch. The fixture and concise evidence
   are retained under `docs/performance/results/2026-09-05-multiplication-inlining`;
-  raw artifacts were retained outside the repository.
+  uncommitted raw artifacts were retained outside the repository on the measurement
+  host.
 - PR 223 was closed intentionally with the measured rationale. Its rejected remote
   source branch was deleted after verifying that its only useful change was the
   tested inlining attribute.

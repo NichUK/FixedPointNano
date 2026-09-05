@@ -26,7 +26,7 @@ Last updated: 2026-09-05
   intentionally open as a draft from
   `repo-assist/perf-multiply-inline-2026-07-12-d0c46fd9cc0e034f` into `main`.
 - Its exact head is `83b673f452ed33e4d0d4653fc6aebb8becf5bc7b`. GitHub reports
-  it mergeable but unstable: the bot auto-approval workflow fails because the
+  it is mergeable but unstable: the bot auto-approval workflow fails because the
   GitHub Actions author cannot approve its own PR; this is not a code/test failure.
 - It has no Copilot review or activity. Persistent monitoring is unavailable
   outside an active task; resume from this record before taking action.

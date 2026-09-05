@@ -33,5 +33,7 @@ Last updated: 2026-09-05
 - Do not adopt its multiplication inlining hint until a current `develop`
   candidate has controlled baseline-versus-candidate BenchmarkDotNet evidence
   for multiplication and representative loops, with numerical equivalence and
-  generated-code/code-size inspection. Next action is to gather that evidence or
-  close the draft deliberately; do not merge its stale `main`-based branch.
+  generated-code/code-size inspection. The experiment and decision thresholds are
+  specified in `docs/performance/multiplication-inlining-test-plan.md`. Next action
+  is to implement that fixture and gather the required evidence or close the draft
+  deliberately; do not merge its stale `main`-based branch.

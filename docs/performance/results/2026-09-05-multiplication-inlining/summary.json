@@ -161,6 +161,7 @@
   "limitations": [
     "15 of 20 timing invocations emitted a BenchmarkDotNet multimodal-distribution warning.",
     "All workload confidence intervals cross 1.00.",
-    "The machine is a developer laptop rather than an isolated performance lab."
+    "The machine is a developer laptop rather than an isolated performance lab.",
+    "The exact tested fixture invoked each workload once for checksum validation during GlobalSetup before ten warmup iterations; the retained fixture moves that validation to the explicit checksum command."
   ]
 }

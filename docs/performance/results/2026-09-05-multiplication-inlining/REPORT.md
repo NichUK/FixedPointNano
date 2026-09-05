@@ -42,6 +42,11 @@ Under runtime defaults, IndependentMultiplyBatch, NotionalBatch, and PowBatch we
 
 Fifteen of 20 default-runtime invocations emitted a multimodal-distribution warning, confirming meaningful host noise. No command failed and all raw reports were retained; the wide confidence intervals prevent claiming a speedup.
 
+The exact tested fixture validated its checksums during `GlobalSetup`, invoking
+each workload once before BenchmarkDotNet's ten warmup iterations. The retained
+fixture performs validation only through `--verify-inlining-corpus` so future
+measurements begin with corpus initialization alone.
+
 - Machine/runtime: `dotnet-info.txt`, `os.txt`, `cpu.txt`, `power-plan.txt`
 - Correctness: `baseline-tests.txt`, `candidate-tests.txt`, `baseline-checksums.txt`, `candidate-checksums.txt`, `checksum-comparison.txt`
 - Assembly: `assembly-comparison.txt`, `disasm-default-*`, `disasm-tieredoff-*`

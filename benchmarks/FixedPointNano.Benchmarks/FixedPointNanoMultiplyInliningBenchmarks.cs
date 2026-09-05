@@ -78,8 +78,6 @@ public class FixedPointNanoMultiplyInliningBenchmarks
 
         _singleLeft = _left[17];
         _singleRight = _right[17];
-
-        _ = CaptureChecksums();
     }
 
     [Benchmark]

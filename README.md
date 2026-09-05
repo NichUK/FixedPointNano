@@ -21,6 +21,18 @@ The library is intended for domains where deterministic 9-decimal fixed-point va
 - Fast helper methods for `Square`, `Sqrt`, population variance/standard deviation, integer division, and ratio multiplication
 - Explicit finite-only `double` conversion with nano-scale rounding
 
+## Parsing
+
+`Parse` and `TryParse` accept strings or character spans, optional format providers,
+and optional `NumberStyles`. A null provider uses the invariant culture. Parsed
+values round to nine decimal places using midpoint-to-even rounding.
+
+`TryParse` returns `false` and sets the result to its default (zero) for null,
+malformed, or out-of-range input. `Parse` throws `ArgumentNullException` for a
+null string and `FormatException` for malformed or out-of-range input, consistently
+across overloads. Unsupported number styles throw `ArgumentException`, including
+when passed to `TryParse` with null input.
+
 ## Example
 
 ```csharp

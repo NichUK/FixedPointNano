@@ -330,24 +330,7 @@ public readonly struct FixedPointNano :
     }
 
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out FixedPointNano result)
-    {
-        if (!decimal.TryParse(s, NumberStyles.Number, provider ?? CultureInfo.InvariantCulture, out var d))
-        {
-            result = default;
-            return false;
-        }
-
-        try
-        {
-            result = FromDecimal(d);
-            return true;
-        }
-        catch (OverflowException)
-        {
-            result = default;
-            return false;
-        }
-    }
+        => TryParse(s, NumberStyles.Number, provider, out result);
 
     public static bool TryParse(string? s, out FixedPointNano result)
         => TryParse(s, CultureInfo.InvariantCulture, out result);
@@ -377,14 +360,18 @@ public readonly struct FixedPointNano :
     /// <param name="provider">An optional format provider.</param>
     /// <returns>The parsed value.</returns>
     /// <exception cref="FormatException">Thrown when <paramref name="s"/> cannot be parsed.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="s"/> is null.</exception>
     public static FixedPointNano Parse(string s, NumberStyles style, IFormatProvider? provider = null)
-        => Parse(s.AsSpan(), style, provider);
+    {
+        ArgumentNullException.ThrowIfNull(s);
+        return Parse(s.AsSpan(), style, provider);
+    }
 
     /// <summary>Attempts to parse <paramref name="s"/> using the specified <see cref="NumberStyles"/>.</summary>
     /// <param name="s">The span to parse.</param>
     /// <param name="style">The number styles to allow.</param>
     /// <param name="provider">An optional format provider.</param>
-    /// <param name="result">The parsed value on success.</param>
+    /// <param name="result">The parsed value on success; otherwise the default value.</param>
     /// <returns><see langword="true"/> on success; otherwise <see langword="false"/>.</returns>
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out FixedPointNano result)
     {
@@ -394,26 +381,26 @@ public readonly struct FixedPointNano :
             return false;
         }
 
-        result = FromDecimal(d);
-        return true;
+        try
+        {
+            result = FromDecimal(d);
+            return true;
+        }
+        catch (OverflowException)
+        {
+            result = default;
+            return false;
+        }
     }
 
     /// <summary>Attempts to parse <paramref name="s"/> using the specified <see cref="NumberStyles"/>.</summary>
     /// <param name="s">The string to parse.</param>
     /// <param name="style">The number styles to allow.</param>
     /// <param name="provider">An optional format provider.</param>
-    /// <param name="result">The parsed value on success.</param>
+    /// <param name="result">The parsed value on success; otherwise the default value.</param>
     /// <returns><see langword="true"/> on success; otherwise <see langword="false"/>.</returns>
     public static bool TryParse(string? s, NumberStyles style, IFormatProvider? provider, out FixedPointNano result)
-    {
-        if (s is null)
-        {
-            result = default;
-            return false;
-        }
-
-        return TryParse(s.AsSpan(), style, provider, out result);
-    }
+        => TryParse(s.AsSpan(), style, provider, out result);
 
     public static FixedPointNano Round(FixedPointNano value, int decimals, MidpointRounding rounding = MidpointRounding.ToEven)
     {

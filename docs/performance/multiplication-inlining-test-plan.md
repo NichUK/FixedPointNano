@@ -107,7 +107,7 @@ is reported separately and is not combined with steady-state results.
    produces ten observations of each variant while balancing warm-machine and
    time-order effects. Reboot or restart the measurement session if thermal or
    background-load changes invalidate a block; discard and explain the whole
-   affected block, not an individual unfavourable result.
+   affected block, not an individual unfavorable result.
 6. Preserve the BenchmarkDotNet Markdown, CSV, JSON, logs, and disassembly artifacts
    from every invocation under a timestamped evidence directory. Do not commit raw
    benchmark artifacts to the repository.

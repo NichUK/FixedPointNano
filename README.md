@@ -47,6 +47,37 @@ var volatility = FixedPointNano.Sqrt(FixedPointNano.Square(price - average));
 Console.WriteLine(total.ToString("F9"));
 ```
 
+## JSON serialization
+
+`FixedPointNanoJsonConverter` is opt-in. Register it for an options instance:
+
+```csharp
+using System.Text.Json;
+using Seerstone;
+
+var options = new JsonSerializerOptions();
+options.Converters.Add(new FixedPointNanoJsonConverter());
+var json = JsonSerializer.Serialize(FixedPointNano.FromDecimal(123.456789123m), options);
+var value = JsonSerializer.Deserialize<FixedPointNano>(json, options);
+```
+
+Alternatively, apply `[JsonConverter(typeof(FixedPointNanoJsonConverter))]` to a
+property (with `using System.Text.Json.Serialization`). Without registration,
+the existing default object representation is unchanged.
+
+The converter writes decimal JSON numbers and reads JSON numbers or invariant
+numeric strings. Strings follow `FixedPointNano.TryParse` rules, including
+invariant group separators; JSON numbers also accept exponent notation. Values
+are parsed as .NET decimals and rounded to nine places using banker's rounding
+(`MidpointRounding.ToEven`), just like `FromDecimal`. Invalid inputs and values
+whose rounded result is outside the representable range throw `JsonException`.
+Nullable values retain the serializer's normal `null` behavior.
+
+The numeric output preserves every stored digit for decimal-aware consumers.
+JavaScript and other binary floating-point consumers can lose precision. If a
+consumer requires quoted numbers, choose a string representation in your DTO or
+provide a custom converter; this converter always writes JSON numbers.
+
 ## Benchmarks
 
 BenchmarkDotNet microbenchmarks live under `benchmarks/FixedPointNano.Benchmarks`.

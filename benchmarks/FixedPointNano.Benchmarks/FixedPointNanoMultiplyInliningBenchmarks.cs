@@ -79,12 +79,7 @@ public class FixedPointNanoMultiplyInliningBenchmarks
         _singleLeft = _left[17];
         _singleRight = _right[17];
 
-        VerifyChecksum(nameof(IndependentMultiplyBatch), IndependentMultiplyBatch(), 6_000_323_985_234L);
-        VerifyChecksum(nameof(DependentMultiplyChain), DependentMultiplyChain(), 999_994_879L);
-        VerifyChecksum(nameof(NotionalBatch), NotionalBatch(), 9_816_311_662_619L);
-        VerifyChecksum(nameof(LerpBatch), LerpBatch(), 46_212_822_455L);
-        VerifyChecksum(nameof(SquareBatch), SquareBatch(), 8_038_421_873_095_119L);
-        VerifyChecksum(nameof(PowBatch), PowBatch(), 1_050_735_154_786L);
+        _ = CaptureChecksums();
     }
 
     [Benchmark]
@@ -174,7 +169,7 @@ public class FixedPointNanoMultiplyInliningBenchmarks
 
     public IReadOnlyList<KeyValuePair<string, long>> CaptureChecksums()
     {
-        return
+        IReadOnlyList<KeyValuePair<string, long>> checksums =
         [
             new(nameof(IndependentMultiplyBatch), IndependentMultiplyBatch()),
             new(nameof(DependentMultiplyChain), DependentMultiplyChain()),
@@ -183,6 +178,27 @@ public class FixedPointNanoMultiplyInliningBenchmarks
             new(nameof(SquareBatch), SquareBatch()),
             new(nameof(PowBatch), PowBatch()),
         ];
+
+        foreach (var checksum in checksums)
+        {
+            VerifyChecksum(checksum.Key, checksum.Value, GetExpectedChecksum(checksum.Key));
+        }
+
+        return checksums;
+    }
+
+    private static long GetExpectedChecksum(string benchmark)
+    {
+        return benchmark switch
+        {
+            nameof(IndependentMultiplyBatch) => 6_000_323_985_234L,
+            nameof(DependentMultiplyChain) => 999_994_879L,
+            nameof(NotionalBatch) => 9_816_311_662_619L,
+            nameof(LerpBatch) => 46_212_822_455L,
+            nameof(SquareBatch) => 8_038_421_873_095_119L,
+            nameof(PowBatch) => 1_050_735_154_786L,
+            _ => throw new ArgumentOutOfRangeException(nameof(benchmark), benchmark, "Unknown benchmark."),
+        };
     }
 
     private static void VerifyChecksum(string benchmark, long actual, long expected)

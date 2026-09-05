@@ -779,6 +779,7 @@ public readonly struct FixedPointNano :
         return new FixedPointNano(checked(value.RawValue - Scale));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano operator *(FixedPointNano left, FixedPointNano right)
     {
         var product = (Int128)left.RawValue * right.RawValue;

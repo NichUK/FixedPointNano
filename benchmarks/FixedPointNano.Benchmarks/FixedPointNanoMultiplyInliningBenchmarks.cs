@@ -176,13 +176,19 @@ public class FixedPointNanoMultiplyInliningBenchmarks
     {
         return
         [
-            new(nameof(IndependentMultiplyBatch), IndependentMultiplyBatch()),
-            new(nameof(DependentMultiplyChain), DependentMultiplyChain()),
-            new(nameof(NotionalBatch), NotionalBatch()),
-            new(nameof(LerpBatch), LerpBatch()),
-            new(nameof(SquareBatch), SquareBatch()),
-            new(nameof(PowBatch), PowBatch()),
+            CaptureChecksum(nameof(IndependentMultiplyBatch), IndependentMultiplyBatch(), 6_000_323_985_234L),
+            CaptureChecksum(nameof(DependentMultiplyChain), DependentMultiplyChain(), 999_994_879L),
+            CaptureChecksum(nameof(NotionalBatch), NotionalBatch(), 9_816_311_662_619L),
+            CaptureChecksum(nameof(LerpBatch), LerpBatch(), 46_212_822_455L),
+            CaptureChecksum(nameof(SquareBatch), SquareBatch(), 8_038_421_873_095_119L),
+            CaptureChecksum(nameof(PowBatch), PowBatch(), 1_050_735_154_786L),
         ];
+    }
+
+    private static KeyValuePair<string, long> CaptureChecksum(string benchmark, long actual, long expected)
+    {
+        VerifyChecksum(benchmark, actual, expected);
+        return new(benchmark, actual);
     }
 
     private static void VerifyChecksum(string benchmark, long actual, long expected)

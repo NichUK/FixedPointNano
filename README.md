@@ -111,3 +111,5 @@ only in the fixed-point API. Formatting references use prepared decimal values.
 Use `--job Dry` for an execution smoke check. Dry or single-iteration results
 are not evidence of a speedup. Rounding rewrites and additional inlining hints
 remain deferred until controlled before/after benchmarks demonstrate a benefit.
+The acceptance criteria and paired-run protocol for the multiplication hint are
+defined in [the multiplication inlining test plan](https://github.com/NichUK/FixedPointNano/blob/main/docs/performance/multiplication-inlining-test-plan.md).

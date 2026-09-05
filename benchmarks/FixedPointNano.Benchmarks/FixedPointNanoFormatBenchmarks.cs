@@ -1,3 +1,4 @@
+using System.Globalization;
 using BenchmarkDotNet.Attributes;
 using Fpn = Seerstone.FixedPointNano;
 
@@ -27,48 +28,48 @@ public class FixedPointNanoFormatBenchmarks
     [Benchmark(Baseline = true)]
     public string? ToStringDefault()
     {
-        return _value.ToString();
+        return _value.ToString(CultureInfo.InvariantCulture);
     }
 
     [Benchmark]
     public string? DecimalToStringReference()
     {
-        return _decimalValue.ToString();
+        return _decimalValue.ToString(CultureInfo.InvariantCulture);
     }
 
     [Benchmark]
     public string? ToStringFixed2()
     {
-        return _value.ToString("F2");
+        return _value.ToString("F2", CultureInfo.InvariantCulture);
     }
 
     [Benchmark]
     public string? DecimalToStringFixed2Reference()
     {
-        return _decimalValue.ToString("F2");
+        return _decimalValue.ToString("F2", CultureInfo.InvariantCulture);
     }
 
     [Benchmark]
     public bool TryFormatDefault()
     {
-        return _value.TryFormat(_buffer, out _, default, null);
+        return _value.TryFormat(_buffer, out _, default, CultureInfo.InvariantCulture);
     }
 
     [Benchmark]
     public bool DecimalTryFormatReference()
     {
-        return _decimalValue.TryFormat(_buffer, out _, default, null);
+        return _decimalValue.TryFormat(_buffer, out _, default, CultureInfo.InvariantCulture);
     }
 
     [Benchmark]
     public bool TryFormatFixed4()
     {
-        return _value.TryFormat(_buffer, out _, "F4", null);
+        return _value.TryFormat(_buffer, out _, "F4", CultureInfo.InvariantCulture);
     }
 
     [Benchmark]
     public bool DecimalTryFormatFixed4Reference()
     {
-        return _decimalValue.TryFormat(_buffer, out _, "F4", null);
+        return _decimalValue.TryFormat(_buffer, out _, "F4", CultureInfo.InvariantCulture);
     }
 }

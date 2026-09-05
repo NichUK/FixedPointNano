@@ -1,3 +1,4 @@
+using System.Globalization;
 using BenchmarkDotNet.Attributes;
 using Fpn = Seerstone.FixedPointNano;
 
@@ -7,6 +8,16 @@ namespace FixedPointNano.Benchmarks;
 public class FixedPointNanoMathBenchmarks
 {
     private const int Period = 14;
+    private const int PowExponent = 5;
+    private const string ParseInput = "1234.567890123";
+    private readonly decimal _leftDecimal = 1234.567890123m;
+    private readonly decimal _rightDecimal = 7.123456789m;
+    private readonly Fpn _powBase = Fpn.FromDecimal(1.5m);
+    private readonly decimal _powBaseDecimal = 1.5m;
+    private readonly double _powBaseDouble = 1.5d;
+    private readonly Fpn _lerpAmount = Fpn.FromDecimal(0.5m);
+    private readonly decimal _lerpAmountDecimal = 0.5m;
+    private readonly double _lerpAmountDouble = 0.5d;
     private readonly Fpn _left = Fpn.FromDecimal(1234.567890123m);
     private readonly Fpn _right = Fpn.FromDecimal(7.123456789m);
     private readonly Fpn _sqrtInput = Fpn.FromDecimal(1234.567890123m);
@@ -17,6 +28,8 @@ public class FixedPointNanoMathBenchmarks
     private Fpn[] _fixedValues = [];
     private decimal[] _decimalValues = [];
     private double[] _doubleValues = [];
+    private Fpn _varianceSum;
+    private Int128 _varianceSumOfRawSquares;
 
     [GlobalSetup]
     public void Setup()
@@ -24,6 +37,8 @@ public class FixedPointNanoMathBenchmarks
         _fixedValues = new Fpn[1024];
         _decimalValues = new decimal[_fixedValues.Length];
         _doubleValues = new double[_fixedValues.Length];
+        _varianceSum = Fpn.Zero;
+        _varianceSumOfRawSquares = Int128.Zero;
 
         for (var index = 0; index < _fixedValues.Length; index++)
         {
@@ -31,7 +46,141 @@ public class FixedPointNanoMathBenchmarks
             _decimalValues[index] = value;
             _doubleValues[index] = (double)value;
             _fixedValues[index] = Fpn.FromDecimal(value);
+            _varianceSum += _fixedValues[index];
+            var raw = _fixedValues[index].RawValue;
+            _varianceSumOfRawSquares = checked(_varianceSumOfRawSquares + ((Int128)raw * raw));
         }
+    }
+
+    [Benchmark]
+    public Fpn AddDecimalReference()
+    {
+        return Fpn.FromDecimal(_leftDecimal + _rightDecimal);
+    }
+
+    [Benchmark]
+    public double AddDoubleReference()
+    {
+        return _leftDouble + _rightDouble;
+    }
+
+    [Benchmark]
+    public Fpn AddRaw()
+    {
+        return _left + _right;
+    }
+
+    [Benchmark]
+    public Fpn SubtractDecimalReference()
+    {
+        return Fpn.FromDecimal(_leftDecimal - _rightDecimal);
+    }
+
+    [Benchmark]
+    public double SubtractDoubleReference()
+    {
+        return _leftDouble - _rightDouble;
+    }
+
+    [Benchmark]
+    public Fpn SubtractRaw()
+    {
+        return _left - _right;
+    }
+
+    [Benchmark]
+    public Fpn FromDecimalRaw()
+    {
+        return Fpn.FromDecimal(_leftDecimal);
+    }
+
+    [Benchmark]
+    public Fpn PowDecimalReference()
+    {
+        var result = 1m;
+        var current = _powBaseDecimal;
+        var remaining = PowExponent;
+        while (remaining > 0)
+        {
+            if ((remaining & 1) != 0)
+            {
+                result *= current;
+            }
+
+            remaining >>= 1;
+            if (remaining > 0)
+            {
+                current *= current;
+            }
+        }
+
+        return Fpn.FromDecimal(result);
+    }
+
+    [Benchmark]
+    public double PowDoubleReference()
+    {
+        return Math.Pow(_powBaseDouble, PowExponent);
+    }
+
+    [Benchmark]
+    public Fpn PowRaw()
+    {
+        return Fpn.Pow(_powBase, PowExponent);
+    }
+
+    [Benchmark]
+    public Fpn LerpDecimalReference()
+    {
+        return Fpn.FromDecimal(_leftDecimal + ((_rightDecimal - _leftDecimal) * _lerpAmountDecimal));
+    }
+
+    [Benchmark]
+    public double LerpDoubleReference()
+    {
+        return _leftDouble + ((_rightDouble - _leftDouble) * _lerpAmountDouble);
+    }
+
+    [Benchmark]
+    public Fpn LerpRaw()
+    {
+        return Fpn.Lerp(_left, _right, _lerpAmount);
+    }
+
+    [Benchmark]
+    public Fpn PopulationVarianceRaw()
+    {
+        return Fpn.PopulationVariance(_varianceSum, _varianceSumOfRawSquares, _fixedValues.Length);
+    }
+
+    [Benchmark]
+    public Fpn SampleVarianceRaw()
+    {
+        return Fpn.SampleVariance(_varianceSum, _varianceSumOfRawSquares, _fixedValues.Length);
+    }
+
+    [Benchmark]
+    public Fpn ParseRaw()
+    {
+        return Fpn.Parse(ParseInput, CultureInfo.InvariantCulture);
+    }
+
+    [Benchmark]
+    public Fpn ParseDecimalReference()
+    {
+        return Fpn.FromDecimal(decimal.Parse(ParseInput, NumberStyles.Number, CultureInfo.InvariantCulture));
+    }
+
+    [Benchmark]
+    public bool TryParseRaw()
+    {
+        return Fpn.TryParse(ParseInput, CultureInfo.InvariantCulture, out _);
+    }
+
+    [Benchmark]
+    public bool TryParseDecimalReference()
+    {
+        return decimal.TryParse(ParseInput, NumberStyles.Number, CultureInfo.InvariantCulture, out _);
     }
 
     [Benchmark]

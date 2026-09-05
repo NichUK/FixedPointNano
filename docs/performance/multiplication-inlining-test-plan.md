@@ -1,5 +1,14 @@
 # Multiplication inlining test plan
 
+## Outcome
+
+The 2026-09-05 experiment did not support adding the attribute. Every workload's
+paired 95% confidence interval crossed parity, no workload met the required
+direction count, and the aggregate candidate-to-baseline point estimate was
+`1.0224` (2.24% slower). The stale proposal was closed without adoption. See the
+[experiment report](results/2026-09-05-multiplication-inlining/REPORT.md) and its
+[machine-readable summary](results/2026-09-05-multiplication-inlining/summary.json).
+
 ## Decision
 
 This experiment decides whether to add

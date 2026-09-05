@@ -1,0 +1,19 @@
+Baseline and candidate experiment commands
+Baseline: c4263974dbab1c3692ee9f01b46fc5176e16b197
+Candidate: 48ff2f09673c2c190099d192c7f289060080e62c
+Validation (run once in each exact-commit worktree):
+dotnet build FixedPointNano.slnx -c Release --nologo
+dotnet test FixedPointNano.slnx -c Release --no-build --nologo
+dotnet run --project benchmarks\FixedPointNano.Benchmarks -c Release --no-build -- --verify-inlining-corpus
+dotnet test tests\FixedPointNano.Tests\FixedPointNano.Tests.csproj -c Release --no-build --nologo --filter FullyQualifiedName~FixedPointNanoMathComparisonTests
+
+Default disassembly (run once in each exact-commit worktree):
+dotnet run --project benchmarks\FixedPointNano.Benchmarks -c Release --no-build -- --filter *FixedPointNanoMultiplyInliningBenchmarks* --disasm --launchCount 1 --warmupCount 10 --iterationCount 15 --iterationTime 250
+
+Tiered-compilation-disabled disassembly/sensitivity (run once in each exact-commit worktree):
+$env:DOTNET_TieredCompilation = "0"
+dotnet run --project benchmarks\FixedPointNano.Benchmarks -c Release --no-build -- --filter *FixedPointNanoMultiplyInliningBenchmarks* --disasm --launchCount 1 --warmupCount 10 --iterationCount 15 --iterationTime 250
+Remove-Item Env:DOTNET_TieredCompilation
+
+Default timing (five ABBA blocks, 20 separate invocations):
+dotnet run --project benchmarks\FixedPointNano.Benchmarks -c Release --no-build -- --filter *Batch* *DependentMultiplyChain* --launchCount 1 --warmupCount 10 --iterationCount 15 --iterationTime 250

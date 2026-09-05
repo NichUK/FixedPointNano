@@ -20,20 +20,19 @@ Last updated: 2026-09-05
 - Replacement source branches, their local worktrees, and the seven superseded
   Repo Assist source branches were deleted after merge/closure verification.
 
-## Retained work
+## Completed multiplication inlining experiment
 
-- PR 223 (https://github.com/NichUK/FixedPointNano/pull/223) remains
-  intentionally open as a draft from
-  `repo-assist/perf-multiply-inline-2026-07-12-d0c46fd9cc0e034f` into `main`.
-- Its exact head is `83b673f452ed33e4d0d4653fc6aebb8becf5bc7b`. GitHub reports
-  it is mergeable but unstable: the bot auto-approval workflow fails because the
-  GitHub Actions author cannot approve its own PR; this is not a code/test failure.
-- It has no Copilot review or activity. Persistent monitoring is unavailable
-  outside an active task; resume from this record before taking action.
-- Do not adopt its multiplication inlining hint until a current `develop`
-  candidate has controlled baseline-versus-candidate BenchmarkDotNet evidence
-  for multiplication and representative loops, with numerical equivalence and
-  generated-code/code-size inspection. The experiment and decision thresholds are
-  specified in `docs/performance/multiplication-inlining-test-plan.md`. Next action
-  is to implement that fixture and gather the required evidence or close the draft
-  deliberately; do not merge its stale `main`-based branch.
+- Baseline `c4263974dbab1c3692ee9f01b46fc5176e16b197` and one-line candidate
+  `48ff2f09673c2c190099d192c7f289060080e62c` passed 1,560 tests and produced
+  byte-identical deterministic corpus checksums.
+- Five ABBA blocks completed all 20 process invocations. Every workload's paired
+  95% confidence interval crossed parity; none reached the required 8/10 direction
+  count. The aggregate candidate/baseline ratio was 1.0224 with a 95% interval of
+  0.9803-1.0640 and the candidate faster in 4/10 pairs.
+- The attribute was rejected because it demonstrated no repeatable consumer
+  benefit. It is absent from the delivery branch. The fixture and concise evidence
+  are retained under `docs/performance/results/2026-09-05-multiplication-inlining`;
+  raw artifacts remain in `C:\dev\FixedPointNano-inlining-evidence\2026-09-05`.
+- PR 223 was closed intentionally with the measured rationale. Its rejected remote
+  source branch was deleted after verifying that its only useful change was the
+  tested inlining attribute.

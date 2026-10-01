@@ -6,7 +6,8 @@
 
     <!-- NuGet package identity -->
     <PackageId>FixedPointNano</PackageId>
-    <Version>0.1.0</Version>
+    <Version>1.1.0</Version>
+    <PackageReleaseNotes>Add generic math interfaces, opt-in JSON serialization, numeric predicates and sample statistics. Make parsing overflow and null handling consistent and expand tests and benchmarks.</PackageReleaseNotes>
     <Authors>NichUK</Authors>
     <Company>Quantauma</Company>
     <Copyright>Copyright (c) 2024 NichUK</Copyright>

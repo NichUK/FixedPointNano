@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-10-08T13:05:07Z",
-  "run_id": "37781385560",
+  "last_run": "2026-10-09T01:25:23Z",
+  "run_id": "37869555788",
   "monthly_activity_issue": 246,
   "monthly_activity_month": "2026-10",
   "comments_made": {
@@ -14,6 +14,13 @@
       "status": "merged",
       "date": "2026-07-13",
       "note": "Merged by maintainer"
+    },
+    "bundle-dependabot-2026-10-09": {
+      "branch": "repo-assist/eng-bundle-dependabot-updates",
+      "status": "pr_created",
+      "pr_number": 249,
+      "date": "2026-10-09",
+      "note": "Bundled NUnit.Analyzers 4.15.0 and NUnit3TestAdapter 6.3.0 updates; all 1560 tests pass"
     },
     "improve-xml-docs-2026-07-12": {
       "branch": "repo-assist/improve-xml-docs-2026-07-12-064dbed4068530db",
@@ -38,33 +45,9 @@
       "status": "merged",
       "date": "2026-07-07",
       "note": "Merged by maintainer"
-    },
-    "perf-frac-lerp-inlining-2026-07-06": {
-      "branch": "repo-assist/perf-frac-lerp-inlining-2026-07-06-24e434fa7cb1abde",
-      "status": "merged",
-      "date": "2026-07-06",
-      "note": "Merged by maintainer"
-    },
-    "test-parse-round-2026-07-06": {
-      "branch": "repo-assist/test-parse-round-2026-07-06-851e9d135ef56e29",
-      "status": "merged",
-      "date": "2026-07-06",
-      "note": "Merged by maintainer"
-    },
-    "perf-add-sub-benchmarks-2026-07-06": {
-      "branch": "repo-assist/perf-add-sub-benchmarks-2026-07-06-5515e79bd7618809",
-      "status": "merged",
-      "date": "2026-07-06",
-      "note": "Merged by maintainer"
-    },
-    "eng-ci-cache-timeout-2026-07-06": {
-      "branch": "repo-assist/eng-ci-cache-timeout-2026-07-06",
-      "status": "issue_218_blocked_on_protected_files",
-      "date": "2026-07-06",
-      "note": "CI caching and timeouts. Needs maintainer decision on .github/workflows/. Issue #218."
     }
   },
-  "notes": "October 2026 run 37781385560 (2026-10-08 13:05 UTC): Selected tasks 2 & 4 + Task 11. Task 2 (Issue Investigation & Comment) - no open issues requiring investigation (only Monthly Activity auto-generated issue). Task 4 (Engineering Investments) - repository in excellent health, Dependabot PRs #247, #248 ready for merge. Task 11 (Monthly Activity) - updated issue #246 with current run. Repository remains in passive maintenance mode with all systems healthy.",
+  "notes": "October 2026 run 37869555788 (2026-10-09 01:25 UTC): Selected tasks 9 & 4 + Task 11. Task 9 (Testing Improvements) - repository test suite in excellent health with 1560 passing tests, no improvements needed. Task 4 (Engineering Investments) - bundled Dependabot PRs #247 and #248 into single coordinated update in PR #249. All builds and tests successful. Monthly Activity issue #246 updated.",
   "issue_backlog_cursor": 0,
   "backlog_features_pending": [
     "NuGet package metadata and publish automation",

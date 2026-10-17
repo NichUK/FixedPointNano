@@ -4,6 +4,9 @@
     <RootNamespace>FixedPointNano</RootNamespace>
     <AssemblyName>FixedPointNano</AssemblyName>
 
+    <!-- Documentation generation for NuGet consumers -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
     <!-- NuGet package identity -->
     <PackageId>FixedPointNano</PackageId>
     <Version>1.1.0</Version>

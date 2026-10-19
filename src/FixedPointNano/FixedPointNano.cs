@@ -314,6 +314,7 @@ public readonly struct FixedPointNano :
     /// <param name="left">The first value.</param>
     /// <param name="right">The second value.</param>
     /// <returns><paramref name="left"/> when it is greater than or equal to <paramref name="right"/>; otherwise <paramref name="right"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static FixedPointNano Max(FixedPointNano left, FixedPointNano right)
     {
         return left.RawValue >= right.RawValue ? left : right;

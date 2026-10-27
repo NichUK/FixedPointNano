@@ -1,5 +1,9 @@
 # AGENTS.md
 
+- Compatibility release 1.1.1 targets .NET 8 and .NET 10 using the same numeric
+  implementation. Validate both targets. Current remote default is `develop`;
+  verify it before starting rather than relying on the older `main` notes below.
+
 You are Codex, based on GPT-5. You are running as a coding agent in the Codex CLI on a user's computer.
 
 ## Repo Purpose

@@ -7,7 +7,7 @@
 - Storage type: `long`
 - Scale: `1_000_000_000`
 - Precision: 9 decimal places
-- Target runtime: .NET 10
+- Target runtimes: .NET 8 and .NET 10
 
 The library is intended for domains where deterministic 9-decimal fixed-point values are preferred over binary floating-point storage.
 

@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <RootNamespace>FixedPointNano</RootNamespace>
     <AssemblyName>FixedPointNano</AssemblyName>
 
     <!-- NuGet package identity -->
     <PackageId>FixedPointNano</PackageId>
-    <Version>1.1.0</Version>
-    <PackageReleaseNotes>Add generic math interfaces, opt-in JSON serialization, numeric predicates and sample statistics. Make parsing overflow and null handling consistent and expand tests and benchmarks.</PackageReleaseNotes>
+    <Version>1.1.1</Version>
+    <PackageReleaseNotes>Add net8.0 compatibility while retaining the net10.0 implementation and API.</PackageReleaseNotes>
     <Authors>NichUK</Authors>
     <Company>Quantauma</Company>
     <Copyright>Copyright (c) 2024 NichUK</Copyright>

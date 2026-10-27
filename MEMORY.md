@@ -37,3 +37,19 @@ Last updated: 2026-09-05
 - PR 223 was closed intentionally with the measured rationale. Its rejected remote
   source branch was deleted after verifying that its only useful change was the
   tested inlining attribute.
+
+
+## FixedPointNano 1.1.1 compatibility release
+
+Branch codex/fixedpointnano-net8-develop is based on remote develop ff4cccd.
+Only library/test multi-targeting net8/net10, release metadata, README and agent
+notes change; numeric implementation/API is unchanged. Independent review GO;
+1,560 NUnit tests pass for each target. Root owns push/PR/merge/publication.
+Resolve exact remote head with git ls-remote origin refs/heads/codex/fixedpointnano-net8-develop.
+Release workflow derives PackageVersion from v1.1.1. Public NuGet currently has
+1.0.0/1.0.1; v1.1.0 exists as a tag but is unpublished. GitHub repository has no
+NUGET_API_KEY secret; user has been asked to configure the existing secure
+publisher. Do not privately publish a shadow Numeric version or expose a key.
+QDP/FO validation uses an explicitly recorded local candidate pending official
+publication. No production consumers have been deployed with this candidate.
+Evidence: C:/Dev/quantauma.artifacts/fx-writer-restart-20261027.

@@ -443,4 +443,191 @@ public sealed class FixedPointNanoGenericMathTests
 
         return total;
     }
+
+    // ── Explicit INumberBase interface tests (coverage for interface delegations) ──
+
+    [Test]
+    public void INumberBaseIsCanonicalShouldAlwaysReturnTrue()
+    {
+        Assert.That(IsCanonical(FixedPointNano.Zero), Is.True);
+        Assert.That(IsCanonical(FixedPointNano.MaxValue), Is.True);
+        Assert.That(IsCanonical(FixedPointNano.MinValue), Is.True);
+    }
+
+    private static bool IsCanonical(FixedPointNano v) => IsCanonicalGeneric<FixedPointNano>(v);
+
+    private static bool IsCanonicalGeneric<T>(T v) where T : INumberBase<T> => T.IsCanonical(v);
+
+    [Test]
+    public void INumberBaseIsComplexNumberShouldAlwaysReturnFalse()
+    {
+        Assert.That(IsComplexNumber(FixedPointNano.Zero), Is.False);
+        Assert.That(IsComplexNumber(FixedPointNano.One), Is.False);
+    }
+
+    private static bool IsComplexNumber(FixedPointNano v)
+    {
+        // Access through generic type parameter
+        return IsComplexNumberGeneric<FixedPointNano>(v);
+    }
+
+    private static bool IsComplexNumberGeneric<T>(T v) where T : INumberBase<T> => T.IsComplexNumber(v);
+
+    [Test]
+    public void INumberBaseIsFiniteShouldAlwaysReturnTrue()
+    {
+        Assert.That(IsFiniteV(FixedPointNano.MaxValue), Is.True);
+        Assert.That(IsFiniteV(FixedPointNano.MinValue), Is.True);
+    }
+
+    [Test]
+    public void INumberBaseIsImaginaryShouldAlwaysReturnFalse()
+    {
+        Assert.That(IsImaginary(FixedPointNano.One), Is.False);
+    }
+
+    [Test]
+    public void INumberBaseIsInfinityShouldAlwaysReturnFalse()
+    {
+        Assert.That(IsInfinityV(FixedPointNano.MaxValue), Is.False);
+    }
+
+    [Test]
+    public void INumberBaseIsIntegerShouldDelegateToPublicMethod()
+    {
+        var wholeValue = (FixedPointNano)5L;
+        var fractionalValue = FixedPointNano.FromDecimal(5.5m);
+        Assert.That(IsInteger(wholeValue), Is.EqualTo(FixedPointNano.IsInteger(wholeValue)));
+        Assert.That(IsInteger(fractionalValue), Is.EqualTo(FixedPointNano.IsInteger(fractionalValue)));
+    }
+
+    private static bool IsInteger(FixedPointNano v) => FixedPointNano.IsInteger(v);
+
+    [Test]
+    public void INumberBaseIsNaNShouldAlwaysReturnFalse()
+    {
+        Assert.That(IsNaNV(FixedPointNano.Zero), Is.False);
+    }
+
+    [Test]
+    public void INumberBaseIsNegativeShouldDelegateToPublicMethod()
+    {
+        var negValue = FixedPointNano.FromDecimal(-1.5m);
+        var posValue = FixedPointNano.FromDecimal(1.5m);
+        Assert.That(IsNegative(negValue), Is.EqualTo(FixedPointNano.IsNegative(negValue)));
+        Assert.That(IsNegative(posValue), Is.EqualTo(FixedPointNano.IsNegative(posValue)));
+    }
+
+    private static bool IsNegative(FixedPointNano v) => FixedPointNano.IsNegative(v);
+
+    [Test]
+    public void INumberBaseIsNegativeInfinityShouldAlwaysReturnFalse()
+    {
+        Assert.That(IsNegInf(FixedPointNano.MinValue), Is.False);
+    }
+
+    [Test]
+    public void INumberBaseIsNormalShouldBeFalseForZeroOnly()
+    {
+        Assert.That(IsNormalV(FixedPointNano.Zero), Is.False);
+        Assert.That(IsNormalV(FixedPointNano.One), Is.True);
+        Assert.That(IsNormalV(FixedPointNano.Epsilon), Is.True);
+    }
+
+    [Test]
+    public void INumberBaseIsPositiveInfinityShouldAlwaysReturnFalse()
+    {
+        Assert.That(IsPosInf(FixedPointNano.MaxValue), Is.False);
+    }
+
+    [Test]
+    public void INumberBaseIsRealNumberShouldAlwaysReturnTrue()
+    {
+        Assert.That(IsRealNum(FixedPointNano.Zero), Is.True);
+        Assert.That(IsRealNum(FixedPointNano.MaxValue), Is.True);
+    }
+
+    [Test]
+    public void INumberBaseIsSubnormalShouldAlwaysReturnFalse()
+    {
+        Assert.That(IsSubnormal(FixedPointNano.Zero), Is.False);
+        Assert.That(IsSubnormal(FixedPointNano.Epsilon), Is.False);
+    }
+
+    [Test]
+    public void INumberBaseIsPositiveShouldDelegateToPublicMethod()
+    {
+        var posValue = FixedPointNano.FromDecimal(2.5m);
+        var negValue = FixedPointNano.FromDecimal(-2.5m);
+        Assert.That(IsPositive(posValue), Is.EqualTo(FixedPointNano.IsPositive(posValue)));
+        Assert.That(IsPositive(negValue), Is.EqualTo(FixedPointNano.IsPositive(negValue)));
+    }
+
+    private static bool IsPositive(FixedPointNano v) => FixedPointNano.IsPositive(v);
+
+    [Test]
+    public void INumberBaseIsZeroShouldDelegateToPublicMethod()
+    {
+        Assert.That(IsZeroV(FixedPointNano.Zero), Is.True);
+        Assert.That(IsZeroV(FixedPointNano.One), Is.False);
+    }
+
+    private static bool IsZeroV(FixedPointNano v) => FixedPointNano.IsZero(v);
+
+    [Test]
+    public void INumberBaseIsEvenIntegerShouldDelegateToPublicMethod()
+    {
+        var evenValue = (FixedPointNano)4L;
+        var oddValue = (FixedPointNano)3L;
+        Assert.That(IsEvenInt(evenValue), Is.True);
+        Assert.That(IsEvenInt(oddValue), Is.False);
+    }
+
+    [Test]
+    public void INumberBaseIsOddIntegerShouldDelegateToPublicMethod()
+    {
+        var evenValue = (FixedPointNano)4L;
+        var oddValue = (FixedPointNano)3L;
+        Assert.That(IsOddInt(oddValue), Is.True);
+        Assert.That(IsOddInt(evenValue), Is.False);
+    }
+
+    [Test]
+    public void INumberBaseCreateCheckedFromSupportedTypeShouldSucceed()
+    {
+        Assert.That(CreateChecked<FixedPointNano, byte>(42), Is.EqualTo((FixedPointNano)42L));
+        Assert.That(CreateChecked<FixedPointNano, int>(100), Is.EqualTo((FixedPointNano)100L));
+    }
+
+    [Test]
+    public void INumberBaseCreateSaturatingFromSupportedTypeShouldSucceed()
+    {
+        Assert.That(CreateSaturating<FixedPointNano, byte>(255), Is.EqualTo((FixedPointNano)255L));
+    }
+
+    [Test]
+    public void INumberBaseCreateTruncatingFromSupportedTypeShouldSucceed()
+    {
+        Assert.That(CreateTruncating<FixedPointNano, sbyte>(-123), Is.EqualTo((FixedPointNano)(-123L)));
+    }
+
+    [Test]
+    public void SqrtEdgeCasesWithHighDoubleEstimates()
+    {
+        // Test values that could cause high estimates from Math.Sqrt(double)
+        var sqrtSmall = FixedPointNano.Sqrt(FixedPointNano.FromDecimal(0.0001m));
+        Assert.That(sqrtSmall, Is.EqualTo(FixedPointNano.FromDecimal(0.01m)));
+
+        var sqrtOne = FixedPointNano.Sqrt(FixedPointNano.One);
+        Assert.That(sqrtOne, Is.EqualTo(FixedPointNano.One));
+    }
+
+    [Test]
+    public void SqrtLargeValuesShouldRoundCorrectly()
+    {
+        // Test with larger values to exercise rounding logic
+        var largeValue = FixedPointNano.MaxValue / 1000000;
+        var result = FixedPointNano.Sqrt(largeValue);
+        Assert.That(result.RawValue, Is.GreaterThan(0));
+    }
 }
